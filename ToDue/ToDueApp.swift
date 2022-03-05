@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct ToDueApp: App {
+    @StateObject var coreDM = CoreDateManager()
     var body: some Scene {
         WindowGroup {
-            ContentView(coreDM: CoreDateManager())
+            ZStack {
+                ContentView()
+            }
+            .environmentObject(coreDM)
         }
     }
 }

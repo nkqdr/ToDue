@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-class CoreDateManager {
+class CoreDateManager: ObservableObject {
     let persistentContainer: NSPersistentContainer
     
     init() {
@@ -24,6 +24,7 @@ class CoreDateManager {
         let task = Task(context: persistentContainer.viewContext)
         task.date = date
         task.taskDescription = taskDescription
+        task.isCompleted = false
         
         do {
             try persistentContainer.viewContext.save()
@@ -39,6 +40,13 @@ class CoreDateManager {
             return try persistentContainer.viewContext.fetch(fetchRequest)
         } catch {
             return []
+        }
+    }
+    
+    func updateTask(task: Task, isCompleted: Bool) {
+        persistentContainer.viewContext.performAndWait {
+            task.isCompleted = isCompleted
+            try? persistentContainer.viewContext.save()
         }
     }
     

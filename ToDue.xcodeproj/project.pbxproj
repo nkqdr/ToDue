@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C327D36EBB00488289 /* CompletedTasksView.swift */; };
+		600A00C627D37CE200488289 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C527D37CE100488289 /* AddTaskView.swift */; };
 		60DD741827D2B16A00DD19AD /* ToDueApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD741727D2B16A00DD19AD /* ToDueApp.swift */; };
 		60DD741A27D2B16A00DD19AD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD741927D2B16A00DD19AD /* ContentView.swift */; };
 		60DD741C27D2B16C00DD19AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60DD741B27D2B16C00DD19AD /* Assets.xcassets */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		600A00C327D36EBB00488289 /* CompletedTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTasksView.swift; sourceTree = "<group>"; };
+		600A00C527D37CE100488289 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
 		60DD741427D2B16A00DD19AD /* ToDue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60DD741727D2B16A00DD19AD /* ToDueApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDueApp.swift; sourceTree = "<group>"; };
 		60DD741927D2B16A00DD19AD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -59,6 +63,8 @@
 			children = (
 				60DD741727D2B16A00DD19AD /* ToDueApp.swift */,
 				60DD741927D2B16A00DD19AD /* ContentView.swift */,
+				600A00C527D37CE100488289 /* AddTaskView.swift */,
+				600A00C327D36EBB00488289 /* CompletedTasksView.swift */,
 				60DD742A27D2B74200DD19AD /* Backend */,
 				60DD741B27D2B16C00DD19AD /* Assets.xcassets */,
 				60DD741D27D2B16C00DD19AD /* Preview Content */,
@@ -155,6 +161,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */,
+				600A00C627D37CE200488289 /* AddTaskView.swift in Sources */,
+				600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */,
 				60DD741A27D2B16A00DD19AD /* ContentView.swift in Sources */,
 				60DD741827D2B16A00DD19AD /* ToDueApp.swift in Sources */,
 				60DD742927D2B2AB00DD19AD /* CoreDataManager.swift in Sources */,
