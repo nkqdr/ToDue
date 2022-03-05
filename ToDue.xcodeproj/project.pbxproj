@@ -13,6 +13,7 @@
 		60DD741F27D2B16C00DD19AD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60DD741E27D2B16C00DD19AD /* Preview Assets.xcassets */; };
 		60DD742727D2B1C300DD19AD /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */; };
 		60DD742927D2B2AB00DD19AD /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */; };
+		60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742D27D2D22E00DD19AD /* TaskContainer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		60DD741E27D2B16C00DD19AD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		60DD742627D2B1C300DD19AD /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
 		60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		60DD742D27D2D22E00DD19AD /* TaskContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskContainer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,10 +59,10 @@
 			children = (
 				60DD741727D2B16A00DD19AD /* ToDueApp.swift */,
 				60DD741927D2B16A00DD19AD /* ContentView.swift */,
-				60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */,
-				60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */,
+				60DD742A27D2B74200DD19AD /* Backend */,
 				60DD741B27D2B16C00DD19AD /* Assets.xcassets */,
 				60DD741D27D2B16C00DD19AD /* Preview Content */,
+				60DD742D27D2D22E00DD19AD /* TaskContainer.swift */,
 			);
 			path = ToDue;
 			sourceTree = "<group>";
@@ -71,6 +73,15 @@
 				60DD741E27D2B16C00DD19AD /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		60DD742A27D2B74200DD19AD /* Backend */ = {
+			isa = PBXGroup;
+			children = (
+				60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */,
+				60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */,
+			);
+			path = Backend;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,6 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */,
 				60DD741A27D2B16A00DD19AD /* ContentView.swift in Sources */,
 				60DD741827D2B16A00DD19AD /* ToDueApp.swift in Sources */,
 				60DD742927D2B2AB00DD19AD /* CoreDataManager.swift in Sources */,

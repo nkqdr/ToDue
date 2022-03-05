@@ -27,7 +27,6 @@ class CoreDateManager {
         
         do {
             try persistentContainer.viewContext.save()
-            print("Task saved!")
         } catch {
             print("Failed to save task \(error)")
         }
