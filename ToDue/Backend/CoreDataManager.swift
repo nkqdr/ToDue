@@ -7,12 +7,19 @@
 
 import Foundation
 import CoreData
+import WidgetKit
 
-class CoreDateManager: ObservableObject {
+class CoreDataManager: ObservableObject {
+    static let shared = CoreDataManager()
     let persistentContainer: NSPersistentContainer
     
-    init() {
+    private init() {
+        let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.niklaskuder.ToDue")!
+        let storeURL = containerURL.appendingPathComponent("DataModel.sqlite")
+        let description = NSPersistentStoreDescription(url: storeURL)
+        
         persistentContainer = NSPersistentContainer(name: "DataModel")
+        persistentContainer.persistentStoreDescriptions = [description]
         persistentContainer.loadPersistentStores { (description, error) in
             if let error = error {
                 fatalError("Core Data failed to initialize \(error.localizedDescription)")
@@ -25,7 +32,7 @@ class CoreDateManager: ObservableObject {
         task.date = date
         task.taskDescription = taskDescription
         task.isCompleted = false
-        
+        WidgetCenter.shared.reloadAllTimelines()
         do {
             try persistentContainer.viewContext.save()
         } catch {
@@ -37,7 +44,11 @@ class CoreDateManager: ObservableObject {
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
         
         do {
-            return try persistentContainer.viewContext.fetch(fetchRequest)
+            var allTasks = try persistentContainer.viewContext.fetch(fetchRequest)
+            allTasks.sort {
+                $0.date! < $1.date!
+            }
+            return allTasks
         } catch {
             return []
         }
@@ -48,6 +59,7 @@ class CoreDateManager: ObservableObject {
             task.isCompleted = isCompleted
             try? persistentContainer.viewContext.save()
         }
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     func deleteTask(task: Task) {
@@ -59,5 +71,6 @@ class CoreDateManager: ObservableObject {
             persistentContainer.viewContext.rollback()
             print("Failed to save context \(error.localizedDescription)")
         }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }

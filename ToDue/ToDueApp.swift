@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct ToDueApp: App {
-    @StateObject var coreDM = CoreDateManager()
+    @StateObject var coreDM = CoreDataManager.shared
     var body: some Scene {
         WindowGroup {
             ZStack {

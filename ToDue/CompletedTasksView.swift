@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CompletedTasksView: View {
-    @EnvironmentObject var coreDM: CoreDateManager
+    @EnvironmentObject var coreDM: CoreDataManager
     @Binding var isPresented: Bool
     @State private var taskArray = [Task]()
     

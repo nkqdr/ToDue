@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var coreDM: CoreDateManager
+    @EnvironmentObject var coreDM: CoreDataManager
     @State private var taskArray = [Task]()
     @State private var showAddingPage = false
     @State private var showCompletedPage = false
+    @State private var showSettingsPage = false
     @State private var remainingTime = ""
     @State private var scrollOffset = 0.0
     @State private var titleOpacity = 0.0
@@ -35,26 +36,6 @@ struct ContentView: View {
                         ForEach (taskArray) { task in
                             let index = taskArray.firstIndex(of: task)
                             TaskContainer(task: task, geometry: geometry, showBackground: index == 0, onUpdate: displayTasks)
-                                .contextMenu(menuItems: {
-                                    Button(role: .cancel, action: {
-                                        markTaskAsCompleted(task: task)
-                                    }, label: {
-                                        Label("Mark as completed", systemImage: "checkmark.circle.fill")
-                                    })
-                                    Button(role: .cancel, action: {
-                                        print("Edit")
-                                    }, label: {
-                                        Label("Edit", systemImage: "pencil")
-                                    })
-                                    Button(role: .destructive, action: {
-                                        coreDM.deleteTask(task: task)
-                                        displayTasks()
-                                    }, label: {
-                                        Label("Delete", systemImage: "trash")
-                                    })
-                                }
-                               
-                            )
                         }
                         .animation(.default, value: taskArray)
                         .background(GeometryReader {
@@ -112,13 +93,23 @@ struct ContentView: View {
                         }
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Menu {
-                                Button("Show Completed", action: {
+                                Button(role: .cancel, action: {
                                     showCompletedPage = true
+                                }, label: {
+                                    Label("Show Completed", systemImage: "rectangle.fill.badge.checkmark")
                                 })
-                                Button("Give Feedback", action: {
-                                print("Give Feedback")
-                                    
+                                Button(role: .cancel, action: {
+                                    showSettingsPage = true
+                                }, label: {
+                                    Label("Settings", systemImage: "gear")
                                 })
+                                Button(role: .cancel, action: {
+                                    print("Give Feedback")
+                                }, label: {
+                                    Label("Give Feedback", systemImage: "star.circle")
+                                })
+                                // Disabled because it is not implemented yet.
+                                .disabled(true)
                             } label: {
                                 Label("", systemImage: "ellipsis.circle").imageScale(.large)
                             }
@@ -132,6 +123,9 @@ struct ContentView: View {
             })
             .sheet(isPresented: $showAddingPage, onDismiss: displayTasks, content: {
                 AddTaskView(isPresented: $showAddingPage)
+            })
+            .sheet(isPresented: $showSettingsPage, onDismiss: displayTasks, content: {
+                SettingsView(isPresented: $showSettingsPage)
             })
         }
         .navigationViewStyle(StackNavigationViewStyle())
@@ -162,16 +156,8 @@ struct ContentView: View {
         array = array.filter { task in
             !task.isCompleted
         }
-        array.sort {
-            $0.date! < $1.date!
-        }
         taskArray = array
         getRemainingDays()
-    }
-    
-    func markTaskAsCompleted(task: Task) {
-        coreDM.updateTask(task: task, isCompleted: true)
-        displayTasks()
     }
 }
 

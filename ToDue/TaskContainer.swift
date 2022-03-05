@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaskContainer: View {
-    @EnvironmentObject var coreDM: CoreDateManager
+    @EnvironmentObject var coreDM: CoreDataManager
     var task: Task
     var geometry: GeometryProxy
     var showBackground: Bool
@@ -22,14 +22,14 @@ struct TaskContainer: View {
         return HStack {
             VStack(alignment: .leading) {
                 Text(dateFormatter.string(from: task.date ?? Date.now))
-                    .font(.title3)
-                    .fontWeight(.bold)
+                    .font(.headline)
+                    .fontWeight(.semibold)
                     .foregroundColor(Color("Text"))
                     .padding(.horizontal)
                     .padding(.top)
                 Spacer()
                 Text(task.taskDescription ?? "")
-                    .font(.title)
+                    .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Text"))
                     .padding(.horizontal)
@@ -48,8 +48,29 @@ struct TaskContainer: View {
         .background(
             showBackground ? RoundedRectangle(cornerRadius: 15)
                 .fill(Color("Accent1")) : RoundedRectangle(cornerRadius: 15)
-                .fill(Color("Background"))
+                .fill(Color("Accent2").opacity(0.2))
             )
+        .contextMenu(menuItems: {
+            Button(role: .cancel, action: {
+                markSelfAsCompleted()
+            }, label: {
+                Label("Mark as completed", systemImage: "checkmark.circle.fill")
+            })
+            Button(role: .cancel, action: {
+                print("Edit")
+            }, label: {
+                Label("Edit", systemImage: "pencil")
+            })
+            // Disabled because it is not implemented yet.
+            .disabled(true)
+            Button(role: .destructive, action: {
+                coreDM.deleteTask(task: task)
+                onUpdate()
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
+        })
+        .padding(.bottom)
     }
     
     func markSelfAsCompleted() {
