@@ -48,7 +48,7 @@ struct TaskContainer: View {
         .background(
             showBackground ? RoundedRectangle(cornerRadius: 15)
                 .fill(Color("Accent1")) : RoundedRectangle(cornerRadius: 15)
-                .fill(Color("Accent2").opacity(0.2))
+                .fill(Color("Accent2").opacity(0.3))
             )
         .contextMenu(menuItems: {
             Button(role: .cancel, action: {

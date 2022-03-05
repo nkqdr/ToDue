@@ -11,12 +11,13 @@ import SwiftUI
 struct TaskEntry: TimelineEntry {
     let date: Date = Date.now
     let task: Task?
+    let secondTask: Task?
 }
 
 struct Provider: TimelineProvider {
     
     func placeholder(in context: Context) -> TaskEntry {
-        TaskEntry(task: nil)
+        TaskEntry(task: nil, secondTask: nil)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (TaskEntry) -> ()) {
@@ -25,9 +26,9 @@ struct Provider: TimelineProvider {
         }
         let entry: TaskEntry
         if (allTasks.isEmpty) {
-            entry = TaskEntry(task: nil)
+            entry = TaskEntry(task: nil, secondTask: nil)
         } else {
-            entry = TaskEntry(task: allTasks[0])
+            entry = TaskEntry(task: allTasks[0], secondTask: allTasks.count < 2 ? nil : allTasks[1])
         }
         completion(entry)
     }
@@ -36,7 +37,7 @@ struct Provider: TimelineProvider {
         let newTasks = CoreDataManager.shared.getAllTasks().filter { task in
             !task.isCompleted
         }
-        let entry = TaskEntry(task: newTasks.isEmpty ? nil : newTasks[0])
+        let entry = TaskEntry(task: newTasks.isEmpty ? nil : newTasks[0], secondTask: newTasks.count < 2 ? nil : newTasks[1])
         let timeline = Timeline(entries: [entry], policy: .atEnd)
         completion(timeline)
     }
@@ -57,13 +58,14 @@ struct SmallWidget : View {
                 .fontWeight(.bold)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .padding()
     }
 }
 
 struct MediumWidget : View {
     var entry: Provider.Entry
     @Binding var remainingTime: String
-    
+
     var body: some View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .long
@@ -108,18 +110,57 @@ struct LargeWidget : View {
     @Binding var remainingTime: String
     
     var body: some View {
-        HStack {
-            VStack {
-                Text("Next Due Date in")
-                    .font(.title3)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+        return VStack (alignment: .leading) {
+            Text("Next Due Date in")
+                .font(.title3)
+                .fontWeight(.bold)
+                .foregroundColor(.gray)
+            Text(remainingTime)
+                .font(.title2)
+                .fontWeight(.bold)
+            Spacer()
+            VStack (alignment: .leading) {
+                Text(dateFormatter.string(from: entry.task != nil ? entry.task!.date! : Date.now))
+                    .foregroundColor(Color("Text"))
+                    .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.gray)
-                Text(remainingTime)
-                    .font(.title2)
+                    .padding([.horizontal, .top])
+                Text(entry.task != nil ? entry.task!.taskDescription! : "Task Description")
+                    .foregroundColor(Color("Text"))
+                    .font(.subheadline)
                     .fontWeight(.bold)
+                    .padding([.horizontal, .bottom])
+                Spacer()
             }
-            Text(entry.task != nil ? entry.task!.taskDescription! : "asd")
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
+            .padding(.vertical)
+            .padding(.trailing)
+            if (entry.secondTask != nil) {
+                VStack (alignment: .leading) {
+                   Text(dateFormatter.string(from: entry.secondTask != nil ? entry.secondTask!.date! : Date.now))
+                       .foregroundColor(Color("Text"))
+                       .font(.headline)
+                       .fontWeight(.bold)
+                       .padding([.horizontal, .top])
+                   Text(entry.secondTask != nil ? entry.secondTask!.taskDescription! : "Task Description")
+                       .foregroundColor(Color("Text"))
+                       .font(.subheadline)
+                       .fontWeight(.bold)
+                       .padding([.horizontal, .bottom])
+                   Spacer()
+               }
+               .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+               .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent2").opacity(0.3)))
+               .padding(.vertical)
+               .padding(.trailing)
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .padding()
     }
 }
 
@@ -191,11 +232,11 @@ struct ToDoWidget_Preview: PreviewProvider {
 //            ToDoWidgetEntryView(entry: TaskEntry(task: nil))
 //                .preferredColorScheme(.dark)
 //                .previewContext(WidgetPreviewContext(family: .systemSmall))
-            ToDoWidgetEntryView(entry: TaskEntry(task: nil))
-                .previewContext(WidgetPreviewContext(family: .systemMedium))
-                .preferredColorScheme(.dark)
 //            ToDoWidgetEntryView(entry: TaskEntry(task: nil))
-//                .previewContext(WidgetPreviewContext(family: .systemLarge))
+//                .previewContext(WidgetPreviewContext(family: .systemMedium))
+//                .preferredColorScheme(.dark)
+            ToDoWidgetEntryView(entry: TaskEntry(task: nil, secondTask: nil))
+                .previewContext(WidgetPreviewContext(family: .systemLarge))
         }
     }
 }
