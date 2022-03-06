@@ -9,12 +9,13 @@ import SwiftUI
 
 struct CompletedTasksView: View {
     @EnvironmentObject var coreDM: CoreDataManager
+    var namespace: Namespace.ID
     @Binding var isPresented: Bool
     @State private var taskArray = [Task]()
     
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
+        ScrollView {
+            Group {
                 HStack {
                     Text("Completed tasks")
                         .font(.largeTitle)
@@ -27,9 +28,9 @@ struct CompletedTasksView: View {
                 }
                 .padding(.top)
                 ForEach (taskArray) { task in
-                    TaskContainer(task: task, geometry: geometry, showBackground: true, onUpdate: displayTasks)
+                    TaskContainer(openDetailView: {}, namespace: namespace, task: task, showBackground: true, onUpdate: displayTasks)
                 }
-                .animation(.default, value: taskArray)
+                .animation(.spring(), value: taskArray)
             }
             .padding(.horizontal)
         }
@@ -44,7 +45,7 @@ struct CompletedTasksView: View {
             task.isCompleted
         }
         array.sort {
-            $0.date! < $1.date!
+            $0.date! > $1.date!
         }
         taskArray = array
     }

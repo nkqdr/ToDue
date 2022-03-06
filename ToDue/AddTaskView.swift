@@ -15,19 +15,18 @@ struct AddTaskView: View {
     @State private var saveButtonDisabled = true
     
     var body: some View {
-        VStack {
-            let dateRange: PartialRangeFrom<Date> = {
-                let calendar = Calendar.current
-                let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date.now)
-                return calendar.date(from: startComponents)!...
-            }()
+        let dateRange: PartialRangeFrom<Date> = {
+            let calendar = Calendar.current
+            let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date.now)
+            return calendar.date(from: startComponents)!...
+        }()
+        return ScrollView {
             VStack(alignment: .leading) {
                 Text("Create a new Task!")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Text"))
-                Spacer()
-                Spacer()
+                    .padding(.bottom, 50)
                 Text("Enter a short description for this task:")
                     .font(.headline)
                     .fontWeight(.bold)
@@ -42,23 +41,23 @@ struct AddTaskView: View {
                             saveButtonDisabled = true
                         }
                     })
-                 
                     .padding(.horizontal)
-                Spacer()
+                    .padding(.bottom, 40)
                 Text("Enter a due date for this task:")
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Text"))
                     .padding(.horizontal)
-                DatePicker("", selection: $date, in: dateRange)
+                DatePicker("", selection: $date, in: dateRange, displayedComponents: .date)
                     .labelsHidden()
                     .foregroundColor(Color("Text"))
                     .datePickerStyle(.graphical)
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal)
-                Spacer()
+                    .padding(.bottom, 40)
                 Button{
                     isPresented = false
+                    print(date.removeTimeStamp!.formatted())
                     coreDM.saveTask(taskDescription: taskDescription, date: date)
                     taskDescription = ""
                     date = Date.now
@@ -72,24 +71,24 @@ struct AddTaskView: View {
                 .disabled(saveButtonDisabled)
             }
             .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .background(Color("Background"))
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .background(Color("Background"))
     }
 }
 
 struct RoundedRectangleButtonStyle: ButtonStyle {
-var isDisabled: Bool
-  func makeBody(configuration: Configuration) -> some View {
-    HStack {
-      Spacer()
-        configuration.label.foregroundColor(isDisabled ? Color("Text") : Color.white)
-      Spacer()
-    }
-    .padding(.horizontal)
-    .background(isDisabled ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
-    .scaleEffect(configuration.isPressed ? 0.95 : 1)
-  }
+    var isDisabled: Bool
+      func makeBody(configuration: Configuration) -> some View {
+        HStack {
+          Spacer()
+            configuration.label.foregroundColor(isDisabled ? Color("Text") : Color.white)
+          Spacer()
+        }
+        .padding(.horizontal)
+        .background(isDisabled ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
+        .scaleEffect(configuration.isPressed ? 0.95 : 1)
+      }
 }
 
 struct AddTaskView_Previews: PreviewProvider {

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var coreDM: CoreDataManager
+    @Namespace var namespace
     @State private var taskArray = [Task]()
     @State private var showAddingPage = false
     @State private var showCompletedPage = false
@@ -16,82 +17,39 @@ struct ContentView: View {
     @State private var remainingTime = ""
     @State private var scrollOffset = 0.0
     @State private var titleOpacity = 0.0
+    @State private var showTaskDetail = false
+    @State private var selectedTask: Task? = nil
     
     var body: some View {
         NavigationView {
-            GeometryReader { geometry in
-                ScrollView {
-                    Group {
-                        Text("Next Due Date in")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .scaleEffect(1 + -scrollOffset * 0.001, anchor: .leading)
-                        Text(remainingTime)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .scaleEffect(1 + -scrollOffset * 0.001, anchor: .leading)
-                        ForEach (taskArray) { task in
-                            let index = taskArray.firstIndex(of: task)
-                            TaskContainer(task: task, geometry: geometry, showBackground: index == 0, onUpdate: displayTasks)
-                        }
-                        .animation(.default, value: taskArray)
-                        .background(GeometryReader {
-                                        Color.clear.preference(key: ViewOffsetKey.self,
-                                                               value: -$0.frame(in: .global).origin.y)
-                                    })
-                        .onPreferenceChange(ViewOffsetKey.self) {
-                            if (abs(scrollOffset - $0) > 100 || $0 < -200) {
-                                return
-                            }
-                            scrollOffset = $0
-                            withAnimation(.easeInOut(duration: 0.1)) {
-                                if (scrollOffset > -110) {
-                                    titleOpacity = 1
-                                } else {
-                                    titleOpacity = 0
-                                }
-                            }
-                            
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .coordinateSpace(name: "scroll")
-                // The button which opens the adding sheet.
                 ZStack {
-                    Circle()
-                        .fill(Color("Text"))
-                        .frame(width: 60, height: 60)
-                    Image(systemName: "plus")
-                        .font(.largeTitle)
-                        .foregroundColor(Color("Background"))
+                    if (!showTaskDetail) {
+                        mainScrollView
+                        addTaskButton
+                    } else {
+                        TaskDetailView(showDetail: $showTaskDetail, namespace: namespace, task: selectedTask!)
+                            .background(Color("Background"))
+                    }
                 }
-                .position(x: geometry.size.width - 60, y: geometry.size.height - 40)
-                .onTapGesture {
-                    showAddingPage = true
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            VStack {
-                                Text("Next Due Date in")
-                                    .font(.subheadline)
-                                    .opacity(titleOpacity)
-                                    .foregroundColor(.gray)
-                                Text(remainingTime)
-                                    .font(.headline)
-                                    .fontWeight(.bold)
-                                    .opacity(titleOpacity)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .offset(x: 25, y: 0)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        VStack {
+                            Text("Next Due Date in")
+                                .font(.subheadline)
+                                .opacity(titleOpacity)
+                                .foregroundColor(.gray)
+                            Text(remainingTime)
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .opacity(titleOpacity)
                         }
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                        .frame(maxWidth: .infinity)
+                        .offset(x: 25, y: 0)
+                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        if !showTaskDetail {
                             Menu {
                                 Button(role: .cancel, action: {
                                     showCompletedPage = true
@@ -113,22 +71,99 @@ struct ContentView: View {
                             } label: {
                                 Label("", systemImage: "ellipsis.circle").imageScale(.large)
                             }
-                            
+                        } else {
+                            Button("Cancel") {
+                                withAnimation(.spring()) {
+                                    showTaskDetail = false
+                                }
+                            }
                         }
                     }
-            .background(Color("Background"))
-            .onAppear(perform: displayTasks)
-            .sheet(isPresented: $showCompletedPage, onDismiss: displayTasks, content: {
-                CompletedTasksView(isPresented: $showCompletedPage)
-            })
-            .sheet(isPresented: $showAddingPage, onDismiss: displayTasks, content: {
-                AddTaskView(isPresented: $showAddingPage)
-            })
-            .sheet(isPresented: $showSettingsPage, onDismiss: displayTasks, content: {
-                SettingsView(isPresented: $showSettingsPage)
-            })
+                }
+                .background(Color("Background"))
+                .onAppear(perform: displayTasks)
+                .sheet(isPresented: $showCompletedPage, onDismiss: displayTasks, content: {
+                    CompletedTasksView(namespace: namespace, isPresented: $showCompletedPage)
+                })
+                .sheet(isPresented: $showAddingPage, onDismiss: displayTasks, content: {
+                    AddTaskView(isPresented: $showAddingPage)
+                })
+                .sheet(isPresented: $showSettingsPage, onDismiss: displayTasks, content: {
+                    SettingsView(isPresented: $showSettingsPage)
+                })
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+    }
+    
+    var mainScrollView: some View {
+        ScrollView {
+            Group {
+                Text("Next Due Date in")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .scaleEffect(1 + scrollOffset * 0.001, anchor: .leading)
+                Text(remainingTime)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .scaleEffect(1 + scrollOffset * 0.001, anchor: .leading)
+
+                ForEach (taskArray) { task in
+                    let index = taskArray.firstIndex(of: task)
+                    TaskContainer(openDetailView: {openTaskDetail(task: task, delay: 0.3)}, namespace: namespace, task: task, showBackground: index == 0, onUpdate: displayTasks)
+                        .onTapGesture {
+                            openTaskDetail(task: task, delay: 0)
+                        }
+                }
+                .animation(.spring(), value: taskArray)
+                .background(
+                    GeometryReader { proxy in
+                        Color.clear.preference(key: ViewOffsetKey.self, value: proxy.frame(in: .named("scroll")).minY)
+                    }
+                )
+                .onPreferenceChange(ViewOffsetKey.self) { newValue in
+                    if (abs(scrollOffset - newValue) > 50 || newValue > 150) {
+                        return
+                    }
+                    scrollOffset = newValue
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        if (scrollOffset < 25) {
+                            titleOpacity = 1
+                        } else {
+                            titleOpacity = 0
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal)
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .coordinateSpace(name: "scroll")
+    }
+    
+    var addTaskButton: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Circle()
+                    .fill(Color("Text"))
+                    .frame(width: 60, height: 60)
+                Image(systemName: "plus")
+                    .font(.largeTitle)
+                    .foregroundColor(Color("Background"))
+            }
+            .position(x: geometry.frame(in: .global).maxX - 50, y: geometry.frame(in: .global).maxY - 120)
+            .onTapGesture {
+                showAddingPage = true
+        }
+        }
+    }
+    
+    func openTaskDetail(task: Task, delay: Double) {
+        selectedTask = task
+        withAnimation(.spring().delay(delay)) {
+            showTaskDetail.toggle()
+        }
     }
     
     func getRemainingDays() {

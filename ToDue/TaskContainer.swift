@@ -9,8 +9,9 @@ import SwiftUI
 
 struct TaskContainer: View {
     @EnvironmentObject var coreDM: CoreDataManager
+    var openDetailView: () -> Void
+    var namespace: Namespace.ID
     var task: Task
-    var geometry: GeometryProxy
     var showBackground: Bool
     var onUpdate: () -> Void
     @State private var isCompleted = false
@@ -19,50 +20,63 @@ struct TaskContainer: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .none
-        return HStack {
-            VStack(alignment: .leading) {
-                Text(dateFormatter.string(from: task.date ?? Date.now))
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(Color("Text"))
-                    .padding(.horizontal)
-                    .padding(.top)
-                Spacer()
-                Text(task.taskDescription ?? "")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color("Text"))
-                    .padding(.horizontal)
-                    .padding(.bottom)
+        return ZStack {
+            if showBackground && !task.isCompleted {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color("Accent1"))
+                    .matchedGeometryEffect(id: "background_\(task.id!)", in: namespace)
+            } else {
+                RoundedRectangle(cornerRadius: 15)
+                .fill(
+                    Color("Accent2")
+                        .opacity(0.3)
+                )
+                .matchedGeometryEffect(id: "background_\(task.id!)", in: namespace)
             }
-            Spacer()
-            Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                .font(.largeTitle)
-                .frame(width: 50, height: 50)
-                .padding(.trailing)
-                .onTapGesture {
-                    markSelfAsCompleted()
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(dateFormatter.string(from: task.date ?? Date.now))
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .matchedGeometryEffect(id: "date_\(task.id!)", in: namespace)
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal)
+                        .padding(.top)
+                    Text(task.taskDescription ?? "")
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
+                        .font(showBackground ? .title : .title2)
+                        .foregroundColor(Color("Text"))
+                        .padding(.horizontal)
+                        .padding(.bottom)
+                    Spacer()
                 }
+                Spacer()
+                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                    .font(.largeTitle)
+                    .frame(width: 50, height: 50)
+                    .padding(.trailing)
+                    .onTapGesture {
+                        markSelfAsCompleted()
+                    }
+            }
         }
-        .frame(maxWidth: .infinity, minHeight: 120, alignment: .leading)
-        .background(
-            showBackground ? RoundedRectangle(cornerRadius: 15)
-                .fill(Color("Accent1")) : RoundedRectangle(cornerRadius: 15)
-                .fill(Color("Accent2").opacity(0.3))
-            )
+        .frame(minHeight: showBackground && !task.isCompleted ? 150 : 0)
         .contextMenu(menuItems: {
             Button(role: .cancel, action: {
                 markSelfAsCompleted()
             }, label: {
-                Label("Mark as completed", systemImage: "checkmark.circle.fill")
+                Label("Mark as \(task.isCompleted ? "uncompleted" : "completed")", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
-            Button(role: .cancel, action: {
-                print("Edit")
-            }, label: {
-                Label("Edit", systemImage: "pencil")
-            })
-            // Disabled because it is not implemented yet.
-            .disabled(true)
+            if !task.isCompleted {
+                Button(role: .cancel, action: {
+                    openDetailView()
+                }, label: {
+                    Label("Edit", systemImage: "pencil")
+                })
+            }
             Button(role: .destructive, action: {
                 coreDM.deleteTask(task: task)
                 onUpdate()
@@ -74,7 +88,6 @@ struct TaskContainer: View {
     }
     
     func markSelfAsCompleted() {
-        print("Completing..")
         isCompleted = !task.isCompleted
         coreDM.updateTask(task: task, isCompleted: isCompleted)
         onUpdate()

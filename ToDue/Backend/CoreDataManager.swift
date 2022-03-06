@@ -32,6 +32,7 @@ class CoreDataManager: ObservableObject {
         task.date = date
         task.taskDescription = taskDescription
         task.isCompleted = false
+        task.id = UUID()
         WidgetCenter.shared.reloadAllTimelines()
         do {
             try persistentContainer.viewContext.save()
