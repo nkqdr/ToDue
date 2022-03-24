@@ -18,12 +18,14 @@ struct SubTask : Identifiable {
 struct TaskDetailView: View {
     @Binding var showDetail: Bool
     @State var showContents: Bool = false
+    // Used for swipe to delete
+    @State private var offsets = [CGSize](repeating: CGSize.zero, count: 3)
     // TODO: DELETE THIS LATER
     @State var subTaskCompleted: Bool = false
     //
     var namespace: Namespace.ID
     let task: Task
-    var subTasks = [SubTask(id: UUID(), title: "Test1", isCompleted: false), SubTask(id: UUID(), title: "Test2", isCompleted: false), SubTask(id: UUID(), title: "Test3", isCompleted: false)]
+    @State var subTasks = [SubTask(id: UUID(), title: "Test1", isCompleted: false), SubTask(id: UUID(), title: "Test2", isCompleted: false), SubTask(id: UUID(), title: "Test3", isCompleted: false)]
     
     var body: some View {
         let dateFormatter = DateFormatter()
@@ -36,23 +38,34 @@ struct TaskDetailView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea()
             ScrollView {
-                VStack(alignment: .leading) {
-                    Text(dateFormatter.string(from: task.date ?? Date.now))
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .matchedGeometryEffect(id: "date_\(task.id!)", in: namespace)
-                        .font(.headline)
-                        .foregroundColor(.secondary)
+                HStack (alignment: .center) {
+                    VStack(alignment: .leading) {
+                        Text(dateFormatter.string(from: task.date ?? Date.now))
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .matchedGeometryEffect(id: "date_\(task.id!)", in: namespace)
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Text(task.taskDescription ?? "")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
+                            .font(.title)
+                            .foregroundColor(Color("Text"))
+                    }
+                    .padding()
+                    if showContents {
+                        Divider()
+                            .padding(.vertical)
+                        Button {
+                            // TODO: Implement edit functionality
+                            print("Edit")
+                        } label: {
+                            Label("", systemImage: "pencil")
+                                .scaleEffect(1.3)
+                        }
                         .padding(.horizontal)
-                        .padding(.top)
-                    Text(task.taskDescription ?? "")
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
-                        .font(.title)
-                        .foregroundColor(Color("Text"))
-                        .padding(.horizontal)
-                        .padding(.bottom)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 20)
@@ -73,9 +86,9 @@ struct TaskDetailView: View {
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        ForEach (subTasks) { subTask in
+                        ForEach (subTasks.indices, id: \.self) { index in
                             HStack {
-                                Text(subTask.title)
+                                Text(subTasks[index].title)
                                     .font(.title3)
                                     .fontWeight(.bold)
                                     .padding(.leading)
@@ -85,6 +98,7 @@ struct TaskDetailView: View {
                                     .frame(width: 50, height: 50)
                                     .padding(.trailing)
                                     .onTapGesture {
+                                        Haptics.shared.play(.medium)
                                         subTaskCompleted.toggle()
                                     }
                             }
@@ -115,6 +129,10 @@ struct TaskDetailView: View {
                 showContents = true
             }
         }
+    }
+    
+    func delete(at offsets: IndexSet) {
+            print("Delete")
     }
     
     func closeDetailView() {

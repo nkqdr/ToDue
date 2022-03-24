@@ -59,6 +59,7 @@ struct TaskContainer: View {
                     .frame(width: 50, height: 50)
                     .padding(.trailing)
                     .onTapGesture {
+                        Haptics.shared.play(.medium)
                         markSelfAsCompleted()
                     }
             }

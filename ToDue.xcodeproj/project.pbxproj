@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C327D36EBB00488289 /* CompletedTasksView.swift */; };
 		600A00C627D37CE200488289 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C527D37CE100488289 /* AddTaskView.swift */; };
+		6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6035BEA927E1E50D0048E6D4 /* Haptics.swift */; };
 		6061F80327D5360300772ACE /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061F80227D5360300772ACE /* ProgressBar.swift */; };
 		6061F80627D536F400772ACE /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061F80527D536F400772ACE /* ViewExtension.swift */; };
 		60809E8827D394A10027AE84 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60809E8727D394A10027AE84 /* WidgetKit.framework */; };
@@ -23,6 +24,7 @@
 		60809E9F27D3A1F30027AE84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60DD741B27D2B16C00DD19AD /* Assets.xcassets */; };
 		608F770627D4A77A007BCC06 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770527D4A77A007BCC06 /* DateExtension.swift */; };
 		608F770827D4AB5C007BCC06 /* TaskDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770727D4AB5C007BCC06 /* TaskDetailView.swift */; };
+		60A92DB927ECFB6700BA81B3 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770527D4A77A007BCC06 /* DateExtension.swift */; };
 		60B4D06827D3CA1900A1BDBE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B4D06727D3CA1900A1BDBE /* SettingsView.swift */; };
 		60DD741827D2B16A00DD19AD /* ToDueApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD741727D2B16A00DD19AD /* ToDueApp.swift */; };
 		60DD741A27D2B16A00DD19AD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD741927D2B16A00DD19AD /* ContentView.swift */; };
@@ -60,6 +62,7 @@
 /* Begin PBXFileReference section */
 		600A00C327D36EBB00488289 /* CompletedTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTasksView.swift; sourceTree = "<group>"; };
 		600A00C527D37CE100488289 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
+		6035BEA927E1E50D0048E6D4 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		6061F80227D5360300772ACE /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		6061F80527D536F400772ACE /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		60809E8527D394A10027AE84 /* ToDoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ToDoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +110,7 @@
 		6061F80127D535EF00772ACE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				6035BEA927E1E50D0048E6D4 /* Haptics.swift */,
 				6061F80227D5360300772ACE /* ProgressBar.swift */,
 			);
 			path = Components;
@@ -301,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60809E9D27D397C20027AE84 /* DataModel.xcdatamodeld in Sources */,
+				60A92DB927ECFB6700BA81B3 /* DateExtension.swift in Sources */,
 				60809E9227D394A30027AE84 /* ToDoWidget.intentdefinition in Sources */,
 				60809E9E27D399860027AE84 /* CoreDataManager.swift in Sources */,
 				60809E8D27D394A10027AE84 /* ToDoWidget.swift in Sources */,
@@ -311,6 +316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */,
 				60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */,
 				608F770627D4A77A007BCC06 /* DateExtension.swift in Sources */,
 				600A00C627D37CE200488289 /* AddTaskView.swift in Sources */,

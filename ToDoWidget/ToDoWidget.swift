@@ -195,7 +195,7 @@ struct ToDoWidgetEntryView : View {
             remainingTime = "No Tasks!"
             return
         }
-        let diff = Calendar.current.dateComponents([.year, .month, .day], from: Date.now, to: task!.date!)
+        let diff = Calendar.current.dateComponents([.year, .month, .day], from: Date.now.removeTimeStamp!, to: task!.date!)
         var outputStr = ""
         if (diff.year != nil && diff.year != 0) {
             outputStr += "\(diff.year!) "
@@ -205,9 +205,13 @@ struct ToDoWidgetEntryView : View {
             outputStr += "\(diff.month!) "
             outputStr += diff.month == 1 ? "Month " : "Months "
         }
-        outputStr += "\(diff.day != nil ? diff.day! + 1 : 0) "
-        outputStr += diff.day != nil && diff.day! + 1 == 1 ? "Day" : "Days"
-        remainingTime = outputStr
+        outputStr += "\(diff.day != nil ? diff.day! : 0) "
+        outputStr += diff.day != nil && diff.day! == 1 ? "Day" : "Days"
+        if (diff.day != nil && diff.month != nil && diff.year != nil && diff.day! < 0 && diff.month! <= 0 && diff.year! <= 0) {
+            remainingTime = "Task is past due!"
+        } else {
+            remainingTime = outputStr
+        }
     }
 }
 

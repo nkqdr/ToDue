@@ -57,7 +57,8 @@ struct AddTaskView: View {
                     .padding(.bottom, 40)
                 Button{
                     isPresented = false
-                    print(date.removeTimeStamp!.formatted())
+                    date = date.removeTimeStamp!
+                    print(date.formatted())
                     coreDM.saveTask(taskDescription: taskDescription, date: date)
                     taskDescription = ""
                     date = Date.now
