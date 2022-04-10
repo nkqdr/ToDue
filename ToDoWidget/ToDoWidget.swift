@@ -85,6 +85,7 @@ struct MediumWidget : View {
             .padding(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
             Spacer()
+            if (entry.task != nil) {
             VStack (alignment: .leading) {
                 Text(dateFormatter.string(from: entry.task != nil ? entry.task!.date! : Date.now))
                     .foregroundColor(Color("Text"))
@@ -101,6 +102,7 @@ struct MediumWidget : View {
             .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
             .padding(.vertical)
             .padding(.trailing)
+            }
         }
     }
 }
@@ -122,23 +124,25 @@ struct LargeWidget : View {
                 .font(.title2)
                 .fontWeight(.bold)
             Spacer()
-            VStack (alignment: .leading) {
-                Text(dateFormatter.string(from: entry.task != nil ? entry.task!.date! : Date.now))
-                    .foregroundColor(Color("Text"))
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .padding([.horizontal, .top])
-                Text(entry.task != nil ? entry.task!.taskDescription! : "Task Description")
-                    .foregroundColor(Color("Text"))
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .padding([.horizontal, .bottom])
-                Spacer()
+            if (entry.task != nil) {
+                VStack (alignment: .leading) {
+                    Text(dateFormatter.string(from: entry.task != nil ? entry.task!.date! : Date.now))
+                        .foregroundColor(Color("Text"))
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .padding([.horizontal, .top])
+                    Text(entry.task != nil ? entry.task!.taskDescription! : "Task Description")
+                        .foregroundColor(Color("Text"))
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .padding([.horizontal, .bottom])
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
+                .padding(.vertical)
+                .padding(.trailing)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
-            .padding(.vertical)
-            .padding(.trailing)
             if (entry.secondTask != nil) {
                 VStack (alignment: .leading) {
                    Text(dateFormatter.string(from: entry.secondTask != nil ? entry.secondTask!.date! : Date.now))
