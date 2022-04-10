@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C327D36EBB00488289 /* CompletedTasksView.swift */; };
 		600A00C627D37CE200488289 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C527D37CE100488289 /* AddTaskView.swift */; };
+		6015556228032BE50049D84A /* TaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6015556128032BE50049D84A /* TaskExtension.swift */; };
 		6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6035BEA927E1E50D0048E6D4 /* Haptics.swift */; };
 		6061F80327D5360300772ACE /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061F80227D5360300772ACE /* ProgressBar.swift */; };
 		6061F80627D536F400772ACE /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061F80527D536F400772ACE /* ViewExtension.swift */; };
@@ -62,6 +63,7 @@
 /* Begin PBXFileReference section */
 		600A00C327D36EBB00488289 /* CompletedTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTasksView.swift; sourceTree = "<group>"; };
 		600A00C527D37CE100488289 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
+		6015556128032BE50049D84A /* TaskExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExtension.swift; sourceTree = "<group>"; };
 		6035BEA927E1E50D0048E6D4 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		6061F80227D5360300772ACE /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		6061F80527D536F400772ACE /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 			children = (
 				608F770527D4A77A007BCC06 /* DateExtension.swift */,
 				6061F80527D536F400772ACE /* ViewExtension.swift */,
+				6015556128032BE50049D84A /* TaskExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */,
 				60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */,
 				608F770627D4A77A007BCC06 /* DateExtension.swift in Sources */,
+				6015556228032BE50049D84A /* TaskExtension.swift in Sources */,
 				600A00C627D37CE200488289 /* AddTaskView.swift in Sources */,
 				608F770827D4AB5C007BCC06 /* TaskDetailView.swift in Sources */,
 				600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */,

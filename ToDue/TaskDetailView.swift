@@ -7,15 +7,8 @@
 
 import SwiftUI
 
-// TODO: DELETE THIS LATER
-struct SubTask : Identifiable {
-    var id: UUID
-    var title: String
-    var isCompleted: Bool
-}
-//
-
 struct TaskDetailView: View {
+    @EnvironmentObject var coreDM: CoreDataManager
     @Binding var showDetail: Bool
     @State var showContents: Bool = false
     // Used for swipe to delete
@@ -24,8 +17,13 @@ struct TaskDetailView: View {
     @State var subTaskCompleted: Bool = false
     //
     var namespace: Namespace.ID
-    let task: Task
-    @State var subTasks = [SubTask(id: UUID(), title: "Test1", isCompleted: false), SubTask(id: UUID(), title: "Test2", isCompleted: false), SubTask(id: UUID(), title: "Test3", isCompleted: false)]
+    var task: Task
+    
+//    init(showDetail: Binding<Bool>, namespace: Namespace.ID, task: Task) {
+//        self._showDetail = showDetail
+//        self.namespace = namespace
+//        self.task = task
+//    }
     
     var body: some View {
         let dateFormatter = DateFormatter()
@@ -59,7 +57,7 @@ struct TaskDetailView: View {
                             .padding(.vertical)
                         Button {
                             // TODO: Implement edit functionality
-                            print("Edit")
+                            coreDM.removeAllSubTasks(from: task)
                         } label: {
                             Label("", systemImage: "pencil")
                                 .scaleEffect(1.3)
@@ -80,15 +78,15 @@ struct TaskDetailView: View {
                                 .foregroundColor(.secondary)
                             Spacer()
                             Button {
-                                // TODO: Implement this
+                                addSubTask(title: "Test")
                             } label: {
-                                Label("Add Sub-Task", systemImage: "plus")
+                                Label("Add", systemImage: "plus")
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        ForEach (subTasks.indices, id: \.self) { index in
+                        ForEach (task.subTaskArray) { subTask in
                             HStack {
-                                Text(subTasks[index].title)
+                                Text(subTask.title!)
                                     .font(.title3)
                                     .fontWeight(.bold)
                                     .padding(.leading)
@@ -129,6 +127,11 @@ struct TaskDetailView: View {
                 showContents = true
             }
         }
+    }
+    
+    func addSubTask(title: String) {
+        coreDM.addSubTask(to: task, subTaskTitle: title)
+//        subTasks = task.subTaskArray
     }
     
     func delete(at offsets: IndexSet) {

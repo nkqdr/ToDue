@@ -25,6 +25,26 @@ class CoreDataManager: ObservableObject {
                 fatalError("Core Data failed to initialize \(error.localizedDescription)")
             }
         }
+        self.persistentContainer.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+    }
+    
+    func removeAllSubTasks(from task: Task) {
+        task.removeFromSubTasks(task.subTasks!)
+        try! persistentContainer.viewContext.save()
+    }
+    
+    func addSubTask(to task: Task, subTaskTitle: String) {
+        let subTask = SubTask(context: persistentContainer.viewContext)
+        subTask.title = subTaskTitle
+        subTask.id = UUID()
+        subTask.isCompleted = false
+        
+        task.addToSubTasks(subTask)
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            print("Failed to add subtask \(error)")
+        }
     }
     
     func saveTask(taskDescription: String, date: Date) {
@@ -33,6 +53,7 @@ class CoreDataManager: ObservableObject {
         task.taskDescription = taskDescription
         task.isCompleted = false
         task.id = UUID()
+        task.subTasks = []
         WidgetCenter.shared.reloadAllTimelines()
         do {
             try persistentContainer.viewContext.save()
