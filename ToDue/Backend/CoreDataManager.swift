@@ -62,6 +62,16 @@ class CoreDataManager: ObservableObject {
         }
     }
     
+    func deleteSubTask(subTask: SubTask) {
+        persistentContainer.viewContext.delete(subTask)
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            persistentContainer.viewContext.rollback()
+            print("Failed to save context \(error.localizedDescription)")
+        }
+    }
+    
     func getAllTasks() -> [Task] {
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
         
@@ -73,6 +83,15 @@ class CoreDataManager: ObservableObject {
             return allTasks
         } catch {
             return []
+        }
+    }
+    
+    func toggleIsCompleted(for subTask: SubTask) {
+        subTask.isCompleted.toggle()
+        do {
+            try persistentContainer.viewContext.save()
+        } catch {
+            print("Failed to complete subtask \(error)")
         }
     }
     

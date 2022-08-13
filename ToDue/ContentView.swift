@@ -72,11 +72,11 @@ struct ContentView: View {
                                 Label("", systemImage: "ellipsis.circle").imageScale(.large)
                             }
                         } else {
-                            Button("Cancel") {
-                                withAnimation(.spring()) {
-                                    showTaskDetail = false
-                                }
-                            }
+//                            Button("Cancel") {
+//                                withAnimation(.spring()) {
+//                                    showTaskDetail = false
+//                                }
+//                            }
                         }
                     }
                 }
@@ -205,11 +205,5 @@ struct ViewOffsetKey: PreferenceKey {
     static var defaultValue = CGFloat.zero
     static func reduce(value: inout Value, nextValue: () -> Value) {
         value += nextValue()
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

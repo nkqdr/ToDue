@@ -10,14 +10,12 @@ import SwiftUI
 struct TaskDetailView: View {
     @EnvironmentObject var coreDM: CoreDataManager
     @Binding var showDetail: Bool
+    // Used for a fade-in effect.
     @State var showContents: Bool = false
-    // Used for swipe to delete
-    @State private var offsets = [CGSize](repeating: CGSize.zero, count: 3)
-    // TODO: DELETE THIS LATER
-    @State var subTaskCompleted: Bool = false
-    //
+    @State var showAddSubtaskSheet: Bool = false
+    @State var subtaskProgress: Double = 0
     var namespace: Namespace.ID
-    var task: Task
+    @ObservedObject var task: Task
     
 //    init(showDetail: Binding<Bool>, namespace: Namespace.ID, task: Task) {
 //        self._showDetail = showDetail
@@ -69,8 +67,10 @@ struct TaskDetailView: View {
                 .padding(.bottom, 20)
                 if showContents {
                     VStack (alignment: .leading) {
-                        ProgressBar(progress: 0.7)
-                            .padding(.bottom, 20)
+                        if subtaskProgress >= 0 {
+                            ProgressBar(progress: subtaskProgress)
+                                .padding(.bottom, 20)
+                        }
                         HStack (alignment: .bottom) {
                             Text("Sub-Tasks:")
                                 .font(.title2)
@@ -78,7 +78,7 @@ struct TaskDetailView: View {
                                 .foregroundColor(.secondary)
                             Spacer()
                             Button {
-                                addSubTask(title: "Test")
+                                showAddSubtaskSheet.toggle()
                             } label: {
                                 Label("Add", systemImage: "plus")
                             }
@@ -91,13 +91,17 @@ struct TaskDetailView: View {
                                     .fontWeight(.bold)
                                     .padding(.leading)
                                 Spacer()
-                                Image(systemName: subTaskCompleted ? "checkmark.circle.fill" : "circle")
+                                Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
                                     .font(.title)
                                     .frame(width: 50, height: 50)
                                     .padding(.trailing)
                                     .onTapGesture {
                                         Haptics.shared.play(.medium)
-                                        subTaskCompleted.toggle()
+                                        task.objectWillChange.send()
+                                        coreDM.toggleIsCompleted(for: subTask)
+                                        withAnimation(.easeInOut) {
+                                            subtaskProgress = calculateProgress()
+                                        }
                                     }
                             }
                             .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
@@ -125,13 +129,26 @@ struct TaskDetailView: View {
         .onAppear {
             withAnimation(.easeInOut.delay(0.3)) {
                 showContents = true
+                subtaskProgress = calculateProgress()
             }
         }
+        .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
+            withAnimation(.easeInOut) {
+                subtaskProgress = calculateProgress()
+            }
+        }, content: {
+            AddSubtaskView(isPresented: $showAddSubtaskSheet, task: task)
+            // Once iOS 16 is out, use .presentationDetents here!
+        })
     }
     
-    func addSubTask(title: String) {
-        coreDM.addSubTask(to: task, subTaskTitle: title)
-//        subTasks = task.subTaskArray
+    func calculateProgress() -> Double {
+        if task.subTaskArray.isEmpty {
+            return -1
+        }
+        let total: Int = task.subTaskArray.count
+        let complete: Int = task.subTaskArray.filter {$0.isCompleted}.count
+        return Double(complete) / Double(total)
     }
     
     func delete(at offsets: IndexSet) {
