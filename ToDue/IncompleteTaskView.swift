@@ -25,22 +25,18 @@ struct IncompleteTaskView: View {
                             .background(Color("Background"))
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
-                        VStack {
+                        VStack(alignment: .center) {
                             Text("Next Due Date in")
                                 .font(.subheadline)
-                                .opacity(titleOpacity)
                                 .foregroundColor(.gray)
                             Text(taskManager.remainingTime)
                                 .font(.headline)
                                 .fontWeight(.bold)
-                                .opacity(titleOpacity)
                         }
-                        .frame(maxWidth: .infinity)
-                        .offset(x: 25, y: 0)
+                        .opacity(titleOpacity)
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if !showTaskDetail {
@@ -69,17 +65,17 @@ struct IncompleteTaskView: View {
     var mainScrollView: some View {
         ScrollView(showsIndicators: false) {
             Group {
-                Text("Next Due Date in")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(.gray)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .scaleEffect(1 + scrollOffset * 0.001, anchor: .leading)
-                Text(taskManager.remainingTime)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .scaleEffect(1 + scrollOffset * 0.001, anchor: .leading)
+                Group {
+                    Text("Next Due Date in")
+                        .font(.title)
+                        .foregroundColor(.gray)
+                        .fontWeight(.bold)
+                    Text(taskManager.remainingTime)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .scaleEffect(1 + scrollOffset * 0.001, anchor: .leading)
 
                 ForEach (taskManager.incompleteTasks) { task in
                     let isFirst: Bool = taskManager.incompleteTasks.first == task
