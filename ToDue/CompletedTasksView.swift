@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct CompletedTasksView: View {
-    @EnvironmentObject var coreDM: CoreDataManager
+    @EnvironmentObject var taskManager: TaskManager
     var namespace: Namespace.ID
     @Binding var isPresented: Bool
-    @State private var taskArray = [Task]()
     
     var body: some View {
         ScrollView {
@@ -27,26 +26,13 @@ struct CompletedTasksView: View {
                     }
                 }
                 .padding(.top)
-                ForEach (taskArray) { task in
-                    TaskContainer(openDetailView: {}, namespace: namespace, task: task, showBackground: true, onUpdate: displayTasks)
+                ForEach (taskManager.completeTasks) { task in
+                    TaskContainer(namespace: namespace, task: task)
                 }
-                .animation(.spring(), value: taskArray)
+                .animation(.spring(), value: taskManager.completeTasks)
             }
             .padding(.horizontal)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color("Background"))
-        .onAppear(perform: displayTasks)
-    }
-    
-    func displayTasks() {
-        var array = coreDM.getAllTasks()
-        array = array.filter { task in
-            task.isCompleted
-        }
-        array.sort {
-            $0.date! > $1.date!
-        }
-        taskArray = array
     }
 }

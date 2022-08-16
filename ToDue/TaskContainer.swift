@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct TaskContainer: View {
-    @EnvironmentObject var coreDM: CoreDataManager
-    var openDetailView: () -> Void
+    @EnvironmentObject var taskManager: TaskManager
+    var openDetailView: () -> Void = {}
     var namespace: Namespace.ID
     var task: Task
-    var showBackground: Bool
-    var onUpdate: () -> Void
-    @State private var isCompleted = false
+    var showBackground: Bool = true
     
     var body: some View {
         let dateFormatter = DateFormatter()
@@ -41,56 +39,66 @@ struct TaskContainer: View {
                         .matchedGeometryEffect(id: "date_\(task.id!)", in: namespace)
                         .font(.headline)
                         .foregroundColor(.secondary)
-                        .padding(.horizontal)
-                        .padding(.top)
                     Text(task.taskDescription ?? "")
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
                         .font(showBackground ? .title : .title2)
                         .foregroundColor(Color("Text"))
-                        .padding(.horizontal)
-                        .padding(.bottom)
                     Spacer()
-                }
-                Spacer()
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.largeTitle)
-                    .frame(width: 50, height: 50)
-                    .padding(.trailing)
-                    .onTapGesture {
-                        Haptics.shared.play(.medium)
-                        markSelfAsCompleted()
+                    if taskManager.progress(for: task) == 1 && !task.isCompleted {
+                        Text("Complete this task by tapping the circle!")
+                            .font(.footnote)
                     }
+                }
+                .padding()
+                Spacer()
+                if task.isCompleted {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.largeTitle)
+                        .frame(width: 50, height: 50)
+                        .padding(.trailing)
+                        .onTapGesture {
+                            Haptics.shared.play(.medium)
+                            taskManager.toggleCompleted(task)
+                        }
+                } else {
+                    ProgressPie(progress: taskManager.progress(for: task))
+                        .background {
+                            Image(systemName: "circle")
+                                .font(.largeTitle)
+                                .onTapGesture {
+                                    Haptics.shared.play(.medium)
+                                    taskManager.toggleCompleted(task)
+                                }
+                        }
+                        .frame(width: 30, height: 30)
+                        .padding(.trailing)
+                }
+                
             }
         }
         .frame(minHeight: showBackground && !task.isCompleted ? 150 : 0)
         .contextMenu(menuItems: {
             Button(role: .cancel, action: {
-                markSelfAsCompleted()
+                taskManager.toggleCompleted(task)
             }, label: {
                 Label("Mark as \(task.isCompleted ? "uncompleted" : "completed")", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
             if !task.isCompleted {
                 Button(role: .cancel, action: {
+                    taskManager.currentTask = task
                     openDetailView()
                 }, label: {
                     Label("Edit", systemImage: "pencil")
                 })
             }
             Button(role: .destructive, action: {
-                coreDM.deleteTask(task: task)
-                onUpdate()
+                taskManager.deleteTask(task)
             }, label: {
                 Label("Delete", systemImage: "trash")
             })
         })
         .padding(.bottom)
-    }
-    
-    func markSelfAsCompleted() {
-        isCompleted = !task.isCompleted
-        coreDM.updateTask(task: task, isCompleted: isCompleted)
-        onUpdate()
     }
 }

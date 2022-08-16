@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddTaskView: View {
-    @EnvironmentObject var coreDM: CoreDataManager
+    @EnvironmentObject var taskManager: TaskManager
     @Binding var isPresented: Bool
     @State private var taskDescription = ""
     @State private var date = Date.now
@@ -58,8 +58,7 @@ struct AddTaskView: View {
                 Button{
                     isPresented = false
                     date = date.removeTimeStamp!
-                    print(date.formatted())
-                    coreDM.saveTask(taskDescription: taskDescription, date: date)
+                    taskManager.addNewTask(description: taskDescription, date: date)
                     taskDescription = ""
                     date = Date.now
                 } label: {

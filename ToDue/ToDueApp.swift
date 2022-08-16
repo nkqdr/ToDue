@@ -9,13 +9,13 @@ import SwiftUI
 
 @main
 struct ToDueApp: App {
-    @StateObject var coreDM = CoreDataManager.shared
+    @StateObject var taskManager = TaskManager()
     var body: some Scene {
         WindowGroup {
             ZStack {
                 ContentView()
             }
-            .environmentObject(coreDM)
+            .environmentObject(taskManager)
         }
     }
 }

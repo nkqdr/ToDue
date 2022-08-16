@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var coreDM: CoreDataManager
+    @EnvironmentObject var taskManager: TaskManager
     @Namespace var namespace
-    @State private var taskArray = [Task]()
     @State private var showAddingPage = false
     @State private var showCompletedPage = false
     @State private var showSettingsPage = false
-    @State private var remainingTime = ""
     @State private var scrollOffset = 0.0
     @State private var titleOpacity = 0.0
     @State private var showTaskDetail = false
@@ -27,7 +25,7 @@ struct ContentView: View {
                         mainScrollView
                         addTaskButton
                     } else {
-                        TaskDetailView(showDetail: $showTaskDetail, namespace: namespace, task: selectedTask!)
+                        TaskDetailView(showDetail: $showTaskDetail, namespace: namespace)
                             .background(Color("Background"))
                     }
                 }
@@ -40,7 +38,7 @@ struct ContentView: View {
                                 .font(.subheadline)
                                 .opacity(titleOpacity)
                                 .foregroundColor(.gray)
-                            Text(remainingTime)
+                            Text(taskManager.remainingTime)
                                 .font(.headline)
                                 .fontWeight(.bold)
                                 .opacity(titleOpacity)
@@ -81,16 +79,15 @@ struct ContentView: View {
                     }
                 }
                 .background(Color("Background"))
-                .onAppear(perform: displayTasks)
-                .sheet(isPresented: $showCompletedPage, onDismiss: displayTasks, content: {
+                .sheet(isPresented: $showCompletedPage) {
                     CompletedTasksView(namespace: namespace, isPresented: $showCompletedPage)
-                })
-                .sheet(isPresented: $showAddingPage, onDismiss: displayTasks, content: {
+                }
+                .sheet(isPresented: $showAddingPage) {
                     AddTaskView(isPresented: $showAddingPage)
-                })
-                .sheet(isPresented: $showSettingsPage, onDismiss: displayTasks, content: {
+                }
+                .sheet(isPresented: $showSettingsPage) {
                     SettingsView(isPresented: $showSettingsPage)
-                })
+                }
             }
             .navigationViewStyle(StackNavigationViewStyle())
     }
@@ -104,20 +101,21 @@ struct ContentView: View {
                     .foregroundColor(.gray)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .scaleEffect(1 + scrollOffset * 0.001, anchor: .leading)
-                Text(remainingTime)
+                Text(taskManager.remainingTime)
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .scaleEffect(1 + scrollOffset * 0.001, anchor: .leading)
 
-                ForEach (taskArray) { task in
-                    let index = taskArray.firstIndex(of: task)
-                    TaskContainer(openDetailView: {openTaskDetail(task: task, delay: 0.3)}, namespace: namespace, task: task, showBackground: index == 0, onUpdate: displayTasks)
+                ForEach (taskManager.incompleteTasks) { task in
+                    let isFirst: Bool = taskManager.incompleteTasks.first == task
+                    TaskContainer(openDetailView: {openTaskDetail(task: task, delay: 0.3)}, namespace: namespace, task: task, showBackground: isFirst)
                         .onTapGesture {
+                            taskManager.currentTask = task
                             openTaskDetail(task: task, delay: 0)
                         }
                 }
-                .animation(.spring(), value: taskArray)
+                .animation(.spring(), value: taskManager.incompleteTasks)
                 .background(
                     GeometryReader { proxy in
                         Color.clear.preference(key: ViewOffsetKey.self, value: proxy.frame(in: .named("scroll")).minY)
@@ -164,39 +162,6 @@ struct ContentView: View {
         withAnimation(.spring().delay(delay)) {
             showTaskDetail.toggle()
         }
-    }
-    
-    func getRemainingDays() {
-        if (taskArray.isEmpty) {
-            remainingTime = "No Tasks!"
-            return
-        }
-        let diff = Calendar.current.dateComponents([.year, .month, .day], from: Date.now.removeTimeStamp!, to: taskArray[0].date!)
-        var outputStr = ""
-        if (diff.year != nil && diff.year != 0) {
-            outputStr += "\(diff.year!) "
-            outputStr += diff.year == 1 ? "Year " : "Years "
-        }
-        if (diff.month != nil && diff.month != 0) {
-            outputStr += "\(diff.month!) "
-            outputStr += diff.month == 1 ? "Month " : "Months "
-        }
-        outputStr += "\(diff.day != nil ? diff.day! : 0) "
-        outputStr += diff.day != nil && diff.day! == 1 ? "Day" : "Days"
-        if (diff.day != nil && diff.month != nil && diff.year != nil && diff.day! < 0 && diff.month! <= 0 && diff.year! <= 0) {
-            remainingTime = "Task is past due!"
-        } else {
-            remainingTime = outputStr
-        }
-    }
-    
-    func displayTasks() {
-        var array = coreDM.getAllTasks()
-        array = array.filter { task in
-            !task.isCompleted
-        }
-        taskArray = array
-        getRemainingDays()
     }
 }
 

@@ -25,6 +25,7 @@ struct ProgressBar: View {
                     Capsule()
                         .fill(.blue)
                         .frame(maxWidth: proxy.size.width * progress)
+                        .animation(.easeInOut, value: progress)
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 10)
