@@ -20,62 +20,60 @@ struct TaskDetailView: View {
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .none
         let task = taskManager.currentTask!
-        return VStack {
-            ZStack {
-                backgroundRectangle
-                ScrollView {
-                    HStack {
-                        VStack {
-                            Text(dateFormatter.string(from: task.date ?? Date.now))
-                                .fontWeight(.semibold)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .matchedGeometryEffect(id: "date_\(task.id!)", in: namespace)
-                                .font(.headline)
-                                .foregroundColor(.secondary)
-                            Text(task.taskDescription ?? "")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
-                                .font(.title2)
-                                .foregroundColor(Color("Text"))
-                        }
-                        .padding()
-                        if showContents {
-                            Divider()
-                                .padding(.vertical)
-                            Button {
-                                // TODO: Implement edit functionality
-    //                            coreDM.removeAllSubTasks(from: task)
-                            } label: {
-                                Label("", systemImage: "pencil")
-                                    .scaleEffect(1.3)
-                            }
-                            .padding(.horizontal)
-                        }
+        return ZStack {
+            backgroundRectangle
+            ScrollView {
+                HStack {
+                    VStack {
+                        Text(dateFormatter.string(from: task.date ?? Date.now))
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .matchedGeometryEffect(id: "date_\(task.id!)", in: namespace)
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                        Text(task.taskDescription ?? "")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
+                            .font(.title2)
+                            .foregroundColor(Color("Text"))
                     }
-                    .padding(.bottom, 20)
+                    .padding()
                     if showContents {
-                        VStack (alignment: .leading) {
-                            if !taskManager.currentSubTaskArray.isEmpty {
-                                ProgressBar(progress: taskManager.progress(for: task))
-                                    .padding(.bottom, 20)
-                            }
-                            HStack (alignment: .bottom) {
-                                Text("Sub-Tasks:")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Button {
-                                    showAddSubtaskSheet.toggle()
-                                } label: {
-                                    Label("Add", systemImage: "plus")
-                                }
-                            }
-                            subTaskList
+                        Divider()
+                            .padding(.vertical)
+                        Button {
+                            // TODO: Implement edit functionality
+//                            coreDM.removeAllSubTasks(from: task)
+                        } label: {
+                            Label("", systemImage: "pencil")
+                                .scaleEffect(1.3)
                         }
-                        .padding()
+                        .padding(.horizontal)
                     }
+                }
+                .padding(.bottom, 20)
+                if showContents {
+                    VStack (alignment: .leading) {
+                        if !taskManager.currentSubTaskArray.isEmpty {
+                            ProgressBar(progress: taskManager.progress(for: task))
+                                .padding(.bottom, 20)
+                        }
+                        HStack (alignment: .bottom) {
+                            Text("Sub-Tasks:")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Button {
+                                showAddSubtaskSheet.toggle()
+                            } label: {
+                                Label("Add", systemImage: "plus")
+                            }
+                        }
+                        subTaskList
+                    }
+                    .padding()
                 }
             }
             .onAppear {
@@ -86,14 +84,6 @@ struct TaskDetailView: View {
             .sheet(isPresented: $showAddSubtaskSheet) {
                 AddSubtaskView(isPresented: $showAddSubtaskSheet)
                 // Once iOS 16 is out, use .presentationDetents here!
-            }
-            Button{
-                closeDetailView()
-            } label: {
-                Text("Close")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .padding()
             }
         }
     }

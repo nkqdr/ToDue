@@ -12,7 +12,7 @@ struct TaskContainer: View {
     var openDetailView: () -> Void = {}
     var namespace: Namespace.ID
     var task: Task
-    var showBackground: Bool = true
+    var showBackground: Bool = false
     
     var body: some View {
         let dateFormatter = DateFormatter()
@@ -23,8 +23,7 @@ struct TaskContainer: View {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(.green.opacity(0.5))
                     .matchedGeometryEffect(id: "background_\(task.id!)", in: namespace)
-            }
-            else if showBackground && !task.isCompleted {
+            } else if showBackground && !task.isCompleted {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(Color("Accent1"))
                     .matchedGeometryEffect(id: "background_\(task.id!)", in: namespace)

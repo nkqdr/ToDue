@@ -9,30 +9,23 @@ import SwiftUI
 
 struct CompletedTasksView: View {
     @EnvironmentObject var taskManager: TaskManager
-    var namespace: Namespace.ID
-    @Binding var isPresented: Bool
+    var taskNamespace: Namespace.ID
     
     var body: some View {
-        ScrollView {
-            Group {
-                HStack {
-                    Text("Completed tasks")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(Color("Text"))
-                    Spacer()
-                    Button("Close") {
-                        isPresented = false
+        NavigationView {
+            VStack {
+                ScrollView {
+                    ForEach (taskManager.completeTasks) { task in
+                        TaskContainer(namespace: taskNamespace, task: task)
                     }
+                    .animation(.spring(), value: taskManager.completeTasks)
                 }
-                .padding(.top)
-                ForEach (taskManager.completeTasks) { task in
-                    TaskContainer(namespace: namespace, task: task)
-                }
-                .animation(.spring(), value: taskManager.completeTasks)
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color("Background"))
+            .navigationTitle("Completed")
         }
-        .background(Color("Background"))
+        .navigationViewStyle(.stack)
     }
 }

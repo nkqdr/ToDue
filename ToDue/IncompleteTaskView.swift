@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  IncompleteTaskView.swift
 //  ToDue
 //
 //  Created by Niklas Kuder on 04.03.22.
@@ -7,25 +7,23 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct IncompleteTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
-    @Namespace var namespace
+    var taskNamespace: Namespace.ID
     @State private var showAddingPage = false
-    @State private var showCompletedPage = false
-    @State private var showSettingsPage = false
     @State private var scrollOffset = 0.0
     @State private var titleOpacity = 0.0
     @State private var showTaskDetail = false
-    @State private var selectedTask: Task? = nil
+//    @State private var selectedTask: Task? = nil
     
     var body: some View {
         NavigationView {
                 ZStack {
                     if (!showTaskDetail) {
                         mainScrollView
-                        addTaskButton
+                    
                     } else {
-                        TaskDetailView(showDetail: $showTaskDetail, namespace: namespace)
+                        TaskDetailView(showDetail: $showTaskDetail, namespace: taskNamespace)
                             .background(Color("Background"))
                     }
                 }
@@ -48,48 +46,26 @@ struct ContentView: View {
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if !showTaskDetail {
-                            Menu {
-                                Button(role: .cancel, action: {
-                                    showCompletedPage = true
-                                }, label: {
-                                    Label("Show Completed", systemImage: "rectangle.fill.badge.checkmark")
-                                })
-                                Button(role: .cancel, action: {
-                                    showSettingsPage = true
-                                }, label: {
-                                    Label("Settings", systemImage: "gear")
-                                })
-                                Button(role: .cancel, action: {
-                                    print("Give Feedback")
-                                }, label: {
-                                    Label("Give Feedback", systemImage: "star.circle")
-                                })
-                                // Disabled because it is not implemented yet.
-                                .disabled(true)
+                            Button {
+                                showAddingPage = true
                             } label: {
-                                Label("", systemImage: "ellipsis.circle").imageScale(.large)
+                                Image(systemName: "plus")
                             }
                         } else {
-//                            Button("Cancel") {
-//                                withAnimation(.spring()) {
-//                                    showTaskDetail = false
-//                                }
-//                            }
+                            Button{
+                                toggleTaskDetail(task: taskManager.currentTask!, delay: 0)
+                            } label: {
+                                Text("Close")
+                            }
                         }
                     }
                 }
                 .background(Color("Background"))
-                .sheet(isPresented: $showCompletedPage) {
-                    CompletedTasksView(namespace: namespace, isPresented: $showCompletedPage)
-                }
                 .sheet(isPresented: $showAddingPage) {
                     AddTaskView(isPresented: $showAddingPage)
                 }
-                .sheet(isPresented: $showSettingsPage) {
-                    SettingsView(isPresented: $showSettingsPage)
-                }
             }
-            .navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(.stack)
     }
     
     var mainScrollView: some View {
@@ -109,10 +85,10 @@ struct ContentView: View {
 
                 ForEach (taskManager.incompleteTasks) { task in
                     let isFirst: Bool = taskManager.incompleteTasks.first == task
-                    TaskContainer(openDetailView: {openTaskDetail(task: task, delay: 0.3)}, namespace: namespace, task: task, showBackground: isFirst)
+                    TaskContainer(openDetailView: {toggleTaskDetail(task: task, delay: 0.3)}, namespace: taskNamespace, task: task, showBackground: isFirst)
                         .onTapGesture {
                             taskManager.currentTask = task
-                            openTaskDetail(task: task, delay: 0)
+                            toggleTaskDetail(task: task, delay: 0)
                         }
                 }
                 .animation(.spring(), value: taskManager.incompleteTasks)
@@ -157,8 +133,10 @@ struct ContentView: View {
         }
     }
     
-    func openTaskDetail(task: Task, delay: Double) {
-        selectedTask = task
+    func toggleTaskDetail(task: Task, delay: Double) {
+        if !showTaskDetail {
+            taskManager.currentTask = task
+        }
         withAnimation(.spring().delay(delay)) {
             showTaskDetail.toggle()
         }
