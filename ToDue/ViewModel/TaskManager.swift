@@ -63,7 +63,7 @@ class TaskManager: ObservableObject {
     
     func progress(for task: Task) -> Double {
         if task.subTaskArray.isEmpty {
-            return -1
+            return task.isCompleted ? 1 : -1
         }
         let total: Int = task.subTaskArray.count
         let complete: Int = task.subTaskArray.filter {$0.isCompleted}.count

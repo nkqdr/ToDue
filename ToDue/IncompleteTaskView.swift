@@ -14,14 +14,12 @@ struct IncompleteTaskView: View {
     @State private var scrollOffset = 0.0
     @State private var titleOpacity = 0.0
     @State private var showTaskDetail = false
-//    @State private var selectedTask: Task? = nil
     
     var body: some View {
         NavigationView {
                 ZStack {
                     if (!showTaskDetail) {
                         mainScrollView
-                    
                     } else {
                         TaskDetailView(showDetail: $showTaskDetail, namespace: taskNamespace)
                             .background(Color("Background"))
@@ -69,7 +67,7 @@ struct IncompleteTaskView: View {
     }
     
     var mainScrollView: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             Group {
                 Text("Next Due Date in")
                     .font(.title)

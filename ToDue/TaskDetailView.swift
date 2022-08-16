@@ -72,6 +72,20 @@ struct TaskDetailView: View {
                             }
                         }
                         subTaskList
+                        Divider()
+                            .padding()
+                        HStack {
+                            Spacer()
+                            Button{
+                                withAnimation(.spring()) {
+                                    showDetail = false
+                                }
+                            } label: {
+                                Text("Close")
+                                    .padding()
+                            }
+                            Spacer()
+                        }
                     }
                     .padding()
                 }

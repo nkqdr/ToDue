@@ -14,13 +14,21 @@ struct CompletedTasksView: View {
     var body: some View {
         NavigationView {
             VStack {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
+                    HStack {
+                        Text("Total: \(taskManager.completeTasks.count)")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                        Spacer()
+                    }
+                    .foregroundColor(.green.opacity(0.8))
+                    .padding(.horizontal)
                     ForEach (taskManager.completeTasks) { task in
                         TaskContainer(namespace: taskNamespace, task: task)
                     }
+                    .padding(.horizontal)
                     .animation(.spring(), value: taskManager.completeTasks)
                 }
-                .padding(.horizontal)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("Background"))
