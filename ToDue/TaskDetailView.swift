@@ -36,7 +36,7 @@ struct TaskDetailView: View {
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
-                                .font(.title)
+                                .font(.title2)
                                 .foregroundColor(Color("Text"))
                         }
                         .padding()

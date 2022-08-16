@@ -19,7 +19,12 @@ struct TaskContainer: View {
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .none
         return ZStack {
-            if showBackground && !task.isCompleted {
+            if taskManager.progress(for: task) == 1 {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(.green.opacity(0.5))
+                    .matchedGeometryEffect(id: "background_\(task.id!)", in: namespace)
+            }
+            else if showBackground && !task.isCompleted {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(Color("Accent1"))
                     .matchedGeometryEffect(id: "background_\(task.id!)", in: namespace)
@@ -43,7 +48,7 @@ struct TaskContainer: View {
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
-                        .font(showBackground ? .title : .title2)
+                        .font(showBackground && !task.isCompleted ? .title2 : .title3)
                         .foregroundColor(Color("Text"))
                     Spacer()
                     if taskManager.progress(for: task) == 1 && !task.isCompleted {
@@ -56,7 +61,7 @@ struct TaskContainer: View {
                 if task.isCompleted {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.largeTitle)
-                        .frame(width: 50, height: 50)
+                        .frame(width: 30, height: 30)
                         .padding(.trailing)
                         .onTapGesture {
                             Haptics.shared.play(.medium)
@@ -65,15 +70,15 @@ struct TaskContainer: View {
                 } else {
                     ProgressPie(progress: taskManager.progress(for: task))
                         .background {
-                            Image(systemName: "circle")
-                                .font(.largeTitle)
-                                .onTapGesture {
-                                    Haptics.shared.play(.medium)
-                                    taskManager.toggleCompleted(task)
-                                }
+                            Circle()
+                                .strokeBorder(lineWidth: 2)
                         }
                         .frame(width: 30, height: 30)
                         .padding(.trailing)
+                        .onTapGesture {
+                            Haptics.shared.play(.medium)
+                            taskManager.toggleCompleted(task)
+                        }
                 }
                 
             }
