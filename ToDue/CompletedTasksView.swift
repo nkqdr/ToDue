@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CompletedTasksView: View {
     @EnvironmentObject var taskManager: TaskManager
-    var taskNamespace: Namespace.ID
     
     var body: some View {
         NavigationView {
@@ -24,7 +23,14 @@ struct CompletedTasksView: View {
                     .foregroundColor(.green.opacity(0.8))
                     .padding(.horizontal)
                     ForEach (taskManager.completeTasks) { task in
-                        TaskContainer(namespace: taskNamespace, task: task)
+                        NavigationLink(destination: {
+                            TaskDetailView(task: task)
+                        }, label: {
+                            TaskContainer(task: task)
+                        })
+                        .simultaneousGesture(TapGesture().onEnded {
+                            taskManager.currentTask = task
+                        })
                     }
                     .padding(.horizontal)
                     .animation(.spring(), value: taskManager.completeTasks)

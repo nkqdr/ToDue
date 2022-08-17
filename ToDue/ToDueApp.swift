@@ -10,20 +10,19 @@ import SwiftUI
 @main
 struct ToDueApp: App {
     @StateObject var taskManager = TaskManager()
-    @Namespace var taskNamespace
     
     var body: some Scene {
-        let tabBarAppearance = UITabBarAppearance.init(idiom: .unspecified)
+//        let tabBarAppearance = UITabBarAppearance.init(idiom: .unspecified)
 //        tabBarAppearance.configureWithTransparentBackground()
-        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+//        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         return WindowGroup {
             TabView {
-                IncompleteTaskView(taskNamespace: taskNamespace)
+                IncompleteTaskView()
                     .tabItem {
                         Image(systemName: "checklist")
                         Text("Overview")
                     }
-                CompletedTasksView(taskNamespace: taskNamespace)
+                CompletedTasksView()
                     .tabItem {
                         Image(systemName: "rectangle.fill.badge.checkmark")
                         Text("Completed")
