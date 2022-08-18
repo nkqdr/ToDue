@@ -10,24 +10,38 @@ import SwiftUI
 struct AddTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
     @Binding var isPresented: Bool
-    @State private var taskDescription = ""
-    @State private var date = Date.now
+    @State private var taskDescription: String
+    @State private var date: Date
     @State private var saveButtonDisabled = true
+    var task: Task?
+    
+    init(isPresented: Binding<Bool>) {
+        self._isPresented = isPresented
+        _taskDescription = State(initialValue: "")
+        _date = State(initialValue: Date.now)
+    }
+    init(isPresented: Binding<Bool>, task: Task) {
+        self._isPresented = isPresented
+        self.task = task
+        _taskDescription = State(initialValue: task.taskDescription ?? "")
+        _date = State(initialValue: task.date ?? Date.now)
+    }
     
     var body: some View {
+        let editMode = task != nil
         let dateRange: PartialRangeFrom<Date> = {
             let calendar = Calendar.current
-            let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date.now)
+            let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: editMode ? task!.date! : Date.now)
             return calendar.date(from: startComponents)!...
         }()
         return ScrollView {
             VStack(alignment: .leading) {
-                Text("Create a new Task!")
+                Text(editMode ? "Edit task" : "Create a new Task!")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Text"))
                     .padding(.bottom, 50)
-                Text("Enter a short description for this task:")
+                Text("Description:")
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Text"))
@@ -43,7 +57,7 @@ struct AddTaskView: View {
                     })
                     .padding(.horizontal)
                     .padding(.bottom, 40)
-                Text("Enter a due date for this task:")
+                Text("Due date:")
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(Color("Text"))
@@ -58,7 +72,11 @@ struct AddTaskView: View {
                 Button{
                     isPresented = false
                     date = date.removeTimeStamp!
-                    taskManager.addNewTask(description: taskDescription, date: date)
+                    if let newTask = task {
+                        taskManager.updateTask(newTask, description: taskDescription, date: date, isCompleted: newTask.isCompleted)
+                    } else {
+                        taskManager.addNewTask(description: taskDescription, date: date)
+                    }
                     taskDescription = ""
                     date = Date.now
                 } label: {

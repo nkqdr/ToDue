@@ -73,7 +73,7 @@ class TaskManager: ObservableObject {
     // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
-        coreDM.updateTask(task: task, isCompleted: !task.isCompleted)
+        coreDM.updateTask(task: task, description: task.taskDescription!, date: task.date!, isCompleted: !task.isCompleted)
         self.update()
     }
     
@@ -94,6 +94,14 @@ class TaskManager: ObservableObject {
     
     func addSubTask(to task: Task, description: String) {
         coreDM.addSubTask(to: task, subTaskTitle: description)
+        self.update()
+    }
+    
+    func updateTask(_ task: Task, description: String?, date: Date?, isCompleted: Bool?) {
+        let newComplete: Bool = isCompleted ?? task.isCompleted
+        let newDescription: String = description ?? task.taskDescription!
+        let newDueDate: Date = date ?? task.date!
+        coreDM.updateTask(task: task, description: newDescription, date: newDueDate, isCompleted: newComplete)
         self.update()
     }
 }

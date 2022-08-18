@@ -95,9 +95,11 @@ class CoreDataManager: ObservableObject {
         }
     }
     
-    func updateTask(task: Task, isCompleted: Bool) {
+    func updateTask(task: Task, description: String, date: Date, isCompleted: Bool) {
         persistentContainer.viewContext.performAndWait {
             task.isCompleted = isCompleted
+            task.taskDescription = description
+            task.date = date
             try? persistentContainer.viewContext.save()
         }
         WidgetCenter.shared.reloadAllTimelines()

@@ -10,6 +10,7 @@ import SwiftUI
 struct TaskDetailView: View {
     @EnvironmentObject var taskManager: TaskManager
     @State var showAddSubtaskSheet: Bool = false
+    @State var showEditTaskSheet: Bool = false
     var task: Task
     
     var body: some View {
@@ -35,8 +36,7 @@ struct TaskDetailView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    // TODO: Implement edit functionality
-    //                            coreDM.removeAllSubTasks(from: task)
+                    showEditTaskSheet = true
                 } label: {
                     Image(systemName: "pencil")
                 }
@@ -46,32 +46,37 @@ struct TaskDetailView: View {
             AddSubtaskView(isPresented: $showAddSubtaskSheet)
             // Once iOS 16 is out, use .presentationDetents here!
         }
+        .sheet(isPresented: $showEditTaskSheet) {
+            AddTaskView(isPresented: $showEditTaskSheet, task: task)
+        }
     }
     
     @ViewBuilder
     var subTasksList: some View {
-        let task = taskManager.currentTask!
-        ForEach(taskManager.currentSubTaskArray) { subTask in
-            HStack {
-                Text(subTask.title!)
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .padding(.leading)
-                Spacer()
-                Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.title)
-                    .frame(width: 50, height: 50)
-                    .padding(.trailing)
-                    .onTapGesture {
-                        Haptics.shared.play(.medium)
-                        task.objectWillChange.send()
-                        taskManager.toggleCompleted(subTask)
-                    }
+        if let task = taskManager.currentTask {
+            ForEach(taskManager.currentSubTaskArray) { subTask in
+                HStack {
+                    Text(subTask.title!)
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .padding(.leading)
+                    Spacer()
+                    Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
+                        .font(.title)
+                        .frame(width: 50, height: 50)
+                        .padding(.trailing)
+                        .onTapGesture {
+                            Haptics.shared.play(.medium)
+                            task.objectWillChange.send()
+                            taskManager.toggleCompleted(subTask)
+                        }
+                }
+                .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
+                .frame(maxWidth: .infinity, alignment: .leading)
+             
             }
-            .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
-            .frame(maxWidth: .infinity, alignment: .leading)
-         
         }
+        
     }
     
     var subTasksHeader: some View {

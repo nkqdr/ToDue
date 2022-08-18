@@ -10,7 +10,6 @@ import SwiftUI
 struct TaskContainer: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var showingAlert: Bool = false
-    var openDetailView: () -> Void = {}
     var task: Task
     var showBackground: Bool = false
     
@@ -62,14 +61,6 @@ struct TaskContainer: View {
             }, label: {
                 Label("Mark as \(task.isCompleted ? "uncompleted" : "completed")", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
-            if !task.isCompleted {
-                Button(role: .cancel, action: {
-                    taskManager.currentTask = task
-                    openDetailView()
-                }, label: {
-                    Label("Edit", systemImage: "pencil")
-                })
-            }
             Button(role: .destructive, action: {
                 showingAlert = true
             }, label: {
