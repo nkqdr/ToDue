@@ -4,8 +4,6 @@
 /* No comment provided by engineer. */
 "Add a subtask" = "Teilaufgabe hinzufügen";
 
-"Create a task" = "Aufgabe erstellen";
-
 /* No comment provided by engineer. */
 "Additional Notes: (Optional)" = "Zusätzliche Notizen";
 
@@ -23,6 +21,9 @@
 
 /* (No Comment) */
 "Completed" = "Abgeschlossen";
+
+/* (No Comment) */
+"Create a task" = "Aufgabe erstellen";
 
 /* No comment provided by engineer. */
 "Delete" = "Löschen";
@@ -60,7 +61,10 @@
 /* No comment provided by engineer. */
 "New task" = "Neue Aufgabe";
 
-/* No comment provided by engineer. */
+/* Localizable.strings
+  ToDue
+
+  Created by Niklas Kuder on 21.08.22. */
 "Next Due Date in" = "Nächste Aufgabe fällig in";
 
 /* No comment provided by engineer. */

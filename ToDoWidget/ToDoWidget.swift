@@ -45,7 +45,7 @@ struct Provider: TimelineProvider {
 
 struct SmallWidget : View {
     var entry: Provider.Entry
-    @Binding var remainingTime: String
+    var remainingTime: LocalizedStringKey
     
     var body: some View {
         VStack (alignment: .leading) {
@@ -56,6 +56,7 @@ struct SmallWidget : View {
             Text(remainingTime)
                 .font(.title2)
                 .fontWeight(.bold)
+            Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .padding()
@@ -64,7 +65,7 @@ struct SmallWidget : View {
 
 struct MediumWidget : View {
     var entry: Provider.Entry
-    @Binding var remainingTime: String
+    var remainingTime: LocalizedStringKey
 
     var body: some View {
         let dateFormatter = DateFormatter()
@@ -73,11 +74,11 @@ struct MediumWidget : View {
         return HStack {
             VStack (alignment: .leading) {
                 Text("Next Due Date in")
-                    .font(.title3)
+                    .font(.subheadline)
                     .fontWeight(.bold)
                     .foregroundColor(.gray)
                 Text(remainingTime)
-                    .font(.title2)
+                    .font(.headline)
                     .fontWeight(.bold)
                 Spacer()
             }
@@ -85,23 +86,10 @@ struct MediumWidget : View {
             .padding(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
             Spacer()
-            if (entry.task != nil) {
-            VStack (alignment: .leading) {
-                Text(dateFormatter.string(from: entry.task != nil ? entry.task!.date! : Date.now))
-                    .foregroundColor(Color("Text"))
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .padding(.vertical)
-                Text(entry.task != nil ? entry.task!.taskTitle! : "Task Title")
-                    .foregroundColor(Color("Text"))
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                Spacer()
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
-            .padding(.vertical)
-            .padding(.trailing)
+            VStack {
+                if let task = entry.task {
+                    TaskContainer(task: task, cornerRadius: 20, descriptionLineLimit: 4)
+                }
             }
         }
     }
@@ -109,7 +97,7 @@ struct MediumWidget : View {
 
 struct LargeWidget : View {
     var entry: Provider.Entry
-    @Binding var remainingTime: String
+    var remainingTime: LocalizedStringKey
     
     var body: some View {
         let dateFormatter = DateFormatter()
@@ -124,43 +112,11 @@ struct LargeWidget : View {
                 .font(.title2)
                 .fontWeight(.bold)
             Spacer()
-            if (entry.task != nil) {
-                VStack (alignment: .leading) {
-                    Text(dateFormatter.string(from: entry.task != nil ? entry.task!.date! : Date.now))
-                        .foregroundColor(Color("Text"))
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .padding([.horizontal, .top])
-                    Text(entry.task != nil ? entry.task!.taskTitle! : "Task Title")
-                        .foregroundColor(Color("Text"))
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                        .padding([.horizontal, .bottom])
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
-                .padding(.vertical)
-                .padding(.trailing)
+            if let task = entry.task {
+                TaskContainer(task: task)
             }
-            if (entry.secondTask != nil) {
-                VStack (alignment: .leading) {
-                   Text(dateFormatter.string(from: entry.secondTask != nil ? entry.secondTask!.date! : Date.now))
-                       .foregroundColor(Color("Text"))
-                       .font(.headline)
-                       .fontWeight(.bold)
-                       .padding([.horizontal, .top])
-                   Text(entry.secondTask != nil ? entry.secondTask!.taskTitle! : "Task Title")
-                       .foregroundColor(Color("Text"))
-                       .font(.subheadline)
-                       .fontWeight(.bold)
-                       .padding([.horizontal, .bottom])
-                   Spacer()
-               }
-               .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-               .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent2").opacity(0.3)))
-               .padding(.vertical)
-               .padding(.trailing)
+            if let task = entry.secondTask {
+                TaskContainer(task: task, backgroundColor: Color("Accent2").opacity(0.3))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
@@ -168,11 +124,48 @@ struct LargeWidget : View {
     }
 }
 
+struct TaskContainer: View {
+    var task: Task
+    var backgroundColor: Color = Color("Accent1")
+    var cornerRadius: CGFloat = 10
+    var descriptionLineLimit: Int = 2
+    
+    var body: some View {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+        return VStack (alignment: .leading) {
+            Text(dateFormatter.string(from: task.date!))
+                .foregroundColor(.secondary)
+                .font(.headline)
+                .fontWeight(.bold)
+                .padding(.vertical, 8)
+            Group {
+                Text(task.taskTitle!)
+                    .foregroundColor(Color("Text"))
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                if descriptionLineLimit > 0 {
+                    Text(task.taskDescription ?? "")
+                        .foregroundColor(.secondary)
+                        .font(.footnote)
+                        .fontWeight(.bold)
+                        .lineLimit(descriptionLineLimit)
+                }
+            }
+            .lineLimit(1)
+            Spacer()
+        }
+        .padding(.all, 8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: cornerRadius).fill(backgroundColor))
+    }
+}
+
 
 
 struct ToDoWidgetEntryView : View {
     var entry: Provider.Entry
-    @State private var remainingTime = "No Tasks!"
     @Environment(\.widgetFamily) var family
 
     
@@ -180,41 +173,39 @@ struct ToDoWidgetEntryView : View {
         Group {
             switch family {
             case .systemSmall:
-                SmallWidget(entry: entry, remainingTime: $remainingTime)
+                SmallWidget(entry: entry, remainingTime: remainingTimeLabel)
             case .systemMedium:
-                MediumWidget(entry: entry, remainingTime: $remainingTime)
+                MediumWidget(entry: entry, remainingTime: remainingTimeLabel)
             default:
-                LargeWidget(entry: entry, remainingTime: $remainingTime)
+                LargeWidget(entry: entry, remainingTime: remainingTimeLabel)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("Background"))
-        .onAppear(perform: {
-            getRemainingDays(task: entry.task)
-        })
     }
     
-    func getRemainingDays(task: Task?) {
-        if (task == nil) {
-            remainingTime = "No Tasks!"
-            return
-        }
-        let diff = Calendar.current.dateComponents([.year, .month, .day], from: Date.now.removeTimeStamp!, to: task!.date!)
-        var outputStr = ""
-        if (diff.year != nil && diff.year != 0) {
-            outputStr += "\(diff.year!) "
-            outputStr += diff.year == 1 ? "Year " : "Years "
-        }
-        if (diff.month != nil && diff.month != 0) {
-            outputStr += "\(diff.month!) "
-            outputStr += diff.month == 1 ? "Month " : "Months "
-        }
-        outputStr += "\(diff.day != nil ? diff.day! : 0) "
-        outputStr += diff.day != nil && diff.day! == 1 ? "Day" : "Days"
-        if (diff.day != nil && diff.month != nil && diff.year != nil && diff.day! < 0 && diff.month! <= 0 && diff.year! <= 0) {
-            remainingTime = "Task is past due!"
+    func remainingTime(_ givenTask: Task?) -> DateComponents {
+        if let task = givenTask {
+            let diff = Calendar.current.dateComponents([.month, .day], from: Date.now.removeTimeStamp!, to: task.date!)
+            return diff
         } else {
-            remainingTime = outputStr
+            return Calendar.current.dateComponents([], from: Date.distantPast)
+        }
+    }
+    
+    var remainingTimeLabel: LocalizedStringKey {
+        let remainingTime = remainingTime(entry.task)
+        if let months = remainingTime.month,
+            let days = remainingTime.day {
+            if months > 0 {
+                return "\(months) Months, \(days) Days"
+            } else if days >= 0 {
+                return "\(days) Days"
+            } else {
+                return "Task is past due!"
+            }
+        } else {
+            return "No tasks!"
         }
     }
 }
@@ -237,12 +228,12 @@ struct ToDoWidget_Preview: PreviewProvider {
     @ViewBuilder
     static var previews: some View {
         Group {
-//            ToDoWidgetEntryView(entry: TaskEntry(task: nil))
-//                .preferredColorScheme(.dark)
-//                .previewContext(WidgetPreviewContext(family: .systemSmall))
-//            ToDoWidgetEntryView(entry: TaskEntry(task: nil))
-//                .previewContext(WidgetPreviewContext(family: .systemMedium))
-//                .preferredColorScheme(.dark)
+            ToDoWidgetEntryView(entry: TaskEntry(task: nil, secondTask: nil))
+                .preferredColorScheme(.dark)
+                .previewContext(WidgetPreviewContext(family: .systemSmall))
+            ToDoWidgetEntryView(entry: TaskEntry(task: nil, secondTask: nil))
+                .preferredColorScheme(.dark)
+                .previewContext(WidgetPreviewContext(family: .systemMedium))
             ToDoWidgetEntryView(entry: TaskEntry(task: nil, secondTask: nil))
                 .previewContext(WidgetPreviewContext(family: .systemLarge))
         }
