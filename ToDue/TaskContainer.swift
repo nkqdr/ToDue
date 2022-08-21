@@ -26,11 +26,17 @@ struct TaskContainer: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.headline)
                         .foregroundColor(.secondary)
-                    Text(task.taskDescription ?? "")
+                    Text(task.taskTitle ?? "")
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(showBackground && !task.isCompleted ? .title2 : .title3)
                         .foregroundColor(Color("Text"))
+                    if let desc = task.taskDescription {
+                        Text(desc)
+                            .foregroundColor(.secondary)
+                            .font(.headline)
+                            .lineLimit(1)
+                    }
                     Spacer()
                     if taskManager.progress(for: task) == 1 && !task.isCompleted {
                         Text("Complete this task by tapping the circle!")
@@ -44,7 +50,7 @@ struct TaskContainer: View {
                 progressCircle
             }
         }
-        .frame(minHeight: showBackground && !task.isCompleted ? 150 : 0)
+        .frame(minHeight: showBackground && !task.isCompleted ? DrawingConstants.topTaskMinHeight : 0)
         .alert(isPresented: $showingAlert) {
             Alert(
                 title: Text("Are you sure you want to delete this?"),
@@ -73,16 +79,15 @@ struct TaskContainer: View {
     @ViewBuilder
     var containerBackground: some View {
         if taskManager.progress(for: task) == 1 {
-            RoundedRectangle(cornerRadius: 15)
-                .fill(.green.opacity(0.5))
+            RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
+                .fill(DrawingConstants.completeTaskBackgroundColor)
         } else if showBackground && !task.isCompleted {
-            RoundedRectangle(cornerRadius: 15)
-                .fill(Color("Accent1"))
+            RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
+                .fill(DrawingConstants.topTaskBackgroundColor)
         } else {
-            RoundedRectangle(cornerRadius: 15)
+            RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
             .fill(
-                Color("Accent2")
-                    .opacity(0.3)
+                DrawingConstants.defaultTaskBackgroundColor
             )
         }
     }
@@ -92,7 +97,7 @@ struct TaskContainer: View {
         if task.isCompleted {
             Image(systemName: "checkmark.circle.fill")
                 .font(.largeTitle)
-                .frame(width: 30, height: 30)
+                .frame(width: DrawingConstants.progressCircleSize, height: DrawingConstants.progressCircleSize)
                 .foregroundColor(Color("Text"))
                 .padding(.trailing)
                 .onTapGesture {
@@ -102,18 +107,28 @@ struct TaskContainer: View {
         } else {
             ZStack {
                 Circle()
-                    .foregroundColor(showBackground && !task.isCompleted ? Color("Accent1") : Color("Accent2").opacity(0.3))
+                    .foregroundColor(showBackground && !task.isCompleted ? DrawingConstants.topTaskBackgroundColor : DrawingConstants.defaultTaskBackgroundColor)
                 Circle()
-                    .strokeBorder(lineWidth: 2)
+                    .strokeBorder(lineWidth: DrawingConstants.progressCircleStrokeWidth)
                 ProgressPie(progress: taskManager.progress(for: task))
             }
             .foregroundColor(Color("Text"))
-            .frame(width: 30, height: 30)
+            .frame(width: DrawingConstants.progressCircleSize, height: DrawingConstants.progressCircleSize)
             .padding(.trailing)
             .onTapGesture {
                 Haptics.shared.play(.medium)
                 taskManager.toggleCompleted(task)
             }
         }
+    }
+    
+    private struct DrawingConstants {
+        static let progressCircleSize: CGFloat = 30
+        static let topTaskBackgroundColor: Color = Color("Accent1")
+        static let defaultTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
+        static let completeTaskBackgroundColor: Color = Color.green.opacity(0.5)
+        static let topTaskMinHeight: CGFloat = 150
+        static let containerCornerRadius: CGFloat = 12
+        static let progressCircleStrokeWidth: CGFloat = 2
     }
 }

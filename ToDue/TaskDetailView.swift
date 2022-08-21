@@ -2,118 +2,72 @@
 //  TaskDetailView.swift
 //  ToDue
 //
-//  Created by Niklas Kuder on 06.03.22.
+//  Created by Niklas Kuder on 17.08.22.
 //
 
 import SwiftUI
 
 struct TaskDetailView: View {
     @EnvironmentObject var taskManager: TaskManager
-    @Binding var showDetail: Bool
-    // Used for a fade-in effect.
-    @State var showContents: Bool = false
     @State var showAddSubtaskSheet: Bool = false
-    var namespace: Namespace.ID
+    @State var showEditTaskSheet: Bool = false
+    @State private var showingAlert: Bool = false
+    @State private var subTaskToDelete: SubTask?
+    var task: Task
     
     var body: some View {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        let task = taskManager.currentTask!
-        return ZStack {
-            backgroundRectangle
-            ScrollView {
-                HStack {
-                    VStack {
-                        Text(dateFormatter.string(from: task.date ?? Date.now))
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .matchedGeometryEffect(id: "date_\(task.id!)", in: namespace)
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                        Text(task.taskDescription ?? "")
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .matchedGeometryEffect(id: "description_\(task.id!)", in: namespace)
-                            .font(.title2)
-                            .foregroundColor(Color("Text"))
-                    }
-                    .padding()
-                    if showContents {
-                        Divider()
-                            .padding(.vertical)
-                        Button {
-                            // TODO: Implement edit functionality
-//                            coreDM.removeAllSubTasks(from: task)
-                        } label: {
-                            Label("", systemImage: "pencil")
-                                .scaleEffect(1.3)
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-                .padding(.bottom, 20)
-                if showContents {
-                    VStack (alignment: .leading) {
-                        if !taskManager.currentSubTaskArray.isEmpty {
-                            ProgressBar(progress: taskManager.progress(for: task))
-                                .padding(.bottom, 20)
-                        }
-                        HStack (alignment: .bottom) {
-                            Text("Sub-Tasks:")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Button {
-                                showAddSubtaskSheet.toggle()
-                            } label: {
-                                Label("Add", systemImage: "plus")
-                            }
-                        }
-                        subTaskList
-                        Divider()
-                            .padding()
-                        HStack {
-                            Spacer()
-                            Button{
-                                withAnimation(.spring()) {
-                                    showDetail = false
+        VStack(alignment: .leading) {
+            ScrollView(showsIndicators: false) {
+                Group {
+                    dueDate
+                    taskDesc
+                    if !taskManager.currentSubTaskArray.isEmpty {
+                        ProgressBar(progress: taskManager.progress(for: task))
+                            .padding(.bottom, DrawingConstants.progressBarPadding)
+                        subTasksHeader
+                        subTasksList
+                        Spacer(minLength: DrawingConstants.scrollBottomPadding)
+                    } else {
+                        GeometryReader { proxy in
+                            VStack(alignment: .center) {
+                                Spacer(minLength: UIScreen.main.bounds.size.height / 3)
+                                Button("Add a subtask") {
+                                    showAddSubtaskSheet.toggle()
                                 }
-                            } label: {
-                                Text("Close")
-                                    .padding()
+                                .buttonStyle(.bordered)
                             }
-                            Spacer()
+                            .frame(maxWidth: .infinity)
                         }
                     }
-                    .padding()
+                }
+                .padding(.horizontal)
+            }
+            .background(Color("Background"))
+        }
+        .frame(maxWidth: .infinity)
+        .navigationTitle(task.taskTitle ?? "")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    showEditTaskSheet = true
+                } label: {
+                    Image(systemName: "pencil")
                 }
             }
-            .onAppear {
-                withAnimation(.easeInOut.delay(0.3)) {
-                    showContents = true
-                }
-            }
-            .sheet(isPresented: $showAddSubtaskSheet) {
-                AddSubtaskView(isPresented: $showAddSubtaskSheet)
-                // Once iOS 16 is out, use .presentationDetents here!
-            }
+        }
+        .sheet(isPresented: $showAddSubtaskSheet) {
+            AddSubtaskView(isPresented: $showAddSubtaskSheet)
+            // TODO: Once iOS 16 is out, use .presentationDetents here!
+        }
+        .sheet(isPresented: $showEditTaskSheet) {
+            AddTaskView(isPresented: $showEditTaskSheet, task: task)
         }
     }
     
-    var backgroundRectangle: some View {
-        let task = taskManager.currentTask!
-        return RoundedRectangle(cornerRadius: 15)
-            .fill(.ultraThinMaterial)
-            .matchedGeometryEffect(id: "background_\(task.id!)", in: namespace)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .ignoresSafeArea()
-    }
-    
-    var subTaskList: some View {
-        let task = taskManager.currentTask!
-        return ForEach (taskManager.currentSubTaskArray) { subTask in
+    @ViewBuilder
+    var subTasksList: some View {
+        ForEach(taskManager.currentSubTaskArray) { subTask in
             HStack {
                 Text(subTask.title!)
                     .font(.title3)
@@ -122,22 +76,93 @@ struct TaskDetailView: View {
                 Spacer()
                 Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.title)
-                    .frame(width: 50, height: 50)
+                    .frame(width: DrawingConstants.completeIndicatorSize, height: DrawingConstants.completeIndicatorSize)
                     .padding(.trailing)
                     .onTapGesture {
                         Haptics.shared.play(.medium)
-                        task.objectWillChange.send()
                         taskManager.toggleCompleted(subTask)
                     }
             }
-            .background(RoundedRectangle(cornerRadius: 15).fill(Color("Accent1")))
+            .background(RoundedRectangle(cornerRadius: DrawingConstants.subTaskCornerRadius).fill(DrawingConstants.subTaskBackgroundColor))
             .frame(maxWidth: .infinity, alignment: .leading)
+            .contextMenu(menuItems: {
+                Button(role: .cancel, action: {
+                    taskManager.toggleCompleted(subTask)
+                }, label: {
+                    Label("Mark as \(subTask.isCompleted ? "uncompleted" : "completed")", systemImage: subTask.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
+                })
+                Button(role: .destructive, action: {
+                    subTaskToDelete = subTask
+                    showingAlert = true
+                }, label: {
+                    Label("Delete", systemImage: "trash")
+                })
+            })
+        }
+        .alert(isPresented: $showingAlert) {
+            Alert(
+                title: Text("Are you sure you want to delete this?"),
+                message: Text("There is no undo"),
+                primaryButton: .destructive(Text("Delete")) {
+                    if let subTask = subTaskToDelete {
+                        taskManager.deleteTask(subTask)
+                    }
+                },
+                secondaryButton: .cancel()
+            )
         }
     }
     
-    private func closeDetailView() {
-        withAnimation(.spring()) {
-            showDetail.toggle()
+    var subTasksHeader: some View {
+        HStack (alignment: .bottom) {
+            Text("Sub-Tasks:")
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.secondary)
+            Spacer()
+            Button {
+                showAddSubtaskSheet.toggle()
+            } label: {
+                Label("Add", systemImage: "plus")
+            }
         }
+    }
+    
+    var dueDate: some View {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+        
+        return Text("Due: " + dateFormatter.string(from: task.date ?? Date.now))
+            .fontWeight(.semibold)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .font(.headline)
+            .foregroundColor(.secondary)
+            .padding(.bottom, DrawingConstants.dueDatePadding)
+    }
+    
+    @ViewBuilder
+    var taskDesc: some View {
+        if let desc = task.taskDescription {
+            if desc != "" {
+                VStack(alignment: .leading) {
+                    Text("Notes:")
+                        .font(.headline)
+                    Text(desc)
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+    
+    private struct DrawingConstants {
+        static let dueDatePadding: CGFloat = 20
+        static let subTaskCornerRadius: CGFloat = 10
+        static let completeIndicatorSize: CGFloat = 50
+        static let scrollBottomPadding: CGFloat = 50
+        static let progressBarPadding: CGFloat = 20
+        static let subTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
     }
 }

@@ -15,6 +15,7 @@ struct ToDueApp: App {
 //        let tabBarAppearance = UITabBarAppearance.init(idiom: .unspecified)
 //        tabBarAppearance.configureWithTransparentBackground()
 //        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        UITableView.appearance().backgroundColor = .clear
         return WindowGroup {
             TabView {
                 IncompleteTaskView()

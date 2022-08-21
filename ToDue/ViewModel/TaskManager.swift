@@ -73,7 +73,7 @@ class TaskManager: ObservableObject {
     // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
-        coreDM.updateTask(task: task, description: task.taskDescription!, date: task.date!, isCompleted: !task.isCompleted)
+        coreDM.updateTask(task: task, description: task.taskDescription!, title: task.taskTitle!, date: task.date!, isCompleted: !task.isCompleted)
         self.update()
     }
     
@@ -87,8 +87,14 @@ class TaskManager: ObservableObject {
         self.update()
     }
     
-    func addNewTask(description: String, date: Date) {
-        coreDM.saveTask(taskDescription: description, date: date)
+    func deleteTask(_ subTask: SubTask) {
+        print("Deleting \(subTask)")
+        coreDM.deleteSubTask(subTask: subTask)
+        self.update()
+    }
+    
+    func addNewTask(description: String, title: String, date: Date) {
+        coreDM.saveTask(taskDescription: description, taskTitle: title, date: date)
         self.update()
     }
     
@@ -97,11 +103,12 @@ class TaskManager: ObservableObject {
         self.update()
     }
     
-    func updateTask(_ task: Task, description: String?, date: Date?, isCompleted: Bool?) {
+    func updateTask(_ task: Task, description: String?, title: String?, date: Date?, isCompleted: Bool?) {
         let newComplete: Bool = isCompleted ?? task.isCompleted
         let newDescription: String = description ?? task.taskDescription!
+        let newTitle: String = title ?? task.taskTitle!
         let newDueDate: Date = date ?? task.date!
-        coreDM.updateTask(task: task, description: newDescription, date: newDueDate, isCompleted: newComplete)
+        coreDM.updateTask(task: task, description: newDescription, title: newTitle, date: newDueDate, isCompleted: newComplete)
         self.update()
     }
 }

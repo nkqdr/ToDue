@@ -38,6 +38,7 @@ class CoreDataManager: ObservableObject {
         subTask.title = subTaskTitle
         subTask.id = UUID()
         subTask.isCompleted = false
+        subTask.createdAt = Date.now
         
         task.addToSubTasks(subTask)
         do {
@@ -47,10 +48,11 @@ class CoreDataManager: ObservableObject {
         }
     }
     
-    func saveTask(taskDescription: String, date: Date) {
+    func saveTask(taskDescription: String, taskTitle: String, date: Date) {
         let task = Task(context: persistentContainer.viewContext)
         task.date = date
         task.taskDescription = taskDescription
+        task.taskTitle = taskTitle
         task.isCompleted = false
         task.id = UUID()
         task.subTasks = []
@@ -95,11 +97,12 @@ class CoreDataManager: ObservableObject {
         }
     }
     
-    func updateTask(task: Task, description: String, date: Date, isCompleted: Bool) {
+    func updateTask(task: Task, description: String, title: String, date: Date, isCompleted: Bool) {
         persistentContainer.viewContext.performAndWait {
             task.isCompleted = isCompleted
             task.taskDescription = description
             task.date = date
+            task.taskTitle = title
             try? persistentContainer.viewContext.save()
         }
         WidgetCenter.shared.reloadAllTimelines()
