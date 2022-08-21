@@ -22,7 +22,10 @@ extension Task {
         let set = subTasks as? Set<SubTask> ?? []
         
         return set.sorted {
-            $0.wrappedCreatedAt < $1.wrappedCreatedAt
+            if $0.wrappedCreatedAt == $1.wrappedCreatedAt {
+                return $0.wrappedTitle < $1.wrappedTitle
+            }
+            return $0.wrappedCreatedAt < $1.wrappedCreatedAt
         }
     }
 }
