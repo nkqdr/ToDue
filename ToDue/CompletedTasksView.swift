@@ -15,7 +15,7 @@ struct CompletedTasksView: View {
             VStack {
                 ScrollView(showsIndicators: false) {
                     HStack {
-                        Text("Total: \(taskManager.completeTasks.count)")
+                        Text("Total: \(taskManager.completeTasks.count)", comment: "Label that displays how many tasks have been completed in total.")
                             .font(.title3)
                             .fontWeight(.bold)
                         Spacer()

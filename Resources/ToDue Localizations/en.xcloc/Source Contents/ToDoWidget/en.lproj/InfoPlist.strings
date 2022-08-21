@@ -1,0 +1,6 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "ToDoWidget";
+/* Bundle name */
+"CFBundleName" = "ToDoWidgetExtension";
+/* Copyright (human-readable) */
+"NSHumanReadableCopyright" = "";

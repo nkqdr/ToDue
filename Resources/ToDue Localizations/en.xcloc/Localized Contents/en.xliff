@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Resources/en.lproj/Localizable.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="13.4.1" build-num="13F100"/>
+    </header>
+    <body>
+      <trans-unit id="%@%%" xml:space="preserve">
+        <source>%@%%</source>
+        <target>%@%%</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="%lld Days" translate="no" xml:space="preserve">
+        <source>%lld Days</source>
+        <target>%lld Days</target>
+        <note>No comment provided by engineer. (Key in .stringsdict)</note>
+      </trans-unit>
+      <trans-unit id="%lld Months %lld Days" translate="no" xml:space="preserve">
+        <source>%lld Months %lld Days</source>
+        <target>%lld Months %lld Days</target>
+        <note>No comment provided by engineer. (Key in .stringsdict)</note>
+      </trans-unit>
+      <trans-unit id="Add" xml:space="preserve">
+        <source>Add</source>
+        <target>Add</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Add a subtask" xml:space="preserve">
+        <source>Add a subtask</source>
+        <target>Add a subtask</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Additional Notes: (Optional)" xml:space="preserve">
+        <source>Additional Notes: (Optional)</source>
+        <target>Additional Notes: (Optional)</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="App Theme" xml:space="preserve">
+        <source>App Theme</source>
+        <target>App Theme</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Appearance" xml:space="preserve">
+        <source>Appearance</source>
+        <target>Appearance</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Are you sure you want to delete this?" xml:space="preserve">
+        <source>Are you sure you want to delete this?</source>
+        <target>Are you sure you want to delete this?</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Complete this task by tapping the circle!" xml:space="preserve">
+        <source>Complete this task by tapping the circle!</source>
+        <target>Complete this task by tapping the circle!</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Completed" xml:space="preserve">
+        <source>Completed</source>
+        <target>Completed</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Delete" xml:space="preserve">
+        <source>Delete</source>
+        <target>Delete</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Description..." xml:space="preserve">
+        <source>Description...</source>
+        <target>Description...</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Due date:" xml:space="preserve">
+        <source>Due date:</source>
+        <target>Due date:</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Due: %@" xml:space="preserve">
+        <source>Due: %@</source>
+        <target>Due: %@</target>
+        <note>Label in detail view that displays when this task is due.</note>
+      </trans-unit>
+      <trans-unit id="Edit task" xml:space="preserve">
+        <source>Edit task</source>
+        <target>Edit task</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Enter a short description:" xml:space="preserve">
+        <source>Enter a short description:</source>
+        <target>Enter a short description:</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="General" xml:space="preserve">
+        <source>General</source>
+        <target>General</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Help" xml:space="preserve">
+        <source>Help</source>
+        <target>Help</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Made in Karlsruhe with ♡" xml:space="preserve">
+        <source>Made in Karlsruhe with ♡</source>
+        <target>Made in Karlsruhe with ♡</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Mark as complete" xml:space="preserve">
+        <source>Mark as complete</source>
+        <target>Mark as complete</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Mark as incomplete" xml:space="preserve">
+        <source>Mark as incomplete</source>
+        <target>Mark as incomplete</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="New task" xml:space="preserve">
+        <source>New task</source>
+        <target>New task</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Next Due Date in" xml:space="preserve">
+        <source>Next Due Date in</source>
+        <target>Next Due Date in</target>
+        <note>Localizable.strings
+  ToDue
+
+  Created by Niklas Kuder on 21.08.22.</note>
+      </trans-unit>
+      <trans-unit id="No tasks!" xml:space="preserve">
+        <source>No tasks!</source>
+        <target>No tasks!</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Notes:" xml:space="preserve">
+        <source>Notes:</source>
+        <target>Notes:</target>
+        <note>Headline for the notes section in the task detail view.</note>
+      </trans-unit>
+      <trans-unit id="Overview" xml:space="preserve">
+        <source>Overview</source>
+        <target>Overview</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Save" xml:space="preserve">
+        <source>Save</source>
+        <target>Save</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Select Theme" xml:space="preserve">
+        <source>Select Theme</source>
+        <target>Select Theme</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Settings" xml:space="preserve">
+        <source>Settings</source>
+        <target>Settings</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="Some help" xml:space="preserve">
+        <source>Some help</source>
+        <target>Some help</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Something" xml:space="preserve">
+        <source>Something</source>
+        <target>Something</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Something else" xml:space="preserve">
+        <source>Something else</source>
+        <target>Something else</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Sub-Tasks:" xml:space="preserve">
+        <source>Sub-Tasks:</source>
+        <target>Sub-Tasks:</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Task is past due!" xml:space="preserve">
+        <source>Task is past due!</source>
+        <target>Task is past due!</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="There is no undo" xml:space="preserve">
+        <source>There is no undo</source>
+        <target>There is no undo</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Title:" xml:space="preserve">
+        <source>Title:</source>
+        <target>Title:</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Total: %lld" xml:space="preserve">
+        <source>Total: %lld</source>
+        <target>Total: %lld</target>
+        <note>Label that displays how many tasks have been completed in total.</note>
+      </trans-unit>
+      <trans-unit id="Type here..." xml:space="preserve">
+        <source>Type here...</source>
+        <target>Type here...</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Resources/en.lproj/Localizable.stringsdict" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="13.4.1" build-num="13F100"/>
+    </header>
+    <body>
+      <trans-unit id="/%lld Days:dict/Days:dict/one:dict/:string" xml:space="preserve">
+        <source>%lld Day</source>
+        <target>%lld Day</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Days:dict/Days:dict/other:dict/:string" xml:space="preserve">
+        <source>%lld Days</source>
+        <target>%lld Days</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Days:dict/Days:dict/zero:dict/:string" xml:space="preserve">
+        <source>%lld Days</source>
+        <target>%lld Days</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Days:dict/NSStringLocalizedFormatKey:dict/:string" xml:space="preserve">
+        <source>%#@Days@</source>
+        <target>%#@Days@</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Months %lld Days:dict/Days:dict/one:dict/:string" xml:space="preserve">
+        <source>%lld Day</source>
+        <target>%lld Day</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Months %lld Days:dict/Days:dict/other:dict/:string" xml:space="preserve">
+        <source>%lld Days</source>
+        <target>%lld Days</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Months %lld Days:dict/Days:dict/zero:dict/:string" xml:space="preserve">
+        <source>%lld Days</source>
+        <target>%lld Days</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Months %lld Days:dict/Months:dict/one:dict/:string" xml:space="preserve">
+        <source>%lld Month</source>
+        <target>%lld Month</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Months %lld Days:dict/Months:dict/other:dict/:string" xml:space="preserve">
+        <source>%lld Months</source>
+        <target>%lld Months</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Months %lld Days:dict/Months:dict/zero:dict/:string" xml:space="preserve">
+        <source>%lld Months</source>
+        <target>%lld Months</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/%lld Months %lld Days:dict/NSStringLocalizedFormatKey:dict/:string" xml:space="preserve">
+        <source>%#@Months@ %#@Days@</source>
+        <target>%#@Months@ %#@Days@</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="ToDoWidget/en.lproj/InfoPlist.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="13.4.1" build-num="13F100"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleDisplayName" xml:space="preserve">
+        <source>ToDoWidget</source>
+        <target>ToDoWidget</target>
+        <note>Bundle display name</note>
+      </trans-unit>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>ToDoWidgetExtension</source>
+        <target>ToDoWidgetExtension</target>
+        <note>Bundle name</note>
+      </trans-unit>
+      <trans-unit id="NSHumanReadableCopyright" xml:space="preserve">
+        <source/>
+        <target/>
+        <note>Copyright (human-readable)</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="ToDoWidget/en.lproj/Localizable.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="13.4.1" build-num="13F100"/>
+    </header>
+    <body>
+      <trans-unit id="Always have your next task on your home screen." xml:space="preserve">
+        <source>Always have your next task on your home screen.</source>
+        <target>Always have your next task on your home screen.</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Next Due Date in" xml:space="preserve">
+        <source>Next Due Date in</source>
+        <target>Next Due Date in</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Next Task Widget" xml:space="preserve">
+        <source>Next Task Widget</source>
+        <target>Next Task Widget</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="ToDue/en.lproj/InfoPlist.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="13.4.1" build-num="13F100"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>ToDue</source>
+        <target>ToDue</target>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

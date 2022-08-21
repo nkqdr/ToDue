@@ -38,27 +38,12 @@ class TaskManager: ObservableObject {
         self.taskArray = coreDM.getAllTasks().sorted(by: { $0.date! < $1.date! })
     }
     
-    var remainingTime: String {
+    var remainingTime: DateComponents {
         if (incompleteTasks.isEmpty) {
-            return "No Tasks!"
+            return Calendar.current.dateComponents([], from: Date.distantPast)
         }
-        let diff = Calendar.current.dateComponents([.year, .month, .day], from: Date.now.removeTimeStamp!, to: incompleteTasks[0].date!)
-        var outputStr = ""
-        if (diff.year != nil && diff.year != 0) {
-            outputStr += "\(diff.year!) "
-            outputStr += diff.year == 1 ? "Year " : "Years "
-        }
-        if (diff.month != nil && diff.month != 0) {
-            outputStr += "\(diff.month!) "
-            outputStr += diff.month == 1 ? "Month " : "Months "
-        }
-        outputStr += "\(diff.day != nil ? diff.day! : 0) "
-        outputStr += diff.day != nil && diff.day! == 1 ? "Day" : "Days"
-        if (diff.day != nil && diff.month != nil && diff.year != nil && diff.day! < 0 && diff.month! <= 0 && diff.year! <= 0) {
-            return "Task is past due!"
-        } else {
-            return outputStr
-        }
+        let diff = Calendar.current.dateComponents([.month, .day], from: Date.now.removeTimeStamp!, to: incompleteTasks[0].date!)
+        return diff
     }
     
     func progress(for task: Task) -> Double {

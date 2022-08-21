@@ -89,7 +89,7 @@ struct TaskDetailView: View {
                 Button(role: .cancel, action: {
                     taskManager.toggleCompleted(subTask)
                 }, label: {
-                    Label("Mark as \(subTask.isCompleted ? "uncompleted" : "completed")", systemImage: subTask.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
+                    Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
                 })
                 Button(role: .destructive, action: {
                     subTaskToDelete = subTask
@@ -133,7 +133,7 @@ struct TaskDetailView: View {
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .none
         
-        return Text("Due: " + dateFormatter.string(from: task.date ?? Date.now))
+        return Text("Due: \(dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
             .fontWeight(.semibold)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.headline)
@@ -146,7 +146,7 @@ struct TaskDetailView: View {
         if let desc = task.taskDescription {
             if desc != "" {
                 VStack(alignment: .leading) {
-                    Text("Notes:")
+                    Text("Notes:", comment: "Headline for the notes section in the task detail view.")
                         .font(.headline)
                     Text(desc)
                         .foregroundColor(.secondary)

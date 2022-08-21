@@ -25,9 +25,8 @@ struct IncompleteTaskView: View {
                             Text("Next Due Date in")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
-                            Text(taskManager.remainingTime)
-                                .font(.headline)
-                                .fontWeight(.bold)
+                            remainingTimeLabel
+                                .font(.headline.weight(.bold))
                         }
                         .opacity(titleOpacity)
                     }
@@ -50,17 +49,32 @@ struct IncompleteTaskView: View {
     var mainScrollView: some View {
         ScrollView(showsIndicators: false) {
             Group {
-                Text("Next Due Date in")
-                    .font(.title)
-                    .foregroundColor(.gray)
-                    .fontWeight(.bold)
-                Text(taskManager.remainingTime)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                if taskManager.remainingTime.month != nil &&
+                   taskManager.remainingTime.day != nil {
+                    Text("Next Due Date in")
+                        .font(.title2)
+                        .foregroundColor(.gray)
+                        .fontWeight(.bold)
+                }
+                remainingTimeLabel
+                    .font(.title.weight(.bold))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .scaleEffect(1 + scrollOffset * 0.001, anchor: .leading)
             .padding(.horizontal)
+            
+            if taskManager.incompleteTasks.isEmpty {
+                GeometryReader { proxy in
+                    VStack(alignment: .center) {
+                        Spacer(minLength: UIScreen.main.bounds.size.height / 3)
+                        Button("Create a task") {
+                            showAddingPage.toggle()
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+            }
 
             ForEach (taskManager.incompleteTasks) { task in
                 let isFirst: Bool = taskManager.incompleteTasks.first == task
@@ -95,6 +109,22 @@ struct IncompleteTaskView: View {
             .padding(.horizontal)
         }
         .coordinateSpace(name: "scroll")
+    }
+    
+    @ViewBuilder
+    var remainingTimeLabel: some View {
+        if let months = taskManager.remainingTime.month,
+            let days = taskManager.remainingTime.day {
+            if months > 0 {
+                Text("\(months) Months, \(days) Days")
+            } else if days >= 0 {
+                Text("\(days) Days")
+            } else {
+                Text("Task is past due!")
+            }
+        } else {
+            Text("No tasks!")
+        }
     }
     
     var addTaskButton: some View {

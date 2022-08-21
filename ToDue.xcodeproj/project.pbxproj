@@ -39,6 +39,9 @@
 		60DD742727D2B1C300DD19AD /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */; };
 		60DD742927D2B2AB00DD19AD /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */; };
 		60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742D27D2D22E00DD19AD /* TaskContainer.swift */; };
+		60FE216628B282BB0002E080 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216828B282BB0002E080 /* Localizable.strings */; };
+		60FE216C28B28C090002E080 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216E28B28C090002E080 /* Localizable.stringsdict */; };
+		60FE217428B297600002E080 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60FE217228B2975F0002E080 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +102,11 @@
 		60DD742627D2B1C300DD19AD /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
 		60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		60DD742D27D2D22E00DD19AD /* TaskContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskContainer.swift; sourceTree = "<group>"; };
+		60FE216928B283000002E080 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		60FE216D28B28C090002E080 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		60FE217028B295250002E080 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		60FE217128B295250002E080 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = de; path = de.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		60FE217328B2975F0002E080 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +167,7 @@
 				60809E8E27D394A10027AE84 /* ToDoWidget.intentdefinition */,
 				60809E8F27D394A30027AE84 /* Assets.xcassets */,
 				60809E9127D394A30027AE84 /* Info.plist */,
+				60FE217228B2975F0002E080 /* Localizable.strings */,
 			);
 			path = ToDoWidget;
 			sourceTree = "<group>";
@@ -174,6 +183,7 @@
 		60DD740B27D2B16A00DD19AD = {
 			isa = PBXGroup;
 			children = (
+				60FE216328B27FB90002E080 /* Resources */,
 				60809E9C27D395C00027AE84 /* ToDoWidgetExtension.entitlements */,
 				60DD741627D2B16A00DD19AD /* ToDue */,
 				60809E8B27D394A10027AE84 /* ToDoWidget */,
@@ -230,6 +240,15 @@
 				60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		60FE216328B27FB90002E080 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				60FE216828B282BB0002E080 /* Localizable.strings */,
+				60FE216E28B28C090002E080 /* Localizable.stringsdict */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,6 +315,7 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
 			);
 			mainGroup = 60DD740B27D2B16A00DD19AD;
 			productRefGroup = 60DD741527D2B16A00DD19AD /* Products */;
@@ -314,6 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60809E9F27D3A1F30027AE84 /* Assets.xcassets in Resources */,
+				60FE217428B297600002E080 /* Localizable.strings in Resources */,
 				60809E9027D394A30027AE84 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -323,6 +344,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				60DD741F27D2B16C00DD19AD /* Preview Assets.xcassets in Resources */,
+				60FE216C28B28C090002E080 /* Localizable.stringsdict in Resources */,
+				60FE216628B282BB0002E080 /* Localizable.strings in Resources */,
 				60DD741C27D2B16C00DD19AD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,6 +400,35 @@
 			targetProxy = 60809E9427D394A30027AE84 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		60FE216828B282BB0002E080 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				60FE216928B283000002E080 /* en */,
+				60FE217028B295250002E080 /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		60FE216E28B28C090002E080 /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				60FE216D28B28C090002E080 /* en */,
+				60FE217128B295250002E080 /* de */,
+			);
+			name = Localizable.stringsdict;
+			sourceTree = "<group>";
+		};
+		60FE217228B2975F0002E080 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				60FE217328B2975F0002E080 /* de */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		60809E9827D394A30027AE84 /* Debug */ = {
@@ -439,6 +491,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -492,6 +545,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -500,6 +554,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -546,6 +601,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};

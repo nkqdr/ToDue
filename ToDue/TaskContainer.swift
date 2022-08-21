@@ -65,7 +65,7 @@ struct TaskContainer: View {
             Button(role: .cancel, action: {
                 taskManager.toggleCompleted(task)
             }, label: {
-                Label("Mark as \(task.isCompleted ? "uncompleted" : "completed")", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
+                Label(task.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
             Button(role: .destructive, action: {
                 showingAlert = true
