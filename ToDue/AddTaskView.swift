@@ -82,7 +82,7 @@ struct AddTaskView: View {
                         saveButtonDisabled = true
                     }
                 })
-            Text("Additional Notes:")
+            Text("Additional Notes: (Optional)")
                 .font(.headline)
                 .fontWeight(.bold)
             // TODO: Replace ZStack with commented code when iOS 16 is out
