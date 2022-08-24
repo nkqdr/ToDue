@@ -38,14 +38,6 @@ class TaskManager: ObservableObject {
         self.taskArray = coreDM.getAllTasks().sorted(by: { $0.date! < $1.date! })
     }
     
-    var remainingTime: DateComponents {
-        if (incompleteTasks.isEmpty) {
-            return Calendar.current.dateComponents([], from: Date.distantPast)
-        }
-        let diff = Calendar.current.dateComponents([.month, .day], from: Date.now.removeTimeStamp!, to: incompleteTasks[0].date!)
-        return diff
-    }
-    
     func progress(for task: Task) -> Double {
         if task.subTaskArray.isEmpty {
             return task.isCompleted ? 1 : -1

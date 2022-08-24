@@ -14,6 +14,7 @@ struct IncompleteTaskView: View {
     @State private var titleOpacity = 0.0
     
     var body: some View {
+        let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
         NavigationView {
                 ZStack {
                     mainScrollView
@@ -25,7 +26,7 @@ struct IncompleteTaskView: View {
                             Text("Next Due Date in")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
-                            remainingTimeLabel
+                            Text(deadlineLabel)
                                 .font(.headline.weight(.bold))
                         }
                         .opacity(titleOpacity)
@@ -47,16 +48,14 @@ struct IncompleteTaskView: View {
     }
     
     var mainScrollView: some View {
-        ScrollView(showsIndicators: false) {
+        let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
+        return ScrollView(showsIndicators: false) {
             Group {
-                if taskManager.remainingTime.month != nil &&
-                   taskManager.remainingTime.day != nil {
-                    Text("Next Due Date in")
-                        .font(.title2)
-                        .foregroundColor(.gray)
-                        .fontWeight(.bold)
-                }
-                remainingTimeLabel
+                Text("Next Due Date in")
+                    .font(.title2)
+                    .foregroundColor(.gray)
+                    .fontWeight(.bold)
+                Text(deadlineLabel)
                     .font(.title.weight(.bold))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -109,22 +108,6 @@ struct IncompleteTaskView: View {
             .padding(.horizontal)
         }
         .coordinateSpace(name: "scroll")
-    }
-    
-    @ViewBuilder
-    var remainingTimeLabel: some View {
-        if let months = taskManager.remainingTime.month,
-            let days = taskManager.remainingTime.day {
-            if months > 0 {
-                Text("\(months) Months, \(days) Days")
-            } else if days >= 0 {
-                Text("\(days) Days")
-            } else {
-                Text("Task is past due!")
-            }
-        } else {
-            Text("No tasks!")
-        }
     }
     
     var addTaskButton: some View {

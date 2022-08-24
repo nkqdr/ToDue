@@ -170,43 +170,19 @@ struct ToDoWidgetEntryView : View {
 
     
     var body: some View {
+        let label = Utils.remainingTimeLabel(task: entry.task)
         Group {
             switch family {
             case .systemSmall:
-                SmallWidget(entry: entry, remainingTime: remainingTimeLabel)
+                SmallWidget(entry: entry, remainingTime: label)
             case .systemMedium:
-                MediumWidget(entry: entry, remainingTime: remainingTimeLabel)
+                MediumWidget(entry: entry, remainingTime: label)
             default:
-                LargeWidget(entry: entry, remainingTime: remainingTimeLabel)
+                LargeWidget(entry: entry, remainingTime: label)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color("Background"))
-    }
-    
-    func remainingTime(_ givenTask: Task?) -> DateComponents {
-        if let task = givenTask {
-            let diff = Calendar.current.dateComponents([.month, .day], from: Date.now.removeTimeStamp!, to: task.date!)
-            return diff
-        } else {
-            return Calendar.current.dateComponents([], from: Date.distantPast)
-        }
-    }
-    
-    var remainingTimeLabel: LocalizedStringKey {
-        let remainingTime = remainingTime(entry.task)
-        if let months = remainingTime.month,
-            let days = remainingTime.day {
-            if months > 0 {
-                return "\(months) Months, \(days) Days"
-            } else if days >= 0 {
-                return "\(days) Days"
-            } else {
-                return "Task is past due!"
-            }
-        } else {
-            return "No tasks!"
-        }
     }
 }
 
