@@ -9,14 +9,14 @@
 /* Begin PBXBuildFile section */
 		600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C327D36EBB00488289 /* CompletedTasksView.swift */; };
 		600A00C627D37CE200488289 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C527D37CE100488289 /* AddTaskView.swift */; };
+		6012162228B689630078A71B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216828B282BB0002E080 /* Localizable.strings */; };
+		6012162328B689660078A71B /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216E28B28C090002E080 /* Localizable.stringsdict */; };
 		6015556228032BE50049D84A /* TaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6015556128032BE50049D84A /* TaskExtension.swift */; };
 		6021A1DE28A7B1B20004C7E8 /* AddSubtaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6021A1DD28A7B1B20004C7E8 /* AddSubtaskView.swift */; };
 		6023C99D28AFF0A100C94DB2 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6023C99C28AFF0A100C94DB2 /* CloudKit.framework */; };
 		6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6035BEA927E1E50D0048E6D4 /* Haptics.swift */; };
 		6061F80327D5360300772ACE /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061F80227D5360300772ACE /* ProgressBar.swift */; };
 		6061F80627D536F400772ACE /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061F80527D536F400772ACE /* ViewExtension.swift */; };
-		607204C328B2A1B5008D1E3E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 607204C528B2A1B5008D1E3E /* Localizable.strings */; };
-		607204C628B2A1BA008D1E3E /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 607204C828B2A1BA008D1E3E /* Localizable.stringsdict */; };
 		60809E8827D394A10027AE84 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60809E8727D394A10027AE84 /* WidgetKit.framework */; };
 		60809E8A27D394A10027AE84 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60809E8927D394A10027AE84 /* SwiftUI.framework */; };
 		60809E8D27D394A10027AE84 /* ToDoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60809E8C27D394A10027AE84 /* ToDoWidget.swift */; };
@@ -79,10 +79,6 @@
 		6035BEA927E1E50D0048E6D4 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		6061F80227D5360300772ACE /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		6061F80527D536F400772ACE /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
-		607204C428B2A1B5008D1E3E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		607204C728B2A1BA008D1E3E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		607204C928B2A2C1008D1E3E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = de; path = de.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		607204CA28B2A2C4008D1E3E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		60809E8527D394A10027AE84 /* ToDoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ToDoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		60809E8727D394A10027AE84 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		60809E8927D394A10027AE84 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -134,6 +130,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6012162128B689250078A71B /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				60FE216328B27FB90002E080 /* Resources */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		6061F80127D535EF00772ACE /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -171,8 +175,6 @@
 				60809E8E27D394A10027AE84 /* ToDoWidget.intentdefinition */,
 				60809E8F27D394A30027AE84 /* Assets.xcassets */,
 				60809E9127D394A30027AE84 /* Info.plist */,
-				607204C528B2A1B5008D1E3E /* Localizable.strings */,
-				607204C828B2A1BA008D1E3E /* Localizable.stringsdict */,
 			);
 			path = ToDoWidget;
 			sourceTree = "<group>";
@@ -188,7 +190,7 @@
 		60DD740B27D2B16A00DD19AD = {
 			isa = PBXGroup;
 			children = (
-				60FE216328B27FB90002E080 /* Resources */,
+				6012162128B689250078A71B /* Shared */,
 				60809E9C27D395C00027AE84 /* ToDoWidgetExtension.entitlements */,
 				60DD741627D2B16A00DD19AD /* ToDue */,
 				60809E8B27D394A10027AE84 /* ToDoWidget */,
@@ -338,10 +340,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607204C328B2A1B5008D1E3E /* Localizable.strings in Resources */,
+				6012162228B689630078A71B /* Localizable.strings in Resources */,
 				60809E9F27D3A1F30027AE84 /* Assets.xcassets in Resources */,
 				60809E9027D394A30027AE84 /* Assets.xcassets in Resources */,
-				607204C628B2A1BA008D1E3E /* Localizable.stringsdict in Resources */,
+				6012162328B689660078A71B /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,24 +410,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		607204C528B2A1B5008D1E3E /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607204C428B2A1B5008D1E3E /* en */,
-				607204CA28B2A2C4008D1E3E /* de */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		607204C828B2A1BA008D1E3E /* Localizable.stringsdict */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607204C728B2A1BA008D1E3E /* en */,
-				607204C928B2A2C1008D1E3E /* de */,
-			);
-			name = Localizable.stringsdict;
-			sourceTree = "<group>";
-		};
 		60FE216828B282BB0002E080 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
