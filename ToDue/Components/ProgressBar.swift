@@ -10,14 +10,17 @@ import SwiftUI
 struct ProgressBar: View {
     // Progress from 0 to 1
     var progress: Double
+    var showPercentage: Bool = true
     
     var body: some View {
         GeometryReader { proxy in
             VStack (alignment: .trailing) {
-                let formatted = String(format: "%.1f", progress * 100)
-                Text("\(formatted)%")
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
+                if showPercentage {
+                    let formatted = String(format: "%.1f", progress * 100)
+                    Text("\(formatted)%")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
                 ZStack (alignment: .leading) {
                     Capsule()
                         .fill(.ultraThickMaterial)

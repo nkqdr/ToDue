@@ -17,38 +17,9 @@ struct TaskDetailView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-//            ScrollView(showsIndicators: false) {
-//                Group {
-//                    dueDate
-//                    taskDesc
-//                    if !taskManager.currentSubTaskArray.isEmpty {
-//                        ProgressBar(progress: taskManager.progress(for: task))
-//                            .padding(.bottom, DrawingConstants.progressBarPadding)
-//                        subTasksHeader
-//                        subTasksList
-//                        Spacer(minLength: DrawingConstants.scrollBottomPadding)
-//                    } else {
-//                        GeometryReader { proxy in
-//                            VStack(alignment: .center) {
-//                                Spacer(minLength: UIScreen.main.bounds.size.height / 3)
-//                                Button("Add a subtask") {
-//                                    showAddSubtaskSheet.toggle()
-//                                }
-//                                .buttonStyle(.bordered)
-//                            }
-//                            .frame(maxWidth: .infinity)
-//                        }
-//                    }
-//                }
-//                .padding(.horizontal)
-//            }
             List {
                 Group {
                     VStack(alignment: .leading) {
-                        Text(task.taskTitle ?? "")
-                            .font(.title).fontWeight(.bold)
-                            .lineLimit(2)
-                            .padding([.bottom, .top], 5)
                         dueDate
                         taskDesc
                         if !taskManager.currentSubTaskArray.isEmpty {
@@ -56,38 +27,11 @@ struct TaskDetailView: View {
                                 .padding(.bottom, DrawingConstants.progressBarPadding)
                         }
                     }
+                    .listRowBackground(Color("Background"))
+                    .listRowInsets(EdgeInsets())
                     Section("Sub-Tasks") {
                         ForEach(taskManager.currentSubTaskArray) { subTask in
-                            HStack {
-                                Text(subTask.title!)
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-//                                    .padding(.leading)
-                                Spacer()
-                                Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
-                                    .font(.title)
-                                    .frame(width: DrawingConstants.completeIndicatorSize, height: DrawingConstants.completeIndicatorSize)
-//                                    .padding(.trailing)
-                                    .onTapGesture {
-                                        Haptics.shared.play(.medium)
-                                        taskManager.toggleCompleted(subTask)
-                                    }
-                            }
-//                            .background(RoundedRectangle(cornerRadius: DrawingConstants.subTaskCornerRadius).fill(DrawingConstants.subTaskBackgroundColor))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contextMenu(menuItems: {
-                                Button(role: .cancel, action: {
-                                    taskManager.toggleCompleted(subTask)
-                                }, label: {
-                                    Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
-                                })
-                                Button(role: .destructive, action: {
-                                    subTaskToDelete = subTask
-                                    showingAlert = true
-                                }, label: {
-                                    Label("Delete", systemImage: "trash")
-                                })
-                            })
+                            subTaskView(subTask)
                         }
                         HStack {
                             Spacer()
@@ -97,25 +41,24 @@ struct TaskDetailView: View {
                             Spacer()
                         }
                     }
+                    .confirmationDialog(
+                        Text("Are you sure you want to delete this?"),
+                        isPresented: $showingAlert,
+                        titleVisibility: .visible
+                    ) {
+                         Button("Delete", role: .destructive) {
+                             withAnimation(.easeInOut) {
+                                 taskManager.deleteTask(subTaskToDelete!)
+                             }
+                         }
+                    }
                 }
                 .listRowBackground(Color("Accent2").opacity(0.3))
             }
             .background(Color("Background"))
-            .alert(isPresented: $showingAlert) {
-                Alert(
-                    title: Text("Are you sure you want to delete this?"),
-                    message: Text("There is no undo"),
-                    primaryButton: .destructive(Text("Delete")) {
-                        if let subTask = subTaskToDelete {
-                            taskManager.deleteTask(subTask)
-                        }
-                    },
-                    secondaryButton: .cancel()
-                )
-            }
         }
-        .frame(maxWidth: .infinity)
-        .navigationBarTitle(task.taskTitle ?? "", displayMode: .inline)
+        .navigationTitle(task.taskTitle ?? "")
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -134,65 +77,61 @@ struct TaskDetailView: View {
         }
     }
     
-    @ViewBuilder
-    var subTasksList: some View {
-        ForEach(taskManager.currentSubTaskArray) { subTask in
-            HStack {
-                Text(subTask.title!)
-                    .font(.title3)
-                    .fontWeight(.bold)
-                    .padding(.leading)
-                Spacer()
-                Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.title)
-                    .frame(width: DrawingConstants.completeIndicatorSize, height: DrawingConstants.completeIndicatorSize)
-                    .padding(.trailing)
-                    .onTapGesture {
-                        Haptics.shared.play(.medium)
-                        taskManager.toggleCompleted(subTask)
-                    }
-            }
-            .background(RoundedRectangle(cornerRadius: DrawingConstants.subTaskCornerRadius).fill(DrawingConstants.subTaskBackgroundColor))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .contextMenu(menuItems: {
-                Button(role: .cancel, action: {
+    func subTaskView(_ subTask: SubTask) -> some View {
+        HStack {
+            Text(subTask.title!)
+                .font(.headline)
+                .fontWeight(.bold)
+            Spacer()
+            Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
+                .font(.title)
+                .frame(width: DrawingConstants.completeIndicatorSize, height: DrawingConstants.completeIndicatorSize)
+                .onTapGesture {
+                    Haptics.shared.play(.medium)
                     taskManager.toggleCompleted(subTask)
-                }, label: {
-                    Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
-                })
-                Button(role: .destructive, action: {
-                    subTaskToDelete = subTask
-                    showingAlert = true
-                }, label: {
-                    Label("Delete", systemImage: "trash")
-                })
+                }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            Button(role: .destructive) {
+                subTaskToDelete = subTask
+                showingAlert = true
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
+        .swipeActions(edge: .leading) {
+            Button {
+                taskManager.toggleCompleted(subTask)
+            } label: {
+                Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
+            }
+            .tint(.indigo)
+        }
+        .contextMenu(menuItems: {
+            Button(role: .cancel, action: {
+                taskManager.toggleCompleted(subTask)
+            }, label: {
+                Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
-        }
-        .alert(isPresented: $showingAlert) {
-            Alert(
-                title: Text("Are you sure you want to delete this?"),
-                message: Text("There is no undo"),
-                primaryButton: .destructive(Text("Delete")) {
-                    if let subTask = subTaskToDelete {
-                        taskManager.deleteTask(subTask)
-                    }
-                },
-                secondaryButton: .cancel()
-            )
-        }
+            Button(role: .destructive, action: {
+                subTaskToDelete = subTask
+                showingAlert = true
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
+        })
     }
     
     var subTasksHeader: some View {
-        HStack (alignment: .bottom) {
-            Text("Sub-Tasks:")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(.secondary)
+        HStack {
+            Text("Sub-Tasks")
             Spacer()
-            Button {
-                showAddSubtaskSheet.toggle()
-            } label: {
-                Label("Add", systemImage: "plus")
+            if !taskManager.currentSubTaskArray.isEmpty {
+                let formatted = String(format: "%.1f", taskManager.progress(for: task) * 100)
+                Text("\(formatted)%")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
             }
         }
     }
@@ -215,11 +154,11 @@ struct TaskDetailView: View {
         if let desc = task.taskDescription {
             if desc != "" {
                 VStack(alignment: .leading) {
-                    Text("Notes:", comment: "Headline for the notes section in the task detail view.")
-                        .font(.headline)
-                    Text(desc)
-                        .foregroundColor(.secondary)
+                    Text("Notes:")
                         .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Text(desc)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
