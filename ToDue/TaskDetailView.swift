@@ -17,36 +17,105 @@ struct TaskDetailView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            ScrollView(showsIndicators: false) {
+//            ScrollView(showsIndicators: false) {
+//                Group {
+//                    dueDate
+//                    taskDesc
+//                    if !taskManager.currentSubTaskArray.isEmpty {
+//                        ProgressBar(progress: taskManager.progress(for: task))
+//                            .padding(.bottom, DrawingConstants.progressBarPadding)
+//                        subTasksHeader
+//                        subTasksList
+//                        Spacer(minLength: DrawingConstants.scrollBottomPadding)
+//                    } else {
+//                        GeometryReader { proxy in
+//                            VStack(alignment: .center) {
+//                                Spacer(minLength: UIScreen.main.bounds.size.height / 3)
+//                                Button("Add a subtask") {
+//                                    showAddSubtaskSheet.toggle()
+//                                }
+//                                .buttonStyle(.bordered)
+//                            }
+//                            .frame(maxWidth: .infinity)
+//                        }
+//                    }
+//                }
+//                .padding(.horizontal)
+//            }
+            List {
                 Group {
-                    dueDate
-                    taskDesc
-                    if !taskManager.currentSubTaskArray.isEmpty {
-                        ProgressBar(progress: taskManager.progress(for: task))
-                            .padding(.bottom, DrawingConstants.progressBarPadding)
-                        subTasksHeader
-                        subTasksList
-                        Spacer(minLength: DrawingConstants.scrollBottomPadding)
-                    } else {
-                        GeometryReader { proxy in
-                            VStack(alignment: .center) {
-                                Spacer(minLength: UIScreen.main.bounds.size.height / 3)
-                                Button("Add a subtask") {
-                                    showAddSubtaskSheet.toggle()
-                                }
-                                .buttonStyle(.bordered)
+                    VStack(alignment: .leading) {
+                        Text(task.taskTitle ?? "")
+                            .font(.title).fontWeight(.bold)
+                            .lineLimit(2)
+                            .padding([.bottom, .top], 5)
+                        dueDate
+                        taskDesc
+                        if !taskManager.currentSubTaskArray.isEmpty {
+                            ProgressBar(progress: taskManager.progress(for: task))
+                                .padding(.bottom, DrawingConstants.progressBarPadding)
+                        }
+                    }
+                    Section("Sub-Tasks") {
+                        ForEach(taskManager.currentSubTaskArray) { subTask in
+                            HStack {
+                                Text(subTask.title!)
+                                    .font(.title3)
+                                    .fontWeight(.bold)
+//                                    .padding(.leading)
+                                Spacer()
+                                Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
+                                    .font(.title)
+                                    .frame(width: DrawingConstants.completeIndicatorSize, height: DrawingConstants.completeIndicatorSize)
+//                                    .padding(.trailing)
+                                    .onTapGesture {
+                                        Haptics.shared.play(.medium)
+                                        taskManager.toggleCompleted(subTask)
+                                    }
                             }
-                            .frame(maxWidth: .infinity)
+//                            .background(RoundedRectangle(cornerRadius: DrawingConstants.subTaskCornerRadius).fill(DrawingConstants.subTaskBackgroundColor))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contextMenu(menuItems: {
+                                Button(role: .cancel, action: {
+                                    taskManager.toggleCompleted(subTask)
+                                }, label: {
+                                    Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
+                                })
+                                Button(role: .destructive, action: {
+                                    subTaskToDelete = subTask
+                                    showingAlert = true
+                                }, label: {
+                                    Label("Delete", systemImage: "trash")
+                                })
+                            })
+                        }
+                        HStack {
+                            Spacer()
+                            Button("Add a subtask") {
+                                showAddSubtaskSheet.toggle()
+                            }
+                            Spacer()
                         }
                     }
                 }
-                .padding(.horizontal)
+                .listRowBackground(Color("Accent2").opacity(0.3))
             }
             .background(Color("Background"))
+            .alert(isPresented: $showingAlert) {
+                Alert(
+                    title: Text("Are you sure you want to delete this?"),
+                    message: Text("There is no undo"),
+                    primaryButton: .destructive(Text("Delete")) {
+                        if let subTask = subTaskToDelete {
+                            taskManager.deleteTask(subTask)
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
         }
         .frame(maxWidth: .infinity)
-        .navigationTitle(task.taskTitle ?? "")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitle(task.taskTitle ?? "", displayMode: .inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
