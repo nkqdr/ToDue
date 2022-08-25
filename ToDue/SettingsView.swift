@@ -10,6 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.openURL) var openURL
     @State private var toggle = false
+    @State private var showEmail = false
+    @State private var email = ContactEmail(toAddress: "contact@niklas-kuder.de", subject: "App contact inquiry", messageHeader: "Please enter your message below")
     enum AppTheme: String, CaseIterable, Identifiable {
         case system, light, dark
         var id: Self { self }
@@ -30,6 +32,17 @@ struct SettingsView: View {
             }
             .background(Color("Background"))
             .navigationTitle("Settings")
+            .sheet(isPresented: $showEmail) {
+                MailView(supportEmail: $email) { result in
+                    switch result {
+                    case .success:
+                        return
+                    case .failure(let error):
+                        print(error)
+                        return
+                    }
+                }
+            }
         }
         .navigationViewStyle(.stack)
     }
@@ -72,8 +85,15 @@ struct SettingsView: View {
                     .foregroundColor(Color("Text"))
             }
             Button {
-                let email = ContactEmail(toAddress: "contact@niklas-kuder.de", subject: "App contact inquiry", messageHeader: "Please enter your message below")
-                email.send(openURL: openURL)
+                if MailView.canSendMail {
+                    showEmail.toggle()
+                } else {
+                    print("""
+                    This device does not support email
+                    \(email.body)
+                    """
+                    )
+                }
             } label: {
                 Label("Contact", systemImage: "person.fill.questionmark")
             }

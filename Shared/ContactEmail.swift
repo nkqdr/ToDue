@@ -12,6 +12,7 @@ struct ContactEmail {
     var toAddress: String
     var subject: String
     var messageHeader: String
+    var data: Data?
     var body: String {
         """
         \(Bundle.main.displayName) \(Bundle.main.appVersion) (\(Bundle.main.appBuild))
