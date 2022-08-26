@@ -80,8 +80,8 @@ struct SettingsView: View {
     
     var helpSettings: some View {
         Section("Help") {
-            NavigationLink(destination: EmptyView()) {
-                Label("Some help", systemImage: "questionmark.circle.fill")
+            NavigationLink(destination: FAQView()) {
+                Label("FAQ", systemImage: "questionmark.circle.fill")
                     .foregroundColor(Color("Text"))
             }
             Button {

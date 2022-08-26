@@ -48,6 +48,13 @@ class CoreDataManager: ObservableObject {
         }
     }
     
+    func updateSubTask(_ subTask: SubTask, description: String) {
+        persistentContainer.viewContext.performAndWait {
+            subTask.title = description
+            try? persistentContainer.viewContext.save()
+        }
+    }
+    
     func saveTask(taskDescription: String, taskTitle: String, date: Date) {
         let task = Task(context: persistentContainer.viewContext)
         task.date = date

@@ -80,6 +80,11 @@ class TaskManager: ObservableObject {
         self.update()
     }
     
+    func editSubTask(_ subTask: SubTask, description: String) {
+        coreDM.updateSubTask(subTask, description: description)
+        self.update()
+    }
+    
     func updateTask(_ task: Task, description: String?, title: String?, date: Date?, isCompleted: Bool?) {
         let newComplete: Bool = isCompleted ?? task.isCompleted
         let newDescription: String = description ?? task.taskDescription!

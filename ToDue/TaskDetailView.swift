@@ -12,7 +12,7 @@ struct TaskDetailView: View {
     @State var showAddSubtaskSheet: Bool = false
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false
-    @State private var subTaskToDelete: SubTask?
+    @State private var currentSubTask: SubTask?
     var task: Task
     
     var body: some View {
@@ -30,9 +30,18 @@ struct TaskDetailView: View {
                     .listRowBackground(Color("Background"))
                     .listRowInsets(EdgeInsets())
                     if !taskManager.currentSubTaskArray.isEmpty {
+                        let incomplete = taskManager.currentSubTaskArray.filter { !$0.isCompleted }
                         Section("Sub-Tasks") {
-                            ForEach(taskManager.currentSubTaskArray) { subTask in
+                            ForEach(incomplete) { subTask in
                                 subTaskView(subTask)
+                            }
+                        }
+                        let completed = taskManager.currentSubTaskArray.filter { $0.isCompleted }
+                        if !completed.isEmpty {
+                            Section("Completed") {
+                                ForEach(completed) { subTask in
+                                    subTaskView(subTask)
+                                }
                             }
                         }
                     } else {
@@ -58,11 +67,11 @@ struct TaskDetailView: View {
                 ) {
                      Button("Delete", role: .destructive) {
                          withAnimation(.easeInOut) {
-                             taskManager.deleteTask(subTaskToDelete!)
+                             taskManager.deleteTask(currentSubTask!)
                          }
                      }
                 } message: {
-                    Text(subTaskToDelete?.wrappedTitle ?? "")
+                    Text(currentSubTask?.wrappedTitle ?? "")
                         .font(.headline).fontWeight(.bold)
                 }
             }
@@ -79,9 +88,16 @@ struct TaskDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: $showAddSubtaskSheet) {
-            AddSubtaskView(isPresented: $showAddSubtaskSheet)
-            // TODO: Once iOS 16 is out, use .presentationDetents here!
+        .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
+            currentSubTask = nil
+        }) {
+            if let subTask = currentSubTask {
+                AddSubtaskView(isPresented: $showAddSubtaskSheet, subTask: subTask)
+                // TODO: Once iOS 16 is out, use .presentationDetents here!
+            } else {
+                AddSubtaskView(isPresented: $showAddSubtaskSheet)
+                // TODO: Once iOS 16 is out, use .presentationDetents here!
+            }
         }
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, task: task)
@@ -93,6 +109,7 @@ struct TaskDetailView: View {
                 Text(subTask.title ?? "")
                     .font(.headline)
                     .fontWeight(.bold)
+                    .strikethrough(subTask.isCompleted, color: Color("Text"))
                 Spacer()
                 Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.title)
@@ -108,14 +125,25 @@ struct TaskDetailView: View {
             }
             .swipeActions(edge: .leading) {
                 toggleSubTaskCompleteButton(subTask)
-                .tint(.indigo)
+                    .tint(.green)
+                editSubTaskButton(subTask)
+                    .tint(.indigo)
             }
-//            .contextMenu {
+            .contextMenu {
 //                toggleSubTaskCompleteButton(subTask)
-//                deleteSubTaskButton(subTask)
-//            }
-//        }
-        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                editSubTaskButton(subTask)
+                deleteSubTaskButton(subTask)
+            }
+            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+    }
+    
+    private func editSubTaskButton(_ subTask: SubTask) -> some View {
+        Button {
+            currentSubTask = subTask
+            showAddSubtaskSheet.toggle()
+        } label: {
+            Label("Edit", systemImage: "pencil")
+        }
     }
     
     private func toggleSubTaskCompleteButton(_ subTask: SubTask) -> some View {
@@ -128,7 +156,7 @@ struct TaskDetailView: View {
     
     private func deleteSubTaskButton(_ subTask: SubTask) -> some View {
         Button(role: .destructive, action: {
-            subTaskToDelete = subTask
+            currentSubTask = subTask
             showingAlert = true
         }, label: {
             Label("Delete", systemImage: "trash")
