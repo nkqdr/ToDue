@@ -144,11 +144,7 @@ struct TaskDetailView: View {
     }
     
     var dueDate: some View {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        
-        return Text("Due: \(dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
+        Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
             .fontWeight(.semibold)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.headline)

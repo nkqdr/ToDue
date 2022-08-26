@@ -30,7 +30,7 @@ class CoreDataManager: ObservableObject {
     
     func removeAllSubTasks(from task: Task) {
         task.removeFromSubTasks(task.subTasks!)
-        try! persistentContainer.viewContext.save()
+        try? persistentContainer.viewContext.save()
     }
     
     func addSubTask(to task: Task, subTaskTitle: String) {
@@ -41,11 +41,7 @@ class CoreDataManager: ObservableObject {
         subTask.createdAt = Date.now
         
         task.addToSubTasks(subTask)
-        do {
-            try persistentContainer.viewContext.save()
-        } catch {
-            print("Failed to add subtask \(error)")
-        }
+        try? persistentContainer.viewContext.save()
     }
     
     func updateSubTask(_ subTask: SubTask, description: String) {
@@ -64,11 +60,7 @@ class CoreDataManager: ObservableObject {
         task.id = UUID()
         task.subTasks = []
         WidgetCenter.shared.reloadAllTimelines()
-        do {
-            try persistentContainer.viewContext.save()
-        } catch {
-            print("Failed to save task \(error)")
-        }
+        try? persistentContainer.viewContext.save()
     }
     
     func deleteSubTask(subTask: SubTask) {
@@ -97,11 +89,7 @@ class CoreDataManager: ObservableObject {
     
     func toggleIsCompleted(for subTask: SubTask) {
         subTask.isCompleted.toggle()
-        do {
-            try persistentContainer.viewContext.save()
-        } catch {
-            print("Failed to complete subtask \(error)")
-        }
+        try? persistentContainer.viewContext.save()
     }
     
     func updateTask(task: Task, description: String, title: String, date: Date, isCompleted: Bool) {

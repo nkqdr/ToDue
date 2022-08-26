@@ -19,6 +19,8 @@ class TaskManager: ObservableObject {
         taskArray.filter { $0.isCompleted }.sorted(by: { $0.date! > $1.date! })
     }
     
+    @Published var filteredCompleteTasks: [Task]?
+    
     var currentTask: Task?
     
     var currentSubTaskArray: [SubTask] {
@@ -49,6 +51,25 @@ class TaskManager: ObservableObject {
     
     // MARK: - Intents
     
+    func filterCompletedTasks(by searchValue: String) {
+        if searchValue == "" {
+            filteredCompleteTasks = nil
+        } else {
+            DispatchQueue.global(qos: .userInitiated).async {
+                let filteredTasks = self.completeTasks.filter { task in
+                    let upperSearch = searchValue.uppercased()
+                    let titleContainsValue = task.taskTitle!.uppercased().contains(upperSearch)
+                    let descContainsValue = task.taskDescription?.uppercased().contains(upperSearch) ?? false
+                    let hasMatchingSubTask = task.subTaskArray.contains { $0.wrappedTitle.uppercased().contains(upperSearch) }
+                    return titleContainsValue || descContainsValue || hasMatchingSubTask
+                }
+                DispatchQueue.main.async {
+                    self.filteredCompleteTasks = filteredTasks
+                }
+            }
+        }
+    }
+    
     func toggleCompleted(_ task: Task) {
         coreDM.updateTask(task: task, description: task.taskDescription!, title: task.taskTitle!, date: task.date!, isCompleted: !task.isCompleted)
         self.update()
@@ -65,7 +86,6 @@ class TaskManager: ObservableObject {
     }
     
     func deleteTask(_ subTask: SubTask) {
-        print("Deleting \(subTask)")
         coreDM.deleteSubTask(subTask: subTask)
         self.update()
     }

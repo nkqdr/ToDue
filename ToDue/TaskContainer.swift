@@ -14,14 +14,11 @@ struct TaskContainer: View {
     var showBackground: Bool = false
     
     var body: some View {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
         return ZStack {
             containerBackground
             HStack {
                 VStack(alignment: .leading) {
-                    Text(dateFormatter.string(from: task.date ?? Date.now))
+                    Text(Utils.dateFormatter.string(from: task.date ?? Date.now))
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.headline)
@@ -61,7 +58,7 @@ struct TaskContainer: View {
                 secondaryButton: .cancel()
             )
         }
-        .contextMenu(menuItems: {
+        .contextMenu {
             Button(role: .cancel, action: {
                 taskManager.toggleCompleted(task)
             }, label: {
@@ -72,7 +69,7 @@ struct TaskContainer: View {
             }, label: {
                 Label("Delete", systemImage: "trash")
             })
-        })
+        }
         .padding(.bottom)
     }
     

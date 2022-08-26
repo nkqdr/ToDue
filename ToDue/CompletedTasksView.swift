@@ -23,7 +23,7 @@ struct CompletedTasksView: View {
                     }
                     .foregroundColor(.green.opacity(0.8))
                     .padding(.horizontal)
-                    ForEach (filteredTasks) { task in
+                    ForEach (taskManager.filteredCompleteTasks ?? taskManager.completeTasks) { task in
                         NavigationLink(destination: {
                             TaskDetailView(task: task)
                         }, label: {
@@ -33,29 +33,17 @@ struct CompletedTasksView: View {
                             taskManager.currentTask = task
                         })                    }
                     .padding(.horizontal)
-                    .animation(.spring(), value: filteredTasks)
+                    .animation(.spring(), value: taskManager.completeTasks)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color("Background"))
             .navigationTitle("Completed")
             .searchable(text: $searchValue)
+            .onChange(of: searchValue) { newValue in
+                taskManager.filterCompletedTasks(by: newValue)
+            }
         }
         .navigationViewStyle(.stack)
-    }
-    
-    private var filteredTasks: [Task] {
-        if searchValue == "" {
-            return taskManager.completeTasks
-        } else {
-            let filteredTasks = taskManager.completeTasks.filter { task in
-                let upperSearch = searchValue.uppercased()
-                let titleContainsValue = task.taskTitle!.uppercased().contains(upperSearch)
-                let descContainsValue = task.taskDescription?.uppercased().contains(upperSearch) ?? false
-                let hasMatchingSubTask = task.subTaskArray.contains { $0.wrappedTitle.uppercased().contains(upperSearch) }
-                return titleContainsValue || descContainsValue || hasMatchingSubTask
-            }
-            return filteredTasks
-        }
     }
 }

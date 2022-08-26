@@ -12,9 +12,6 @@ struct ToDueApp: App {
     @StateObject var taskManager = TaskManager()
     
     var body: some Scene {
-//        let tabBarAppearance = UITabBarAppearance.init(idiom: .unspecified)
-//        tabBarAppearance.configureWithTransparentBackground()
-//        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         UITableView.appearance().backgroundColor = .clear
         return WindowGroup {
             TabView {

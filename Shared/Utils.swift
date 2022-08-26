@@ -17,6 +17,13 @@ class Utils {
             return Calendar.current.dateComponents([], from: Date.distantPast)
         }
     }
+    
+    static var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+        return dateFormatter
+    }
 
     static func remainingTimeLabel(task: Task?) -> LocalizedStringKey {
         let remainingTime = _remainingTime(task)
