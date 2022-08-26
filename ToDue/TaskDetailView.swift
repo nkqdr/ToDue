@@ -16,69 +16,38 @@ struct TaskDetailView: View {
     var task: Task
     
     var body: some View {
-        VStack(alignment: .leading) {
-            List {
-                Group {
-                    VStack(alignment: .leading) {
-                        dueDate
-                        taskDesc
-                        if !taskManager.currentSubTaskArray.isEmpty {
-                            ProgressBar(progress: taskManager.progress(for: task))
-                                .padding(.bottom, DrawingConstants.progressBarPadding)
-                        }
-                    }
-                    .listRowBackground(Color("Background"))
-                    .listRowInsets(EdgeInsets())
+        List {
+            Group {
+                VStack(alignment: .leading) {
+                    dueDate
+                    taskDesc
                     if !taskManager.currentSubTaskArray.isEmpty {
-                        let incomplete = taskManager.currentSubTaskArray.filter { !$0.isCompleted }
-                        if !incomplete.isEmpty {
-                            Section("Sub-Tasks") {
-                                ForEach(incomplete) { subTask in
-                                    subTaskView(subTask)
-                                }
-                            }
-                        }
-                        let completed = taskManager.currentSubTaskArray.filter { $0.isCompleted }
-                        if !completed.isEmpty {
-                            Section("Completed") {
-                                ForEach(completed) { subTask in
-                                    subTaskView(subTask)
-                                }
-                            }
-                        }
-                    } else {
-                        Section {
-                            ForEach(taskManager.currentSubTaskArray) { subTask in
-                                subTaskView(subTask)
-                            }
-                        }
-                    }
-                    HStack {
-                        Spacer()
-                        Button("Add subtask") {
-                            showAddSubtaskSheet.toggle()
-                        }
-                        Spacer()
+                        ProgressBar(progress: taskManager.progress(for: task))
+                            .padding(.bottom, DrawingConstants.progressBarPadding)
                     }
                 }
-                .listRowBackground(Color("Accent2").opacity(0.3))
-                .confirmationDialog(
-                    Text("Are you sure you want to delete this?"),
-                    isPresented: $showingAlert,
-                    titleVisibility: .visible
-                ) {
-                     Button("Delete", role: .destructive) {
-                         withAnimation(.easeInOut) {
-                             taskManager.deleteTask(currentSubTask!)
-                         }
-                     }
-                } message: {
-                    Text(currentSubTask?.wrappedTitle ?? "")
-                        .font(.headline).fontWeight(.bold)
-                }
+                .listRowBackground(Color("Background"))
+                .listRowInsets(EdgeInsets())
+                subTaskList
+                addSubTaskButton
             }
-            .background(Color("Background"))
+            .listRowBackground(Color("Accent2").opacity(0.3))
+            .confirmationDialog(
+                Text("Are you sure you want to delete this?"),
+                isPresented: $showingAlert,
+                titleVisibility: .visible
+            ) {
+                 Button("Delete", role: .destructive) {
+                     withAnimation(.easeInOut) {
+                         taskManager.deleteTask(currentSubTask!)
+                     }
+                 }
+            } message: {
+                Text(currentSubTask?.wrappedTitle ?? "")
+                    .font(.headline).fontWeight(.bold)
+            }
         }
+        .background(Color("Background"))
         .navigationTitle(task.taskTitle ?? "")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
@@ -132,7 +101,6 @@ struct TaskDetailView: View {
                     .tint(.indigo)
             }
             .contextMenu {
-//                toggleSubTaskCompleteButton(subTask)
                 editSubTaskButton(subTask)
                 deleteSubTaskButton(subTask)
             }
@@ -165,6 +133,16 @@ struct TaskDetailView: View {
         })
     }
     
+    var addSubTaskButton: some View {
+        HStack {
+            Spacer()
+            Button("Add subtask") {
+                showAddSubtaskSheet.toggle()
+            }
+            Spacer()
+        }
+    }
+    
     var dueDate: some View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .long
@@ -191,6 +169,31 @@ struct TaskDetailView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+        }
+    }
+    
+    @ViewBuilder
+    var subTaskList: some View {
+        if !taskManager.currentSubTaskArray.isEmpty {
+            let incomplete = taskManager.currentSubTaskArray.filter { !$0.isCompleted }
+            if !incomplete.isEmpty {
+                Section("Sub-Tasks") {
+                    ForEach(incomplete) { subTask in
+                        subTaskView(subTask)
+                    }
+                }
+            }
+            let completed = taskManager.currentSubTaskArray.filter { $0.isCompleted }
+            if !completed.isEmpty {
+                Section("Completed") {
+                    ForEach(completed) { subTask in
+                        subTaskView(subTask)
+                    }
+                }
+            }
+        } else {
+            // Empty section here for some extra padding
+            Section {}
         }
     }
     
