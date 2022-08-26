@@ -1,11 +1,11 @@
 /* No comment provided by engineer. */
-"Add" = "Hinzufügen";
-
-/* No comment provided by engineer. */
-"Add a subtask" = "Teilaufgabe hinzufügen";
+"Add subtask" = "Teilaufgabe hinzufügen";
 
 /* No comment provided by engineer. */
 "Additional Notes: (Optional)" = "Zusätzliche Notizen";
+
+/* No comment provided by engineer. */
+"Always have your next task on your home screen." = "Haben Sie Ihre nächste Aufgabe immer auf Ihrem Startbildschirm.";
 
 /* No comment provided by engineer. */
 "App Theme" = "Erscheinungsbild";
@@ -21,6 +21,9 @@
 
 /* (No Comment) */
 "Completed" = "Abgeschlossen";
+
+/* No comment provided by engineer. */
+"Contact" = "Kontakt aufnehmen";
 
 /* (No Comment) */
 "Create a task" = "Aufgabe erstellen";
@@ -38,10 +41,22 @@
 "Due: %@" = "Fällig: %@";
 
 /* No comment provided by engineer. */
+"Edit" = "Bearbeiten";
+
+/* No comment provided by engineer. */
 "Edit task" = "Aufgabe bearbeiten";
 
 /* No comment provided by engineer. */
 "Enter a short description:" = "Geben Sie eine kurze Beschreibung an:";
+
+/* (No Comment) */
+"FAQ" = "Häufige Fragen";
+
+/* No comment provided by engineer. */
+"First tap on a task to select it. Now you should see a button that says 'Add subtask'." = "Tippe dafür zunächst auf eine Aufgabe um sie auszuwählen. Nun solltest du einen Knopf sehen, auf dem 'Teilaufgabe hinzufügen' steht.";
+
+/* No comment provided by engineer. */
+"First tap on a task to select it. Then you will see a pen in the upper right corner that you can tap on. Now you are in 'Edit' mode and can make additional notes." = "Tippe dafür zunächst auf eine Aufgabe um sie auszuwählen. Dann siehst du in der oberen, rechten Ecke einen Stift auf den du tippen kannst. Nun bist du im 'Bearbeiten'-Modus und kannst zusätzliche Notizen machen.";
 
 /* No comment provided by engineer. */
 "General" = "Allgemein";
@@ -50,13 +65,28 @@
 "Help" = "Hilfe";
 
 /* No comment provided by engineer. */
-"Made in Karlsruhe with ♡" = "Made in Karlsruhe with ♡";
+"How can I add subtasks?" = "Wie kann ich Teilaufgaben hinzufügen?";
+
+/* No comment provided by engineer. */
+"How can I delete a task?" = "Wie kann ich eine Aufgabe löschen?";
+
+/* No comment provided by engineer. */
+"How can I write down additional information about a task?" = "Wie kann ich zusätzliche Informationen zu einer Aufgabe notieren?";
+
+/* No comment provided by engineer. */
+"If you press and hold a task for a short time, several functions are displayed. There you can also delete them, among other things." = "Wenn man eine Aufgabe kurz gedrückt hält, bekommt man mehrere Funktionen angezeigt. Dort kann man sie unter Anderem auch löschen.";
+
+/* No comment provided by engineer. */
+"In what order are the tasks listed?" = "Nach welcher Reihenfolge werden die Aufgaben aufgelistet?";
 
 /* No comment provided by engineer. */
 "Mark as complete" = "Als geschafft markieren";
 
 /* No comment provided by engineer. */
 "Mark as incomplete" = "Als unfertig markieren";
+
+/* No comment provided by engineer. */
+"More" = "Mehr";
 
 /* No comment provided by engineer. */
 "New task" = "Neue Aufgabe";
@@ -68,9 +98,12 @@
 "Next Due Date in" = "Nächste Aufgabe fällig in";
 
 /* No comment provided by engineer. */
+"Next Task Widget" = "Nächste-Aufgabe Widget";
+
+/* No comment provided by engineer. */
 "No tasks!" = "Keine Aufgaben!";
 
-/* Headline for the notes section in the task detail view. */
+/* No comment provided by engineer. */
 "Notes:" = "Notizen:";
 
 /* (No Comment) */
@@ -86,19 +119,13 @@
 "Settings" = "Einstellungen";
 
 /* No comment provided by engineer. */
-"FAQ" = "Häufige Fragen";
-
-/* No comment provided by engineer. */
-"Something" = "Irgendwas";
-
-/* No comment provided by engineer. */
-"Something else" = "Irgendwas anderes";
-
-/* No comment provided by engineer. */
 "Sub-Tasks" = "Teilaufgaben";
 
 /* No comment provided by engineer. */
 "Task is past due!" = "Aufgabe ist überfällig!";
+
+/* No comment provided by engineer. */
+"The tasks are sorted by their due date, so you will always see the next task at the top." = "Die Aufgaben werden nach ihrem Fälligkeitsdatum sortiert, sodass du die nächste Aufgabe immer ganz oben siehst.";
 
 /* No comment provided by engineer. */
 "There is no undo" = "Es gibt kein Zurück";

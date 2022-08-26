@@ -28,10 +28,10 @@ struct ToDueApp: App {
                         Image(systemName: "rectangle.fill.badge.checkmark")
                         Text("Completed")
                     }
-                SettingsView()
+                MorePageView()
                     .tabItem {
-                        Image(systemName: "gear")
-                        Text("Settings")
+                        Image(systemName: "ellipsis")
+                        Text("More")
                     }
             }
             .environmentObject(taskManager)

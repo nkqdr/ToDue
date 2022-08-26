@@ -30,8 +30,7 @@ struct CompletedTasksView: View {
                         })
                         .simultaneousGesture(TapGesture().onEnded {
                             taskManager.currentTask = task
-                        })
-                    }
+                        })                    }
                     .padding(.horizontal)
                     .animation(.spring(), value: taskManager.completeTasks)
                 }

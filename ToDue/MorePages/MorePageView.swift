@@ -1,5 +1,5 @@
 //
-//  SettingsView.swift
+//  MorePageView.swift
 //  ToDue
 //
 //  Created by Niklas Kuder on 05.03.22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SettingsView: View {
+struct MorePageView: View {
     @Environment(\.openURL) var openURL
     @State private var toggle = false
     @State private var showEmail = false
@@ -24,14 +24,14 @@ struct SettingsView: View {
             List {
                 Group {
                     generalSettings
-                    appearanceSettings
-                    helpSettings
-                    settingsFooter
+//                    appearanceSettings
+                    helpSection
+                    pageFooter
                 }
                 .listRowBackground(Color("Accent2").opacity(0.3))
             }
             .background(Color("Background"))
-            .navigationTitle("Settings")
+            .navigationTitle("More")
             .sheet(isPresented: $showEmail) {
                 MailView(supportEmail: $email) { result in
                     switch result {
@@ -49,11 +49,9 @@ struct SettingsView: View {
     
     var generalSettings: some View {
         Section("General") {
-            NavigationLink("Something") {
-                
-            }
-            NavigationLink("Something else") {
-                
+            NavigationLink(destination: SettingsView()) {
+                Label("Settings", systemImage: "gear")
+                    .foregroundColor(Color("Text"))
             }
         }
     }
@@ -78,7 +76,7 @@ struct SettingsView: View {
         }
     }
     
-    var helpSettings: some View {
+    var helpSection: some View {
         Section("Help") {
             NavigationLink(destination: FAQView()) {
                 Label("FAQ", systemImage: "questionmark.circle.fill")
@@ -100,7 +98,7 @@ struct SettingsView: View {
         }
     }
     
-    var settingsFooter: some View {
+    var pageFooter: some View {
         Section {
             HStack {
                 Image(systemName: "heart")
@@ -119,9 +117,9 @@ struct SettingsView: View {
     func cancelOrder() { }
 }
 
-struct SettingsView_Previews: PreviewProvider {
+struct MorePageView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView()
+        MorePageView()
             .preferredColorScheme(.dark)
     }
 }

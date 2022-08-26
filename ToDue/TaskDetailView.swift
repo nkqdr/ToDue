@@ -31,9 +31,11 @@ struct TaskDetailView: View {
                     .listRowInsets(EdgeInsets())
                     if !taskManager.currentSubTaskArray.isEmpty {
                         let incomplete = taskManager.currentSubTaskArray.filter { !$0.isCompleted }
-                        Section("Sub-Tasks") {
-                            ForEach(incomplete) { subTask in
-                                subTaskView(subTask)
+                        if !incomplete.isEmpty {
+                            Section("Sub-Tasks") {
+                                ForEach(incomplete) { subTask in
+                                    subTaskView(subTask)
+                                }
                             }
                         }
                         let completed = taskManager.currentSubTaskArray.filter { $0.isCompleted }
@@ -53,7 +55,7 @@ struct TaskDetailView: View {
                     }
                     HStack {
                         Spacer()
-                        Button("Add a subtask") {
+                        Button("Add subtask") {
                             showAddSubtaskSheet.toggle()
                         }
                         Spacer()
@@ -125,7 +127,7 @@ struct TaskDetailView: View {
             }
             .swipeActions(edge: .leading) {
                 toggleSubTaskCompleteButton(subTask)
-                    .tint(.green)
+                    .tint(.mint)
                 editSubTaskButton(subTask)
                     .tint(.indigo)
             }
