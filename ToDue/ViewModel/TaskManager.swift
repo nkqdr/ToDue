@@ -40,6 +40,13 @@ class TaskManager: ObservableObject {
         self.taskArray = coreDM.getAllTasks().sorted(by: { $0.date! < $1.date! })
     }
     
+    var currentTaskProgress: Double {
+        if let task = currentTask {
+            return progress(for: task)
+        }
+        return -1
+    }
+    
     func progress(for task: Task) -> Double {
         if task.subTaskArray.isEmpty {
             return task.isCompleted ? 1 : -1

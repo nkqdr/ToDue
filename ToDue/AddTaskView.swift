@@ -10,34 +10,27 @@ import SwiftUI
 struct AddTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
     @Binding var isPresented: Bool
-    @State private var taskDescription: String
-    @State private var taskTitle: String
-    @State private var date: Date
+    @State private var taskDescription: String = ""
+    @State private var taskTitle: String = ""
+    @State private var date: Date = Date()
     @State private var saveButtonDisabled = true
-    var task: Task?
-    
-    init(isPresented: Binding<Bool>) {
-        self._isPresented = isPresented
-        _taskDescription = State(initialValue: "")
-        _taskTitle = State(initialValue: "")
-        _date = State(initialValue: Date.now)
-    }
-    init(isPresented: Binding<Bool>, task: Task) {
-        self._isPresented = isPresented
-        self.task = task
-        _taskDescription = State(initialValue: task.taskDescription ?? "")
-        _taskTitle = State(initialValue: task.taskTitle ?? "")
-        _date = State(initialValue: task.date ?? Date.now)
-    }
     
     private var dateRange: PartialRangeFrom<Date> {
+        let task = taskManager.currentTask
         let calendar = Calendar.current
         let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: task != nil ? min(task!.date!, Date.now) : Date.now)
         return calendar.date(from: startComponents)!...
     }
     
+    private func maybeLoadTask() {
+        let task: Task? = taskManager.currentTask
+        taskDescription = task?.taskDescription ?? ""
+        taskTitle = task?.taskTitle ?? ""
+        date = task?.date ?? Date.now
+    }
+    
     var body: some View {
-        let editMode = task != nil
+        let editMode = taskManager.currentTask != nil
         return VStack(alignment: .leading) {
             Text(editMode ? "Edit task" : "New task")
                 .font(.largeTitle)
@@ -66,6 +59,7 @@ struct AddTaskView: View {
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .background(Color("Background"))
+        .onAppear(perform: maybeLoadTask)
     }
     
     var titleAndNotes: some View {
@@ -102,7 +96,7 @@ struct AddTaskView: View {
     private func handleSave() {
         isPresented = false
         date = date.removeTimeStamp!
-        if let newTask = task {
+        if let newTask = taskManager.currentTask {
             taskManager.updateTask(newTask, description: taskDescription, title: taskTitle, date: date, isCompleted: newTask.isCompleted)
         } else {
             taskManager.addNewTask(description: taskDescription, title: taskTitle, date: date)

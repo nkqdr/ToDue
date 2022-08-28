@@ -76,7 +76,7 @@ struct IncompleteTaskView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .scaleEffect(max(0.8, min(1.2, 1 - scrollOffset * 0.001)), anchor: .leading)
         .padding(.horizontal)
-        .opacity(1-titleOpacity)
+        .opacity(1 - titleOpacity)
     }
     
     var mainScrollView: some View {
@@ -86,7 +86,7 @@ struct IncompleteTaskView: View {
             ForEach (taskManager.incompleteTasks) { task in
                 let isFirst: Bool = taskManager.incompleteTasks.first == task
                 NavigationLink(destination: {
-                    TaskDetailView(task: task)
+                    TaskDetailView()
                 }, label: {
                     TaskContainer(task: task, showBackground: isFirst)
                 })

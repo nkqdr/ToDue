@@ -13,7 +13,6 @@ struct TaskDetailView: View {
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
-    var task: Task
     
     var body: some View {
         List {
@@ -22,7 +21,7 @@ struct TaskDetailView: View {
                     dueDate
                     taskDesc
                     if !taskManager.currentSubTaskArray.isEmpty {
-                        ProgressBar(progress: taskManager.progress(for: task))
+                        ProgressBar(progress: taskManager.currentTaskProgress)
                             .padding(.bottom, DrawingConstants.progressBarPadding)
                     }
                 }
@@ -48,7 +47,7 @@ struct TaskDetailView: View {
             }
         }
         .background(Color("Background"))
-        .navigationTitle(task.taskTitle ?? "")
+        .navigationTitle(taskManager.currentTask?.taskTitle ?? "")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -71,7 +70,7 @@ struct TaskDetailView: View {
             }
         }
         .sheet(isPresented: $showEditTaskSheet) {
-            AddTaskView(isPresented: $showEditTaskSheet, task: task)
+            AddTaskView(isPresented: $showEditTaskSheet)
         }
     }
     
@@ -144,7 +143,7 @@ struct TaskDetailView: View {
     }
     
     var dueDate: some View {
-        Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
+        Text("Due: \(Utils.dateFormatter.string(from: taskManager.currentTask?.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
             .fontWeight(.semibold)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.headline)
@@ -154,7 +153,7 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var taskDesc: some View {
-        if let desc = task.taskDescription {
+        if let desc = taskManager.currentTask?.taskDescription {
             if desc != "" {
                 VStack(alignment: .leading) {
                     Text("Notes:")

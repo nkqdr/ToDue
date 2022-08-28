@@ -25,7 +25,7 @@ struct CompletedTasksView: View {
                     .padding(.horizontal)
                     ForEach (taskManager.filteredCompleteTasks ?? taskManager.completeTasks) { task in
                         NavigationLink(destination: {
-                            TaskDetailView(task: task)
+                            TaskDetailView()
                         }, label: {
                             TaskContainer(task: task)
                         })
