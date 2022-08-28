@@ -30,13 +30,14 @@ struct AddTaskView: View {
         _date = State(initialValue: task.date ?? Date.now)
     }
     
+    private var dateRange: PartialRangeFrom<Date> {
+        let calendar = Calendar.current
+        let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: task != nil ? min(task!.date!, Date.now) : Date.now)
+        return calendar.date(from: startComponents)!...
+    }
+    
     var body: some View {
         let editMode = task != nil
-        let dateRange: PartialRangeFrom<Date> = {
-            let calendar = Calendar.current
-            let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: editMode ? min(task!.date!, Date.now) : Date.now)
-            return calendar.date(from: startComponents)!...
-        }()
         return VStack(alignment: .leading) {
             Text(editMode ? "Edit task" : "New task")
                 .font(.largeTitle)

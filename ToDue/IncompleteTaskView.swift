@@ -76,6 +76,7 @@ struct IncompleteTaskView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .scaleEffect(max(0.8, min(1.2, 1 - scrollOffset * 0.001)), anchor: .leading)
         .padding(.horizontal)
+        .opacity(1-titleOpacity)
     }
     
     var mainScrollView: some View {
@@ -96,8 +97,8 @@ struct IncompleteTaskView: View {
             .animation(.spring(), value: taskManager.incompleteTasks)
             .padding(.horizontal)
             .onChange(of: scrollOffset) { newValue in
-                withAnimation(.easeInOut(duration: 0.1)) {
-                    if newValue > 60 {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    if newValue > 50 {
                         titleOpacity = 1
                     } else {
                         titleOpacity = 0
