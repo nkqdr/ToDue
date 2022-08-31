@@ -9,67 +9,67 @@ import SwiftUI
 
 struct AddSubtaskView: View {
     @EnvironmentObject var taskManager: TaskManager
-    @State private var taskDescription: String = ""
     @Binding var isPresented: Bool
     @State private var saveButtonDisabled = true
-    var subTask: SubTask?
-    
-    init(isPresented: Binding<Bool>) {
-        self._isPresented = isPresented
-        _taskDescription = State(initialValue: "")
-    }
-    
-    init(isPresented: Binding<Bool>, subTask: SubTask) {
-        self._isPresented = isPresented
-        self.subTask = subTask
-        _taskDescription = State(initialValue: subTask.title ?? "")
-    }
+    @StateObject var subtaskEditor: SubtaskEditor
     
     var body: some View {
-        let editMode = subTask != nil
-        let task = taskManager.currentTask!
-        VStack(alignment: .leading) {
-            Spacer()
-            Text("Enter a short description:")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(Color("Text"))
-                .padding(.horizontal)
-            TextField("Description...", text: $taskDescription)
-                .submitLabel(.done)
-                .textFieldStyle(.roundedBorder)
-                .onChange(of: taskDescription, perform: {
-                    if ($0.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
-                        saveButtonDisabled = false
-                    } else {
-                        saveButtonDisabled = true
-                    }
-                })
-                .padding(.horizontal)
-                .padding(.bottom, 40)
-            Button{
-                isPresented = false
-                if let st = subTask {
-                    taskManager.editSubTask(st, description: taskDescription)
-                } else {
-                    taskManager.addSubTask(to: task, description: taskDescription)
+        let editMode = subtaskEditor.subtask != nil
+        NavigationView {
+            Form {
+                Section("Information") {
+                    TextField("Title", text: $subtaskEditor.subtaskTitle)
+                        .submitLabel(.done)
+                        .onChange(of: subtaskEditor.subtaskTitle) {
+                            if ($0.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
+                                saveButtonDisabled = false
+                            } else {
+                                saveButtonDisabled = true
+                            }
+                        }
                 }
-            } label: {
-                Text("Save")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .padding()
+                .listRowBackground(Color("Accent2").opacity(0.3))
             }
-            .buttonStyle(RoundedRectangleButtonStyle(isDisabled: saveButtonDisabled))
-            .disabled(editMode ? taskDescription == "" : saveButtonDisabled)
+            .background(Color("Background"))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        isPresented.toggle()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save", action: handleSave)
+                        .disabled(editMode ? subtaskEditor.subtaskTitle == "" : saveButtonDisabled)
+                }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button {
+                        hideKeyboard()
+                    } label: {
+                        Image(systemName: "keyboard.chevron.compact.down")
+                    }
+                }
+            }
+            .navigationTitle(editMode ? "Edit subtask" : "Add subtask")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .padding()
-        .background(Color("Background"))
+    }
+    
+    private func handleSave() {
+        if let st = subtaskEditor.subtask {
+            taskManager.editSubTask(st, description: subtaskEditor.subtaskTitle)
+        } else {
+            if let task = taskManager.currentTask {
+                taskManager.addSubTask(to: task, description: subtaskEditor.subtaskTitle)
+            }
+        }
+        isPresented = false
     }
 }
 
 struct AddSubtaskView_Previews: PreviewProvider {
     static var previews: some View {
-        AddSubtaskView(isPresented: .constant(true))
+        AddSubtaskView(isPresented: .constant(true), subtaskEditor: SubtaskEditor())
+            .environmentObject(TaskManager())
     }
 }

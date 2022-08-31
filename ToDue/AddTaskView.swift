@@ -10,118 +10,81 @@ import SwiftUI
 struct AddTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
     @Binding var isPresented: Bool
-    @State private var taskDescription: String = ""
-    @State private var taskTitle: String = ""
-    @State private var date: Date = Date()
+    @StateObject var taskEditor: TaskEditor
     @State private var saveButtonDisabled = true
     
     private var dateRange: PartialRangeFrom<Date> {
-        let task = taskManager.currentTask
+        let task = taskEditor.task
         let calendar = Calendar.current
         let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: task != nil ? min(task!.date!, Date.now) : Date.now)
         return calendar.date(from: startComponents)!...
     }
     
-    private func maybeLoadTask() {
-        let task: Task? = taskManager.currentTask
-        taskDescription = task?.taskDescription ?? ""
-        taskTitle = task?.taskTitle ?? ""
-        date = task?.date ?? Date.now
-    }
-    
     var body: some View {
-        let editMode = taskManager.currentTask != nil
-        return VStack(alignment: .leading) {
-            Text(editMode ? "Edit task" : "New task")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(Color("Text"))
-                .padding(.bottom, 20)
-            titleAndNotes
-            Divider()
-            DatePicker("Due date:", selection: $date, in: dateRange, displayedComponents: .date)
-                .font(.headline.weight(.bold))
-                .foregroundColor(Color("Text"))
-                .datePickerStyle(.compact)
-                .frame(maxWidth: .infinity)
-                .padding(.bottom, 40)
-            Button{
-                handleSave()
-            } label: {
-                Text("Save")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .padding()
-            }
-            .buttonStyle(RoundedRectangleButtonStyle(isDisabled: editMode ? taskTitle == "" : saveButtonDisabled))
-            .disabled(editMode ? taskTitle == "" : saveButtonDisabled)
-        }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .background(Color("Background"))
-        .onAppear(perform: maybeLoadTask)
-    }
-    
-    var titleAndNotes: some View {
-        Group {
-            Text("Title:")
-                .font(.headline)
-                .fontWeight(.bold)
-            TextField("Type here...", text: $taskTitle)
-                .submitLabel(.done)
-                .textFieldStyle(.roundedBorder)
-                .onChange(of: taskTitle, perform: {
-                    if ($0.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
-                        saveButtonDisabled = false
-                    } else {
-                        saveButtonDisabled = true
+        let editMode = taskEditor.task != nil
+        return NavigationView {
+            Form {
+                Group {
+                    Section("Information") {
+                        TextField("Title", text: $taskEditor.taskTitle)
+                            .onChange(of: taskEditor.taskTitle) {
+                                if ($0.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
+                                    saveButtonDisabled = false
+                                } else {
+                                    saveButtonDisabled = true
+                                }
+                            }
+                        DatePicker("Due date:", selection: $taskEditor.taskDueDate, in: dateRange, displayedComponents: .date)
                     }
-                })
-            Text("Additional Notes: (Optional)")
-                .font(.headline)
-                .fontWeight(.bold)
-            // TODO: Replace ZStack with commented code when iOS 16 is out
-//                    TextField("", text: $taskDescription,  axis: .vertical)
-//                        .textFieldStyle(.roundedBorder)
-//                        .lineLimit(2...5)
-            ZStack {
-                TextEditor(text: $taskDescription)
-                    .submitLabel(.done)
-                Text(taskDescription).opacity(0).padding(.all, 8).lineLimit(5)
+                    Section("Additional Notes: (Optional)") {
+                        TextEditor(text: $taskEditor.taskDescription)
+                            .frame(minHeight: 100)
+                            .disableAutocorrection(true)
+                            .submitLabel(.done)
+                    }
+                }
+                .listRowBackground(Color("Accent2").opacity(0.3))
             }
+            .navigationTitle(editMode ? "Edit task" : "New task")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        isPresented.toggle()
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save", action: handleSave)
+                        .disabled(editMode ? taskEditor.taskTitle == "" : saveButtonDisabled)
+                }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button {
+                        hideKeyboard()
+                    } label: {
+                        Image(systemName: "keyboard.chevron.compact.down")
+                    }
+                }
+            }
+            .background(Color("Background"))
         }
-        .foregroundColor(Color("Text"))
     }
     
     private func handleSave() {
-        isPresented = false
-        date = date.removeTimeStamp!
-        if let newTask = taskManager.currentTask {
-            taskManager.updateTask(newTask, description: taskDescription, title: taskTitle, date: date, isCompleted: newTask.isCompleted)
+        let newDate = taskEditor.taskDueDate.removeTimeStamp!
+        let newDescription = taskEditor.taskDescription
+        let newTitle = taskEditor.taskTitle
+        if let newTask = taskEditor.task {
+            taskManager.updateTask(newTask, description: newDescription, title: newTitle, date: newDate, isCompleted: newTask.isCompleted)
         } else {
-            taskManager.addNewTask(description: taskDescription, title: taskTitle, date: date)
+            taskManager.addNewTask(description: newDescription, title: newTitle, date: newDate)
         }
-        taskDescription = ""
-        date = Date.now
+        isPresented = false
     }
-}
-
-struct RoundedRectangleButtonStyle: ButtonStyle {
-    var isDisabled: Bool
-      func makeBody(configuration: Configuration) -> some View {
-        HStack {
-          Spacer()
-            configuration.label.foregroundColor(isDisabled ? Color("Text") : Color.white)
-          Spacer()
-        }
-        .padding(.horizontal)
-        .background(isDisabled ? Color.gray.cornerRadius(10) : Color.blue.cornerRadius(10))
-        .scaleEffect(configuration.isPressed ? 0.95 : 1)
-      }
 }
 
 struct AddTaskView_Previews: PreviewProvider {
     static var previews: some View {
-        AddTaskView(isPresented: .constant(true))
+        AddTaskView(isPresented: .constant(true), taskEditor: TaskEditor())
+            .environmentObject(TaskManager())
     }
 }

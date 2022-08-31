@@ -77,6 +77,10 @@ class TaskManager: ObservableObject {
         }
     }
     
+    func setCurrentTask(_ task: Task) {
+        self.currentTask = task
+    }
+    
     func toggleCompleted(_ task: Task) {
         coreDM.updateTask(task: task, description: task.taskDescription!, title: task.taskTitle!, date: task.date!, isCompleted: !task.isCompleted)
         self.update()

@@ -80,6 +80,9 @@
 "In what order are the tasks listed?" = "Nach welcher Reihenfolge werden die Aufgaben aufgelistet?";
 
 /* No comment provided by engineer. */
+"Information" = "Informationen";
+
+/* No comment provided by engineer. */
 "Mark as complete" = "Als geschafft markieren";
 
 /* No comment provided by engineer. */
@@ -131,7 +134,7 @@
 "There is no undo" = "Es gibt kein Zurück";
 
 /* No comment provided by engineer. */
-"Title:" = "Titel:";
+"Title" = "Titel";
 
 /* Label that displays how many tasks have been completed in total. */
 "Total: %lld" = "Insgesamt: %lld";

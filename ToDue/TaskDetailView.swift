@@ -62,15 +62,15 @@ struct TaskDetailView: View {
             currentSubTask = nil
         }) {
             if let subTask = currentSubTask {
-                AddSubtaskView(isPresented: $showAddSubtaskSheet, subTask: subTask)
+                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(subTask))
                 // TODO: Once iOS 16 is out, use .presentationDetents here!
             } else {
-                AddSubtaskView(isPresented: $showAddSubtaskSheet)
+                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor())
                 // TODO: Once iOS 16 is out, use .presentationDetents here!
             }
         }
         .sheet(isPresented: $showEditTaskSheet) {
-            AddTaskView(isPresented: $showEditTaskSheet)
+            AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: taskManager.currentTask))
         }
     }
     

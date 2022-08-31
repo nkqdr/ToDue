@@ -48,15 +48,19 @@ struct TaskContainer: View {
             }
         }
         .frame(minHeight: showBackground && !task.isCompleted ? DrawingConstants.topTaskMinHeight : 0)
-        .alert(isPresented: $showingAlert) {
-            Alert(
-                title: Text("Are you sure you want to delete this?"),
-                message: Text("There is no undo"),
-                primaryButton: .destructive(Text("Delete")) {
-                    taskManager.deleteTask(task)
-                },
-                secondaryButton: .cancel()
-            )
+        .confirmationDialog(
+            Text("Are you sure you want to delete this?"),
+            isPresented: $showingAlert,
+            titleVisibility: .visible
+        ) {
+             Button("Delete", role: .destructive) {
+                 withAnimation(.easeInOut) {
+                     taskManager.deleteTask(task)
+                 }
+             }
+        } message: {
+            Text(task.taskTitle ?? "")
+                .font(.headline).fontWeight(.bold)
         }
         .contextMenu {
             Button(role: .cancel, action: {

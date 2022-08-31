@@ -41,7 +41,7 @@ struct IncompleteTaskView: View {
             }
             .background(Color("Background"))
             .sheet(isPresented: $showAddingPage) {
-                AddTaskView(isPresented: $showAddingPage)
+                AddTaskView(isPresented: $showAddingPage, taskEditor: TaskEditor())
             }
         }
         .navigationViewStyle(.stack)
@@ -91,7 +91,7 @@ struct IncompleteTaskView: View {
                     TaskContainer(task: task, showBackground: isFirst)
                 })
                 .simultaneousGesture(TapGesture().onEnded {
-                    taskManager.currentTask = task
+                    taskManager.setCurrentTask(task)
                 })
             }
             .animation(.spring(), value: taskManager.incompleteTasks)
