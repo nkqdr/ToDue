@@ -16,7 +16,7 @@ struct AddTaskView: View {
     private var dateRange: PartialRangeFrom<Date> {
         let task = taskEditor.task
         let calendar = Calendar.current
-        let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: task != nil ? min(task!.date!, Date.now) : Date.now)
+        let startComponents = calendar.dateComponents([.year, .month, .day], from: task != nil ? min(task!.date!, Date.now) : Date.now)
         return calendar.date(from: startComponents)!...
     }
     
@@ -70,14 +70,7 @@ struct AddTaskView: View {
     }
     
     private func handleSave() {
-        let newDate = taskEditor.taskDueDate.removeTimeStamp!
-        let newDescription = taskEditor.taskDescription
-        let newTitle = taskEditor.taskTitle
-        if let newTask = taskEditor.task {
-            taskManager.updateTask(newTask, description: newDescription, title: newTitle, date: newDate, isCompleted: newTask.isCompleted)
-        } else {
-            taskManager.addNewTask(description: newDescription, title: newTitle, date: newDate)
-        }
+        taskManager.saveTask(taskEditor)
         isPresented = false
     }
 }

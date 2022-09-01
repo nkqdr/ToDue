@@ -7,7 +7,6 @@
 
 import Foundation
 import CoreData
-import WidgetKit
 
 class CoreDataManager: ObservableObject {
     static let shared = CoreDataManager()
@@ -31,87 +30,31 @@ class CoreDataManager: ObservableObject {
         persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
-    func removeAllSubTasks(from task: Task) {
-        task.removeFromSubTasks(task.subTasks!)
-        try? persistentContainer.viewContext.save()
-    }
+//    func removeAllSubTasks(from task: Task) {
+//        task.removeFromSubTasks(task.subTasks!)
+//        try? persistentContainer.viewContext.save()
+//    }
     
-    func addSubTask(to task: Task, subTaskTitle: String) {
-        let subTask = SubTask(context: persistentContainer.viewContext)
-        subTask.title = subTaskTitle
-        subTask.id = UUID()
-        subTask.isCompleted = false
-        subTask.createdAt = Date.now
-        
-        task.addToSubTasks(subTask)
-        try? persistentContainer.viewContext.save()
-    }
-    
-    func updateSubTask(_ subTask: SubTask, description: String) {
-        persistentContainer.viewContext.performAndWait {
-            subTask.title = description
-            try? persistentContainer.viewContext.save()
-        }
-    }
-    
-    func saveTask(taskDescription: String, taskTitle: String, date: Date) {
-        let task = Task(context: persistentContainer.viewContext)
-        task.date = date
-        task.taskDescription = taskDescription
-        task.taskTitle = taskTitle
-        task.isCompleted = false
-        task.id = UUID()
-        task.subTasks = []
-        WidgetCenter.shared.reloadAllTimelines()
-        try? persistentContainer.viewContext.save()
-    }
-    
-    func deleteSubTask(subTask: SubTask) {
-        persistentContainer.viewContext.delete(subTask)
+    private func executeFetch<T>(_ request: NSFetchRequest<T>) -> [T] {
         do {
-            try persistentContainer.viewContext.save()
+            return try persistentContainer.viewContext.fetch(request)
         } catch {
-            persistentContainer.viewContext.rollback()
-            print("Failed to save context \(error.localizedDescription)")
+            return []
         }
+    }
+    
+    func getIncompleteTasks() -> [Task] {
+        let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "isCompleted = %d", false)
+        
+        return executeFetch(fetchRequest)
     }
     
     func getAllTasks() -> [Task] {
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
-        do {
-            return try persistentContainer.viewContext.fetch(fetchRequest)
-        } catch {
-            return []
-        }
-    }
-    
-    func toggleIsCompleted(for subTask: SubTask) {
-        subTask.isCompleted.toggle()
-        try? persistentContainer.viewContext.save()
-    }
-    
-    func updateTask(task: Task, description: String, title: String, date: Date, isCompleted: Bool) {
-        persistentContainer.viewContext.performAndWait {
-            task.isCompleted = isCompleted
-            task.taskDescription = description
-            task.date = date
-            task.taskTitle = title
-            try? persistentContainer.viewContext.save()
-        }
-        WidgetCenter.shared.reloadAllTimelines()
-    }
-    
-    func deleteTask(task: Task) {
-        persistentContainer.viewContext.delete(task)
-        
-        do {
-            try persistentContainer.viewContext.save()
-        } catch {
-            persistentContainer.viewContext.rollback()
-            print("Failed to save context \(error.localizedDescription)")
-        }
-        WidgetCenter.shared.reloadAllTimelines()
+        return executeFetch(fetchRequest)
     }
 }

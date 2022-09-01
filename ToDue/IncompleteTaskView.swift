@@ -12,11 +12,9 @@ struct IncompleteTaskView: View {
     @State private var showAddingPage = false
     @State private var scrollOffset: CGFloat = 0.0
     @State private var titleOpacity = 0.0
-    @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Task.date, ascending: true)], predicate: NSPredicate(format: "isCompleted = %d", false), animation: .spring())
-    var incompleteTasks: FetchedResults<Task>
     
     var body: some View {
-        let deadlineLabel = Utils.remainingTimeLabel(task: incompleteTasks.first)
+        let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
         NavigationView {
             ZStack {
                 mainScrollView
@@ -51,7 +49,7 @@ struct IncompleteTaskView: View {
     
     @ViewBuilder
     var maybeAddTaskButton: some View {
-        if incompleteTasks.isEmpty {
+        if taskManager.incompleteTasks.isEmpty {
             GeometryReader { proxy in
                 VStack(alignment: .center) {
                     Spacer(minLength: UIScreen.main.bounds.size.height / 3)
@@ -66,7 +64,7 @@ struct IncompleteTaskView: View {
     }
     
     var largePageTitle: some View {
-        let deadlineLabel = Utils.remainingTimeLabel(task: incompleteTasks.first)
+        let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
         return Group {
             Text("Next Due Date in")
                 .font(.title2)
@@ -85,14 +83,15 @@ struct IncompleteTaskView: View {
         ObservableScrollView(scrollOffset: $scrollOffset, showsIndicators: false) { proxy in
             largePageTitle
             maybeAddTaskButton
-            ForEach (incompleteTasks) { task in
-                let isFirst: Bool = incompleteTasks.first == task
+            ForEach (taskManager.incompleteTasks) { task in
+                let isFirst: Bool = taskManager.incompleteTasks.first == task
                 NavigationLink(destination: {
                     TaskDetailView(task: task)
                 }, label: {
                     TaskContainer(task: task, showBackground: isFirst)
                 })
             }
+            .animation(.spring(), value: taskManager.incompleteTasks)
             .padding(.horizontal)
             .onChange(of: scrollOffset) { newValue in
                 withAnimation(.easeInOut(duration: 0.2)) {
@@ -102,23 +101,6 @@ struct IncompleteTaskView: View {
                         titleOpacity = 0
                     }
                 }
-            }
-        }
-    }
-    
-    var addTaskButton: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Circle()
-                    .fill(Color("Text"))
-                    .frame(width: 60, height: 60)
-                Image(systemName: "plus")
-                    .font(.largeTitle)
-                    .foregroundColor(Color("Background"))
-            }
-            .position(x: geometry.frame(in: .global).maxX - 50, y: geometry.frame(in: .global).maxY - 120)
-            .onTapGesture {
-                showAddingPage = true
             }
         }
     }

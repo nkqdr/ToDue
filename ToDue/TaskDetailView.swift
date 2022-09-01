@@ -13,7 +13,18 @@ struct TaskDetailView: View {
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
+    @FetchRequest var subTasks: FetchedResults<SubTask>
     var task: Task
+    
+    init(task: Task) {
+        self.task = task
+        self._subTasks = FetchRequest(
+            entity: SubTask.entity(),
+            sortDescriptors: [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)],
+            predicate: NSPredicate(format: "task == %@", task),
+            animation: .spring()
+        )
+    }
     
     var body: some View {
         List {
@@ -62,13 +73,8 @@ struct TaskDetailView: View {
         .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
             currentSubTask = nil
         }) {
-            if let subTask = currentSubTask {
-                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(subTask))
-                // TODO: Once iOS 16 is out, use .presentationDetents here!
-            } else {
-                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor())
-                // TODO: Once iOS 16 is out, use .presentationDetents here!
-            }
+            AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(currentSubTask, on: task))
+            // TODO: Once iOS 16 is out, use .presentationDetents here!
         }
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
@@ -170,8 +176,9 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var subTaskList: some View {
-        if !task.subTaskArray.isEmpty {
-            let incomplete = task.subTaskArray.filter { !$0.isCompleted }
+        let subTaskArray = subTasks.map { $0 }
+        if !subTaskArray.isEmpty {
+            let incomplete = subTaskArray.filter { !$0.isCompleted }
             if !incomplete.isEmpty {
                 Section("Sub-Tasks") {
                     ForEach(incomplete) { subTask in
@@ -179,7 +186,7 @@ struct TaskDetailView: View {
                     }
                 }
             }
-            let completed = task.subTaskArray.filter { $0.isCompleted }
+            let completed = subTaskArray.filter { $0.isCompleted }
             if !completed.isEmpty {
                 Section("Completed") {
                     ForEach(completed) { subTask in

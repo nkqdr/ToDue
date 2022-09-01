@@ -56,20 +56,14 @@ struct AddSubtaskView: View {
     }
     
     private func handleSave() {
-        if let st = subtaskEditor.subtask {
-            taskManager.editSubTask(st, description: subtaskEditor.subtaskTitle)
-        } else {
-            if let task = subtaskEditor.subtask?.task {
-                taskManager.addSubTask(to: task, description: subtaskEditor.subtaskTitle)
-            }
-        }
+        taskManager.saveSubtask(subtaskEditor)
         isPresented = false
     }
 }
 
 struct AddSubtaskView_Previews: PreviewProvider {
     static var previews: some View {
-        AddSubtaskView(isPresented: .constant(true), subtaskEditor: SubtaskEditor())
+        AddSubtaskView(isPresented: .constant(true), subtaskEditor: SubtaskEditor(on: Task()))
             .environmentObject(TaskManager())
     }
 }
