@@ -11,21 +11,24 @@ import WidgetKit
 
 class CoreDataManager: ObservableObject {
     static let shared = CoreDataManager()
-    let persistentContainer: NSPersistentContainer
+    let persistentContainer: NSPersistentCloudKitContainer
     
     private init() {
+        persistentContainer = NSPersistentCloudKitContainer(name: "DataModel")
+        
         let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.niklaskuder.ToDue")!
         let storeURL = containerURL.appendingPathComponent("DataModel.sqlite")
-        let description = NSPersistentStoreDescription(url: storeURL)
+        let storeDescription = NSPersistentStoreDescription(url: storeURL)
+        storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.niklaskuder.ToDue")
+        persistentContainer.persistentStoreDescriptions = [storeDescription]
         
-        persistentContainer = NSPersistentContainer(name: "DataModel")
-        persistentContainer.persistentStoreDescriptions = [description]
         persistentContainer.loadPersistentStores { (description, error) in
             if let error = error {
                 fatalError("Core Data failed to initialize \(error.localizedDescription)")
             }
         }
-        self.persistentContainer.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
     func removeAllSubTasks(from task: Task) {
@@ -75,13 +78,10 @@ class CoreDataManager: ObservableObject {
     
     func getAllTasks() -> [Task] {
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         do {
-            var allTasks = try persistentContainer.viewContext.fetch(fetchRequest)
-            allTasks.sort {
-                $0.date! < $1.date!
-            }
-            return allTasks
+            return try persistentContainer.viewContext.fetch(fetchRequest)
         } catch {
             return []
         }

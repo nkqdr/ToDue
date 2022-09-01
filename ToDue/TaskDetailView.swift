@@ -13,6 +13,7 @@ struct TaskDetailView: View {
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
+    var task: Task
     
     var body: some View {
         List {
@@ -20,8 +21,8 @@ struct TaskDetailView: View {
                 VStack(alignment: .leading) {
                     dueDate
                     taskDesc
-                    if !taskManager.currentSubTaskArray.isEmpty {
-                        ProgressBar(progress: taskManager.currentTaskProgress)
+                    if !task.subTaskArray.isEmpty {
+                        ProgressBar(progress: taskManager.progress(for: task))
                             .padding(.bottom, DrawingConstants.progressBarPadding)
                     }
                 }
@@ -47,7 +48,7 @@ struct TaskDetailView: View {
             }
         }
         .background(Color("Background"))
-        .navigationTitle(taskManager.currentTask?.taskTitle ?? "")
+        .navigationTitle(task.taskTitle ?? "")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -70,7 +71,7 @@ struct TaskDetailView: View {
             }
         }
         .sheet(isPresented: $showEditTaskSheet) {
-            AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: taskManager.currentTask))
+            AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
         }
     }
     
@@ -143,7 +144,7 @@ struct TaskDetailView: View {
     }
     
     var dueDate: some View {
-        Text("Due: \(Utils.dateFormatter.string(from: taskManager.currentTask?.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
+        Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
             .fontWeight(.semibold)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.headline)
@@ -153,7 +154,7 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var taskDesc: some View {
-        if let desc = taskManager.currentTask?.taskDescription {
+        if let desc = task.taskDescription {
             if desc != "" {
                 VStack(alignment: .leading) {
                     Text("Notes:")
@@ -169,8 +170,8 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var subTaskList: some View {
-        if !taskManager.currentSubTaskArray.isEmpty {
-            let incomplete = taskManager.currentSubTaskArray.filter { !$0.isCompleted }
+        if !task.subTaskArray.isEmpty {
+            let incomplete = task.subTaskArray.filter { !$0.isCompleted }
             if !incomplete.isEmpty {
                 Section("Sub-Tasks") {
                     ForEach(incomplete) { subTask in
@@ -178,7 +179,7 @@ struct TaskDetailView: View {
                     }
                 }
             }
-            let completed = taskManager.currentSubTaskArray.filter { $0.isCompleted }
+            let completed = task.subTaskArray.filter { $0.isCompleted }
             if !completed.isEmpty {
                 Section("Completed") {
                     ForEach(completed) { subTask in

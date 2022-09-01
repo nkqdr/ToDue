@@ -8,43 +8,11 @@
 import Foundation
 
 class TaskManager: ObservableObject {
-    private let coreDM: CoreDataManager
-    @Published var taskArray: [Task] = []
-    
-    var incompleteTasks: [Task] {
-        taskArray.filter { !$0.isCompleted }
-    }
-    
-    var completeTasks: [Task] {
-        taskArray.filter { $0.isCompleted }.sorted(by: { $0.date! > $1.date! })
-    }
-    
-    @Published var filteredCompleteTasks: [Task]?
-    
-    var currentTask: Task?
-    
-    var currentSubTaskArray: [SubTask] {
-        if let task = currentTask {
-            return task.subTaskArray
-        }
-        return []
-    }
+    let coreDM: CoreDataManager
     
     init() {
         let coreDM = CoreDataManager.shared
         self.coreDM = coreDM
-        self.taskArray = coreDM.getAllTasks().sorted(by: { $0.date! < $1.date! })
-    }
-    
-    private func update() {
-        self.taskArray = coreDM.getAllTasks().sorted(by: { $0.date! < $1.date! })
-    }
-    
-    var currentTaskProgress: Double {
-        if let task = currentTask {
-            return progress(for: task)
-        }
-        return -1
     }
     
     func progress(for task: Task) -> Double {
@@ -56,64 +24,54 @@ class TaskManager: ObservableObject {
         return Double(complete) / Double(total)
     }
     
-    // MARK: - Intents
-    
-    func filterCompletedTasks(by searchValue: String) {
-        if searchValue == "" {
-            filteredCompleteTasks = nil
-        } else {
-            DispatchQueue.global(qos: .userInitiated).async {
-                let filteredTasks = self.completeTasks.filter { task in
-                    let upperSearch = searchValue.uppercased()
-                    let titleContainsValue = task.taskTitle!.uppercased().contains(upperSearch)
-                    let descContainsValue = task.taskDescription?.uppercased().contains(upperSearch) ?? false
-                    let hasMatchingSubTask = task.subTaskArray.contains { $0.wrappedTitle.uppercased().contains(upperSearch) }
-                    return titleContainsValue || descContainsValue || hasMatchingSubTask
-                }
-                DispatchQueue.main.async {
-                    self.filteredCompleteTasks = filteredTasks
-                }
+    func filterTasks(_ tasks: [Task], by searchValue: String) -> [Task]? {
+        var filtered: [Task]?
+        if searchValue != "" {
+            filtered = tasks.filter { task in
+                let upperSearch = searchValue.uppercased()
+                let titleContainsValue = task.taskTitle!.uppercased().contains(upperSearch)
+                let descContainsValue = task.taskDescription?.uppercased().contains(upperSearch) ?? false
+                let hasMatchingSubTask = task.subTaskArray.contains { $0.wrappedTitle.uppercased().contains(upperSearch) }
+                return titleContainsValue || descContainsValue || hasMatchingSubTask
             }
         }
+        return filtered
     }
     
-    func setCurrentTask(_ task: Task) {
-        self.currentTask = task
-    }
+    // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
         coreDM.updateTask(task: task, description: task.taskDescription!, title: task.taskTitle!, date: task.date!, isCompleted: !task.isCompleted)
-        self.update()
     }
     
     func toggleCompleted(_ subTask: SubTask) {
         coreDM.toggleIsCompleted(for: subTask)
-        self.update()
+        self.objectWillChange.send()
     }
     
     func deleteTask(_ task: Task) {
         coreDM.deleteTask(task: task)
-        self.update()
+        self.objectWillChange.send()
     }
     
     func deleteTask(_ subTask: SubTask) {
         coreDM.deleteSubTask(subTask: subTask)
-        self.update()
+        self.objectWillChange.send()
     }
     
     func addNewTask(description: String, title: String, date: Date) {
         coreDM.saveTask(taskDescription: description, taskTitle: title, date: date)
-        self.update()
+        self.objectWillChange.send()
     }
     
     func addSubTask(to task: Task, description: String) {
         coreDM.addSubTask(to: task, subTaskTitle: description)
-        self.update()
+        self.objectWillChange.send()
     }
     
     func editSubTask(_ subTask: SubTask, description: String) {
         coreDM.updateSubTask(subTask, description: description)
-        self.update()
+        self.objectWillChange.send()
     }
     
     func updateTask(_ task: Task, description: String?, title: String?, date: Date?, isCompleted: Bool?) {
@@ -122,6 +80,6 @@ class TaskManager: ObservableObject {
         let newTitle: String = title ?? task.taskTitle!
         let newDueDate: Date = date ?? task.date!
         coreDM.updateTask(task: task, description: newDescription, title: newTitle, date: newDueDate, isCompleted: newComplete)
-        self.update()
+        self.objectWillChange.send()
     }
 }

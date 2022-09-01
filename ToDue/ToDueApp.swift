@@ -32,6 +32,7 @@ struct ToDueApp: App {
                     }
             }
             .environmentObject(taskManager)
+            .environment(\.managedObjectContext, taskManager.coreDM.persistentContainer.viewContext)
         }
     }
 }

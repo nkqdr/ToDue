@@ -59,7 +59,7 @@ struct AddSubtaskView: View {
         if let st = subtaskEditor.subtask {
             taskManager.editSubTask(st, description: subtaskEditor.subtaskTitle)
         } else {
-            if let task = taskManager.currentTask {
+            if let task = subtaskEditor.subtask?.task {
                 taskManager.addSubTask(to: task, description: subtaskEditor.subtaskTitle)
             }
         }

@@ -10,30 +10,30 @@ import SwiftUI
 struct CompletedTasksView: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var searchValue = ""
+    @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Task.date, ascending: false)], predicate: NSPredicate(format: "isCompleted = %d", true), animation: .spring())
+    var completeTasks: FetchedResults<Task>
+    @State var displayedTasks: [Task]?
     
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView(showsIndicators: false) {
                     HStack {
-                        Text("Total: \(taskManager.completeTasks.count)", comment: "Label that displays how many tasks have been completed in total.")
+                        Text("Total: \(completeTasks.count)", comment: "Label that displays how many tasks have been completed in total.")
                             .font(.title3)
                             .fontWeight(.bold)
                         Spacer()
                     }
                     .foregroundColor(.green.opacity(0.8))
                     .padding(.horizontal)
-                    ForEach (taskManager.filteredCompleteTasks ?? taskManager.completeTasks) { task in
+                    ForEach (displayedTasks ?? completeTasks.map { $0 }) { task in
                         NavigationLink(destination: {
-                            TaskDetailView()
+                            TaskDetailView(task: task)
                         }, label: {
                             TaskContainer(task: task)
                         })
-                        .simultaneousGesture(TapGesture().onEnded {
-                            taskManager.setCurrentTask(task)
-                        })                    }
+                    }
                     .padding(.horizontal)
-                    .animation(.spring(), value: taskManager.completeTasks)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -41,7 +41,12 @@ struct CompletedTasksView: View {
             .navigationTitle("Completed")
             .searchable(text: $searchValue)
             .onChange(of: searchValue) { newValue in
-                taskManager.filterCompletedTasks(by: newValue)
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let newTasks = taskManager.filterTasks(completeTasks.map { $0 }, by: searchValue)
+                    DispatchQueue.main.async {
+                        displayedTasks = newTasks
+                    }
+                }
             }
         }
         .navigationViewStyle(.stack)

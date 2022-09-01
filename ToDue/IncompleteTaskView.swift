@@ -12,9 +12,11 @@ struct IncompleteTaskView: View {
     @State private var showAddingPage = false
     @State private var scrollOffset: CGFloat = 0.0
     @State private var titleOpacity = 0.0
+    @FetchRequest(entity: Task.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Task.date, ascending: true)], predicate: NSPredicate(format: "isCompleted = %d", false), animation: .spring())
+    var incompleteTasks: FetchedResults<Task>
     
     var body: some View {
-        let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
+        let deadlineLabel = Utils.remainingTimeLabel(task: incompleteTasks.first)
         NavigationView {
             ZStack {
                 mainScrollView
@@ -49,7 +51,7 @@ struct IncompleteTaskView: View {
     
     @ViewBuilder
     var maybeAddTaskButton: some View {
-        if taskManager.incompleteTasks.isEmpty {
+        if incompleteTasks.isEmpty {
             GeometryReader { proxy in
                 VStack(alignment: .center) {
                     Spacer(minLength: UIScreen.main.bounds.size.height / 3)
@@ -64,7 +66,7 @@ struct IncompleteTaskView: View {
     }
     
     var largePageTitle: some View {
-        let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
+        let deadlineLabel = Utils.remainingTimeLabel(task: incompleteTasks.first)
         return Group {
             Text("Next Due Date in")
                 .font(.title2)
@@ -83,18 +85,14 @@ struct IncompleteTaskView: View {
         ObservableScrollView(scrollOffset: $scrollOffset, showsIndicators: false) { proxy in
             largePageTitle
             maybeAddTaskButton
-            ForEach (taskManager.incompleteTasks) { task in
-                let isFirst: Bool = taskManager.incompleteTasks.first == task
+            ForEach (incompleteTasks) { task in
+                let isFirst: Bool = incompleteTasks.first == task
                 NavigationLink(destination: {
-                    TaskDetailView()
+                    TaskDetailView(task: task)
                 }, label: {
                     TaskContainer(task: task, showBackground: isFirst)
                 })
-                .simultaneousGesture(TapGesture().onEnded {
-                    taskManager.setCurrentTask(task)
-                })
             }
-            .animation(.spring(), value: taskManager.incompleteTasks)
             .padding(.horizontal)
             .onChange(of: scrollOffset) { newValue in
                 withAnimation(.easeInOut(duration: 0.2)) {
