@@ -16,7 +16,7 @@ struct IncompleteTaskView: View {
     var body: some View {
         let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
         NavigationView {
-            ZStack {
+            Group {
                 mainScrollView
             }
             .navigationBarTitleDisplayMode(.inline)
