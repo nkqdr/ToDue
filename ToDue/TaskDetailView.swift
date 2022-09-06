@@ -59,8 +59,6 @@ struct TaskDetailView: View {
             }
         }
         .background(Color("Background"))
-        .navigationTitle(task.taskTitle ?? "")
-        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -70,6 +68,8 @@ struct TaskDetailView: View {
                 }
             }
         }
+        .navigationTitle(task.taskTitle ?? "")
+        .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
             currentSubTask = nil
         }) {

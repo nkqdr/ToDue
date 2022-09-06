@@ -43,8 +43,16 @@ struct IncompleteTaskView: View {
             .sheet(isPresented: $showAddingPage) {
                 AddTaskView(isPresented: $showAddingPage, taskEditor: TaskEditor())
             }
+            Group {
+                if let task = taskManager.incompleteTasks.first {
+                    TaskDetailView(task: task)
+                } else {
+                    Color("Background")
+                        .ignoresSafeArea()
+                }
+            }
         }
-        .navigationViewStyle(.stack)
+        .currentDeviceNavigationViewStyle()
     }
     
     @ViewBuilder
@@ -74,7 +82,7 @@ struct IncompleteTaskView: View {
                 .font(.title.weight(.bold))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .scaleEffect(max(0.8, min(1.2, 1 - scrollOffset * 0.001)), anchor: .leading)
+        .scaleEffect(max(0.8, min(1.1, 1 - scrollOffset * 0.0005)), anchor: .leading)
         .padding(.horizontal)
         .opacity(1 - titleOpacity)
     }

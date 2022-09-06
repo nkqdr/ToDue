@@ -12,6 +12,15 @@ extension View {
         clipShape( RoundedCorner(radius: radius, corners: corners) )
     }
     
+    @ViewBuilder
+    public func currentDeviceNavigationViewStyle() -> some View {
+        if UIDevice.isIPhone {
+            self.navigationViewStyle(StackNavigationViewStyle())
+        } else {
+            self.navigationViewStyle(DefaultNavigationViewStyle())
+        }
+    }
+    
     #if canImport(UIKit)
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
