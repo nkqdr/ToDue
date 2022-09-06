@@ -30,10 +30,7 @@ class PersistenceController {
         persistentContainer.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
-//    func removeAllSubTasks(from task: Task) {
-//        task.removeFromSubTasks(task.subTasks!)
-//        try? persistentContainer.viewContext.save()
-//    }
+    // MARK: - FetchRequests
     
     private func executeFetch<T>(_ request: NSFetchRequest<T>) -> [T] {
         do {

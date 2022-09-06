@@ -69,7 +69,7 @@ class TaskStorage: NSObject, ObservableObject {
 extension TaskStorage: NSFetchedResultsControllerDelegate {
     public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         guard let tasks = controller.fetchedObjects as? [Task] else { return }
-        print("Context has changed, reloading courses")
+        print("Context has changed, reloading tasks")
         self.tasks.value = tasks
     }
 }

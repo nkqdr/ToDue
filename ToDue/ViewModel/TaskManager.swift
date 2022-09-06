@@ -16,18 +16,25 @@ class TaskManager: ObservableObject {
     @Published var completeTasks: [Task] = []
     @Published var tasks: [Task] = [] {
         willSet {
-            print("Setting tasks...")
             incompleteTasks = newValue.filter { !$0.isCompleted }
             completeTasks = newValue.filter { $0.isCompleted }.reversed()
         }
     }
     
-    private var cancellable: AnyCancellable?
+    @Published var subTasks: [SubTask] = []
     
-    init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher()) {
-        cancellable = taskPublisher.sink { tasks in
+    private var taskCancellable: AnyCancellable?
+    private var subTaskCancellable: AnyCancellable?
+    
+    init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher(),
+         subTaskPublisher: AnyPublisher<[SubTask], Never> = SubtaskStorage.shared.subTasks.eraseToAnyPublisher()) {
+        taskCancellable = taskPublisher.sink { tasks in
             print("Updating tasks...")
             self.tasks = tasks
+        }
+        subTaskCancellable = subTaskPublisher.sink { subTasks in
+            print("Updating subtasks...")
+            self.subTasks = subTasks
         }
     }
     
@@ -54,45 +61,6 @@ class TaskManager: ObservableObject {
         return filtered
     }
     
-    // MARK: - Private utility functions
-    
-    private func addSubTask(to task: Task, description: String) {
-        let subTask = SubTask(context: container.viewContext)
-        subTask.title = description
-        subTask.id = UUID()
-        subTask.isCompleted = false
-        subTask.createdAt = Date.now
-        
-        task.addToSubTasks(subTask)
-        try? container.viewContext.save()
-    }
-    
-    private func editSubTask(_ subTask: SubTask, description: String) {
-        container.viewContext.performAndWait {
-            subTask.title = description
-            try? container.viewContext.save()
-        }
-    }
-    
-    private func updateTask(_ task: Task, description: String?, title: String?, date: Date?, isCompleted: Bool?) {
-        TaskStorage.shared.update(task, title: title, description: description, date: date, isCompleted: isCompleted)
-        WidgetCenter.shared.reloadAllTimelines()
-    }
-    
-    private func addNewTask(description: String, title: String, date: Date) {
-        TaskStorage.shared.add(title: title, description: description, date: date)
-        WidgetCenter.shared.reloadAllTimelines()
-    }
-    
-    private func saveOrRollback() {
-        do {
-            try container.viewContext.save()
-        } catch {
-            container.viewContext.rollback()
-            print("Failed to save context \(error.localizedDescription)")
-        }
-    }
-    
     // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
@@ -104,9 +72,7 @@ class TaskManager: ObservableObject {
     }
     
     func toggleCompleted(_ subTask: SubTask) {
-        subTask.isCompleted.toggle()
-        try? container.viewContext.save()
-        self.objectWillChange.send()
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: !subTask.isCompleted)
     }
     
     func deleteTask(_ task: Task) {
@@ -115,17 +81,15 @@ class TaskManager: ObservableObject {
     }
     
     func deleteTask(_ subTask: SubTask) {
-        container.viewContext.delete(subTask)
-        saveOrRollback()
+        SubtaskStorage.shared.delete(subTask)
     }
     
     func saveSubtask(_ editor: SubtaskEditor) {
         if let st = editor.subtask {
-            editSubTask(st, description: editor.subtaskTitle)
+            SubtaskStorage.shared.update(st, title: editor.subtaskTitle, isCompleted: st.isCompleted)
         } else {
-            addSubTask(to: editor.task, description: editor.subtaskTitle)
+            SubtaskStorage.shared.add(to: editor.task, title: editor.subtaskTitle)
         }
-        self.objectWillChange.send()
     }
     
     func saveTask(_ editor: TaskEditor) {
@@ -133,10 +97,10 @@ class TaskManager: ObservableObject {
         let newDescription = editor.taskDescription
         let newTitle = editor.taskTitle
         if let newTask = editor.task {
-            updateTask(newTask, description: newDescription, title: newTitle, date: newDate, isCompleted: newTask.isCompleted)
+            TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted)
         } else {
-            addNewTask(description: newDescription, title: newTitle, date: newDate)
+            TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate)
         }
-        self.objectWillChange.send()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }

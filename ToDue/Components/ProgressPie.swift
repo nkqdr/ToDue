@@ -12,6 +12,13 @@ struct ProgressPie: Shape {
     var startAngle: Angle
     var endAngle: Angle
     var clockwise: Bool = true
+    var animatableData: AnimatablePair<Double, Double> {
+        get { AnimatablePair(startAngle.radians, endAngle.radians) }
+        set {
+            startAngle = Angle.radians(newValue.first)
+            endAngle = Angle.radians(newValue.second)
+        }
+    }
     
     init(progress: Double) {
         self.progress = progress

@@ -12,6 +12,7 @@ class SubtaskEditor: ObservableObject {
     private(set) var task: Task
     
     @Published var subtaskTitle: String
+    @Published var saveButtonDisabled: Bool = true
     
     init(_ subtask: SubTask?, on task: Task) {
         self.subtask = subtask
@@ -22,5 +23,15 @@ class SubtaskEditor: ObservableObject {
     init(on task: Task) {
         self.subtaskTitle = ""
         self.task = task
+    }
+    
+    // MARK: - Intents
+    
+    func changeTitleValue(newValue: String) {
+        if (newValue.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
+            saveButtonDisabled = false
+        } else {
+            saveButtonDisabled = true
+        }
     }
 }

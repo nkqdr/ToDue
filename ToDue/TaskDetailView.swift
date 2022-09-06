@@ -13,18 +13,19 @@ struct TaskDetailView: View {
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
-    @FetchRequest var subTasks: FetchedResults<SubTask>
+//    @FetchRequest var subTasks: FetchedResults<SubTask>
+    
     var task: Task
     
-    init(task: Task) {
-        self.task = task
-        self._subTasks = FetchRequest(
-            entity: SubTask.entity(),
-            sortDescriptors: [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)],
-            predicate: NSPredicate(format: "task == %@", task),
-            animation: .spring()
-        )
-    }
+//    init(task: Task) {
+//        self.task = task
+//        self._subTasks = FetchRequest(
+//            entity: SubTask.entity(),
+//            sortDescriptors: [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)],
+//            predicate: NSPredicate(format: "task == %@", task),
+//            animation: .spring()
+//        )
+//    }
     
     var body: some View {
         List {
@@ -176,7 +177,7 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var subTaskList: some View {
-        let subTaskArray = subTasks.map { $0 }
+        let subTaskArray = task.subTaskArray //subTasks.map { $0 }
         if !subTaskArray.isEmpty {
             let incomplete = subTaskArray.filter { !$0.isCompleted }
             if !incomplete.isEmpty {

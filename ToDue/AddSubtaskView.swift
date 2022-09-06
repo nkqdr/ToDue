@@ -10,7 +10,6 @@ import SwiftUI
 struct AddSubtaskView: View {
     @EnvironmentObject var taskManager: TaskManager
     @Binding var isPresented: Bool
-    @State private var saveButtonDisabled = true
     @StateObject var subtaskEditor: SubtaskEditor
     
     var body: some View {
@@ -20,13 +19,7 @@ struct AddSubtaskView: View {
                 Section("Information") {
                     TextField("Title", text: $subtaskEditor.subtaskTitle)
                         .submitLabel(.done)
-                        .onChange(of: subtaskEditor.subtaskTitle) {
-                            if ($0.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
-                                saveButtonDisabled = false
-                            } else {
-                                saveButtonDisabled = true
-                            }
-                        }
+                        .onChange(of: subtaskEditor.subtaskTitle, perform: subtaskEditor.changeTitleValue)
                 }
                 .listRowBackground(Color("Accent2").opacity(0.3))
             }
@@ -39,7 +32,7 @@ struct AddSubtaskView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save", action: handleSave)
-                        .disabled(editMode ? subtaskEditor.subtaskTitle == "" : saveButtonDisabled)
+                        .disabled(editMode ? subtaskEditor.subtaskTitle == "" : subtaskEditor.saveButtonDisabled)
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
