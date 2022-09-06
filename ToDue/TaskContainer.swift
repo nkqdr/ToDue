@@ -21,24 +21,24 @@ struct TaskContainer: View {
                     Text(Utils.dateFormatter.string(from: task.date ?? Date.now))
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.headline)
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
                     Text(task.taskTitle ?? "")
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(showBackground && !task.isCompleted ? .title2 : .title3)
+                        .font(showBackground && !task.isCompleted ? .title3 : .headline)
                         .foregroundColor(Color("Text"))
                     if let desc = task.taskDescription {
                         Text(desc)
                             .foregroundColor(.secondary)
-                            .font(.headline)
+                            .font(.subheadline)
                             .lineLimit(1)
                     }
                     Spacer()
                     if taskManager.progress(for: task) == 1 && !task.isCompleted {
                         Text("Complete this task by tapping the circle!")
                             .font(.footnote)
-                            .foregroundColor(Color("Text"))
+                            .foregroundColor(.secondary)
                     }
                 }
                 .multilineTextAlignment(.leading)
@@ -74,7 +74,7 @@ struct TaskContainer: View {
                 Label("Delete", systemImage: "trash")
             })
         }
-        .padding(.bottom)
+        .padding(.bottom, 5)
     }
     
     @ViewBuilder
@@ -132,7 +132,7 @@ struct TaskContainer: View {
         static let topTaskBackgroundColor: Color = Color("Accent1")
         static let defaultTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
         static let completeTaskBackgroundColor: Color = Color.green.opacity(0.5)
-        static let topTaskMinHeight: CGFloat = 150
+        static let topTaskMinHeight: CGFloat = 140
         static let containerCornerRadius: CGFloat = 12
         static let progressCircleStrokeWidth: CGFloat = 2
     }
