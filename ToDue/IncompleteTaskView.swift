@@ -43,13 +43,11 @@ struct IncompleteTaskView: View {
             .sheet(isPresented: $showAddingPage) {
                 AddTaskView(isPresented: $showAddingPage, taskEditor: TaskEditor())
             }
-            Group {
-                if let task = taskManager.incompleteTasks.first {
-                    TaskDetailView(task: task)
-                } else {
-                    Color("Background")
-                        .ignoresSafeArea()
-                }
+            if let task = taskManager.incompleteTasks.first {
+                TaskDetailView(task: task)
+            } else {
+                Color("Background")
+                    .ignoresSafeArea()
             }
         }
         .currentDeviceNavigationViewStyle()

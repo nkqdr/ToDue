@@ -47,13 +47,11 @@ struct CompletedTasksView: View {
                     }
                 }
             }
-            Group {
-                if let task = taskManager.completeTasks.first {
-                    TaskDetailView(task: task)
-                } else {
-                    Color("Background")
-                        .ignoresSafeArea()
-                }
+            if let task = taskManager.completeTasks.first {
+                TaskDetailView(task: task)
+            } else {
+                Color("Background")
+                    .ignoresSafeArea()
             }
         }
         .currentDeviceNavigationViewStyle()
