@@ -82,7 +82,7 @@ struct IncompleteTaskView: View {
                 .font(.title.weight(.bold))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .scaleEffect(max(0.8, min(1.1, 1 - scrollOffset * 0.0005)), anchor: .leading)
+        .scaleEffect(max(DrawingConstants.minTitleScaleFactor, min(DrawingConstants.maxTitleScaleFactor, 1 - scrollOffset * DrawingConstants.scrollOffsetScaleFactor)), anchor: .leading)
         .padding(.horizontal)
         .opacity(1 - titleOpacity)
     }
@@ -102,8 +102,8 @@ struct IncompleteTaskView: View {
             .animation(.spring(), value: taskManager.incompleteTasks)
             .padding(.horizontal)
             .onChange(of: scrollOffset) { newValue in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    if newValue > 50 {
+                withAnimation(.easeInOut(duration: DrawingConstants.titleFadeDuration)) {
+                    if newValue > DrawingConstants.titleSwitchThreshold {
                         titleOpacity = 1
                     } else {
                         titleOpacity = 0
@@ -111,5 +111,13 @@ struct IncompleteTaskView: View {
                 }
             }
         }
+    }
+    
+    private struct DrawingConstants {
+        static let minTitleScaleFactor: CGFloat = 0.8
+        static let maxTitleScaleFactor: CGFloat = 1.1
+        static let scrollOffsetScaleFactor: CGFloat = 0.0005
+        static let titleFadeDuration: CGFloat = 0.2
+        static let titleSwitchThreshold: CGFloat = 50
     }
 }

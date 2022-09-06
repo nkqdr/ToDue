@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// This class is used as a controller for editing and creating subtasks
 class SubtaskEditor: ObservableObject {
     private(set) var subtask: SubTask?
     private(set) var task: Task
