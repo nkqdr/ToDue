@@ -26,6 +26,10 @@ extension View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
     #endif
+    
+    func themedListRowBackground() -> some View {
+        self.listRowBackground(Color("Accent2").opacity(0.3))
+    }
 }
 
 struct RoundedCorner: Shape {

@@ -13,19 +13,7 @@ struct TaskDetailView: View {
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
-//    @FetchRequest var subTasks: FetchedResults<SubTask>
-    
     var task: Task
-    
-//    init(task: Task) {
-//        self.task = task
-//        self._subTasks = FetchRequest(
-//            entity: SubTask.entity(),
-//            sortDescriptors: [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)],
-//            predicate: NSPredicate(format: "task == %@", task),
-//            animation: .spring()
-//        )
-//    }
     
     var body: some View {
         List {
@@ -43,7 +31,7 @@ struct TaskDetailView: View {
                 subTaskList
                 addSubTaskButton
             }
-            .listRowBackground(Color("Accent2").opacity(0.3))
+            .themedListRowBackground()
             .confirmationDialog(
                 Text("Are you sure you want to delete this?"),
                 isPresented: $showingAlert,
@@ -111,7 +99,7 @@ struct TaskDetailView: View {
                 editSubTaskButton(subTask)
                 deleteSubTaskButton(subTask)
             }
-            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+            .listRowInsets(DrawingConstants.subTaskListRowInsets)
     }
     
     private func editSubTaskButton(_ subTask: SubTask) -> some View {
@@ -177,7 +165,7 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var subTaskList: some View {
-        let subTaskArray = task.subTaskArray //subTasks.map { $0 }
+        let subTaskArray = task.subTaskArray
         if !subTaskArray.isEmpty {
             let incomplete = subTaskArray.filter { !$0.isCompleted }
             if !incomplete.isEmpty {
@@ -207,6 +195,6 @@ struct TaskDetailView: View {
         static let completeIndicatorSize: CGFloat = 50
         static let scrollBottomPadding: CGFloat = 50
         static let progressBarPadding: CGFloat = 20
-        static let subTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
+        static let subTaskListRowInsets: EdgeInsets = EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
     }
 }

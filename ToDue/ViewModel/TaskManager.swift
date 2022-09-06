@@ -36,6 +36,7 @@ class TaskManager: ObservableObject {
             print("Updating subtasks...")
             self.subTasks = subTasks
         }
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     func progress(for task: Task) -> Double {
