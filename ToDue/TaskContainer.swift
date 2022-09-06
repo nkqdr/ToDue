@@ -106,12 +106,16 @@ struct TaskContainer: View {
                     taskManager.toggleCompleted(task)
                 }
         } else {
+            let progress = taskManager.progress(for: task)
             ZStack {
+                // This circle is needed so that the TapGesture is also recognized within the stroked circle.
                 Circle()
-                    .foregroundColor(showBackground && !task.isCompleted ? DrawingConstants.topTaskBackgroundColor : DrawingConstants.defaultTaskBackgroundColor)
+                    .foregroundColor(.clear)
                 Circle()
                     .strokeBorder(lineWidth: DrawingConstants.progressCircleStrokeWidth)
-                ProgressPie(progress: taskManager.progress(for: task))
+                    .animation(.easeInOut, value: progress)
+                ProgressPie(progress: progress)
+                    .animation(.easeInOut, value: progress)
             }
             .foregroundColor(Color("Text"))
             .frame(width: DrawingConstants.progressCircleSize, height: DrawingConstants.progressCircleSize)

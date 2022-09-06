@@ -13,6 +13,7 @@ struct TaskDetailView: View {
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
+    var task: Task
     
     var body: some View {
         List {
@@ -20,8 +21,8 @@ struct TaskDetailView: View {
                 VStack(alignment: .leading) {
                     dueDate
                     taskDesc
-                    if !taskManager.currentSubTaskArray.isEmpty {
-                        ProgressBar(progress: taskManager.currentTaskProgress)
+                    if !task.subTaskArray.isEmpty {
+                        ProgressBar(progress: taskManager.progress(for: task))
                             .padding(.bottom, DrawingConstants.progressBarPadding)
                     }
                 }
@@ -30,7 +31,7 @@ struct TaskDetailView: View {
                 subTaskList
                 addSubTaskButton
             }
-            .listRowBackground(Color("Accent2").opacity(0.3))
+            .themedListRowBackground()
             .confirmationDialog(
                 Text("Are you sure you want to delete this?"),
                 isPresented: $showingAlert,
@@ -47,8 +48,6 @@ struct TaskDetailView: View {
             }
         }
         .background(Color("Background"))
-        .navigationTitle(taskManager.currentTask?.taskTitle ?? "")
-        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -58,19 +57,16 @@ struct TaskDetailView: View {
                 }
             }
         }
+        .navigationTitle(task.taskTitle ?? "")
+        .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
             currentSubTask = nil
         }) {
-            if let subTask = currentSubTask {
-                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(subTask))
-                // TODO: Once iOS 16 is out, use .presentationDetents here!
-            } else {
-                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor())
-                // TODO: Once iOS 16 is out, use .presentationDetents here!
-            }
+            AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(currentSubTask, on: task))
+            // TODO: Once iOS 16 is out, use .presentationDetents here!
         }
         .sheet(isPresented: $showEditTaskSheet) {
-            AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: taskManager.currentTask))
+            AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
         }
     }
     
@@ -103,7 +99,7 @@ struct TaskDetailView: View {
                 editSubTaskButton(subTask)
                 deleteSubTaskButton(subTask)
             }
-            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+            .listRowInsets(DrawingConstants.subTaskListRowInsets)
     }
     
     private func editSubTaskButton(_ subTask: SubTask) -> some View {
@@ -143,7 +139,7 @@ struct TaskDetailView: View {
     }
     
     var dueDate: some View {
-        Text("Due: \(Utils.dateFormatter.string(from: taskManager.currentTask?.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
+        Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
             .fontWeight(.semibold)
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.headline)
@@ -153,7 +149,7 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var taskDesc: some View {
-        if let desc = taskManager.currentTask?.taskDescription {
+        if let desc = task.taskDescription {
             if desc != "" {
                 VStack(alignment: .leading) {
                     Text("Notes:")
@@ -169,8 +165,9 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var subTaskList: some View {
-        if !taskManager.currentSubTaskArray.isEmpty {
-            let incomplete = taskManager.currentSubTaskArray.filter { !$0.isCompleted }
+        let subTaskArray = task.subTaskArray
+        if !subTaskArray.isEmpty {
+            let incomplete = subTaskArray.filter { !$0.isCompleted }
             if !incomplete.isEmpty {
                 Section("Sub-Tasks") {
                     ForEach(incomplete) { subTask in
@@ -178,7 +175,7 @@ struct TaskDetailView: View {
                     }
                 }
             }
-            let completed = taskManager.currentSubTaskArray.filter { $0.isCompleted }
+            let completed = subTaskArray.filter { $0.isCompleted }
             if !completed.isEmpty {
                 Section("Completed") {
                     ForEach(completed) { subTask in
@@ -198,6 +195,6 @@ struct TaskDetailView: View {
         static let completeIndicatorSize: CGFloat = 50
         static let scrollBottomPadding: CGFloat = 50
         static let progressBarPadding: CGFloat = 20
-        static let subTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
+        static let subTaskListRowInsets: EdgeInsets = EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
     }
 }

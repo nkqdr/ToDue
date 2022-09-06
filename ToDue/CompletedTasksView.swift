@@ -10,6 +10,7 @@ import SwiftUI
 struct CompletedTasksView: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var searchValue = ""
+    @State var displayedTasks: [Task]?
     
     var body: some View {
         NavigationView {
@@ -23,17 +24,15 @@ struct CompletedTasksView: View {
                     }
                     .foregroundColor(.green.opacity(0.8))
                     .padding(.horizontal)
-                    ForEach (taskManager.filteredCompleteTasks ?? taskManager.completeTasks) { task in
+                    ForEach (displayedTasks ?? taskManager.completeTasks.map { $0 }) { task in
                         NavigationLink(destination: {
-                            TaskDetailView()
+                            TaskDetailView(task: task)
                         }, label: {
                             TaskContainer(task: task)
                         })
-                        .simultaneousGesture(TapGesture().onEnded {
-                            taskManager.setCurrentTask(task)
-                        })                    }
-                    .padding(.horizontal)
+                    }
                     .animation(.spring(), value: taskManager.completeTasks)
+                    .padding(.horizontal)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -41,9 +40,20 @@ struct CompletedTasksView: View {
             .navigationTitle("Completed")
             .searchable(text: $searchValue)
             .onChange(of: searchValue) { newValue in
-                taskManager.filterCompletedTasks(by: newValue)
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let newTasks = taskManager.filterTasks(taskManager.completeTasks.map { $0 }, by: searchValue)
+                    DispatchQueue.main.async {
+                        displayedTasks = newTasks
+                    }
+                }
+            }
+            if let task = taskManager.completeTasks.first {
+                TaskDetailView(task: task)
+            } else {
+                Color("Background")
+                    .ignoresSafeArea()
             }
         }
-        .navigationViewStyle(.stack)
+        .currentDeviceNavigationViewStyle()
     }
 }

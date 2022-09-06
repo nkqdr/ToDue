@@ -28,7 +28,7 @@ struct MorePageView: View {
                     helpSection
                     pageFooter
                 }
-                .listRowBackground(Color("Accent2").opacity(0.3))
+                .themedListRowBackground()
             }
             .background(Color("Background"))
             .navigationTitle("More")

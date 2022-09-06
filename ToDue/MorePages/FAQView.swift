@@ -14,7 +14,7 @@ struct FAQView: View {
                 overviewSection
                 subTasksSection
             }
-            .listRowBackground(Color("Accent2").opacity(0.3))
+            .themedListRowBackground()
         }
         .navigationTitle("FAQ")
         .background(Color("Background"))

@@ -6,45 +6,37 @@
 //
 
 import Foundation
+import WidgetKit
+import Combine
 
 class TaskManager: ObservableObject {
-    private let coreDM: CoreDataManager
-    @Published var taskArray: [Task] = []
+    @Published private(set) var container = PersistenceController.shared.persistentContainer
     
-    var incompleteTasks: [Task] {
-        taskArray.filter { !$0.isCompleted }
-    }
-    
-    var completeTasks: [Task] {
-        taskArray.filter { $0.isCompleted }.sorted(by: { $0.date! > $1.date! })
-    }
-    
-    @Published var filteredCompleteTasks: [Task]?
-    
-    var currentTask: Task?
-    
-    var currentSubTaskArray: [SubTask] {
-        if let task = currentTask {
-            return task.subTaskArray
+    @Published var incompleteTasks: [Task] = []
+    @Published var completeTasks: [Task] = []
+    @Published var tasks: [Task] = [] {
+        willSet {
+            incompleteTasks = newValue.filter { !$0.isCompleted }
+            completeTasks = newValue.filter { $0.isCompleted }.reversed()
         }
-        return []
     }
     
-    init() {
-        let coreDM = CoreDataManager.shared
-        self.coreDM = coreDM
-        self.taskArray = coreDM.getAllTasks().sorted(by: { $0.date! < $1.date! })
-    }
+    @Published var subTasks: [SubTask] = []
     
-    private func update() {
-        self.taskArray = coreDM.getAllTasks().sorted(by: { $0.date! < $1.date! })
-    }
+    private var taskCancellable: AnyCancellable?
+    private var subTaskCancellable: AnyCancellable?
     
-    var currentTaskProgress: Double {
-        if let task = currentTask {
-            return progress(for: task)
+    init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher(),
+         subTaskPublisher: AnyPublisher<[SubTask], Never> = SubtaskStorage.shared.subTasks.eraseToAnyPublisher()) {
+        taskCancellable = taskPublisher.sink { tasks in
+            print("Updating tasks...")
+            self.tasks = tasks
         }
-        return -1
+        subTaskCancellable = subTaskPublisher.sink { subTasks in
+            print("Updating subtasks...")
+            self.subTasks = subTasks
+        }
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     func progress(for task: Task) -> Double {
@@ -56,72 +48,60 @@ class TaskManager: ObservableObject {
         return Double(complete) / Double(total)
     }
     
-    // MARK: - Intents
-    
-    func filterCompletedTasks(by searchValue: String) {
-        if searchValue == "" {
-            filteredCompleteTasks = nil
-        } else {
-            DispatchQueue.global(qos: .userInitiated).async {
-                let filteredTasks = self.completeTasks.filter { task in
-                    let upperSearch = searchValue.uppercased()
-                    let titleContainsValue = task.taskTitle!.uppercased().contains(upperSearch)
-                    let descContainsValue = task.taskDescription?.uppercased().contains(upperSearch) ?? false
-                    let hasMatchingSubTask = task.subTaskArray.contains { $0.wrappedTitle.uppercased().contains(upperSearch) }
-                    return titleContainsValue || descContainsValue || hasMatchingSubTask
-                }
-                DispatchQueue.main.async {
-                    self.filteredCompleteTasks = filteredTasks
-                }
+    func filterTasks(_ tasks: [Task], by searchValue: String) -> [Task]? {
+        var filtered: [Task]?
+        if searchValue != "" {
+            filtered = tasks.filter { task in
+                let upperSearch = searchValue.uppercased()
+                let titleContainsValue = task.taskTitle!.uppercased().contains(upperSearch)
+                let descContainsValue = task.taskDescription?.uppercased().contains(upperSearch) ?? false
+                let hasMatchingSubTask = task.subTaskArray.contains { $0.wrappedTitle.uppercased().contains(upperSearch) }
+                return titleContainsValue || descContainsValue || hasMatchingSubTask
             }
         }
+        return filtered
     }
     
-    func setCurrentTask(_ task: Task) {
-        self.currentTask = task
-    }
+    // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
-        coreDM.updateTask(task: task, description: task.taskDescription!, title: task.taskTitle!, date: task.date!, isCompleted: !task.isCompleted)
-        self.update()
+        container.viewContext.performAndWait {
+            task.isCompleted = !task.isCompleted
+            try? container.viewContext.save()
+        }
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     func toggleCompleted(_ subTask: SubTask) {
-        coreDM.toggleIsCompleted(for: subTask)
-        self.update()
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: !subTask.isCompleted)
     }
     
     func deleteTask(_ task: Task) {
-        coreDM.deleteTask(task: task)
-        self.update()
+        TaskStorage.shared.delete(task)
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
     func deleteTask(_ subTask: SubTask) {
-        coreDM.deleteSubTask(subTask: subTask)
-        self.update()
+        SubtaskStorage.shared.delete(subTask)
     }
     
-    func addNewTask(description: String, title: String, date: Date) {
-        coreDM.saveTask(taskDescription: description, taskTitle: title, date: date)
-        self.update()
+    func saveSubtask(_ editor: SubtaskEditor) {
+        if let st = editor.subtask {
+            SubtaskStorage.shared.update(st, title: editor.subtaskTitle, isCompleted: st.isCompleted)
+        } else {
+            SubtaskStorage.shared.add(to: editor.task, title: editor.subtaskTitle)
+        }
     }
     
-    func addSubTask(to task: Task, description: String) {
-        coreDM.addSubTask(to: task, subTaskTitle: description)
-        self.update()
-    }
-    
-    func editSubTask(_ subTask: SubTask, description: String) {
-        coreDM.updateSubTask(subTask, description: description)
-        self.update()
-    }
-    
-    func updateTask(_ task: Task, description: String?, title: String?, date: Date?, isCompleted: Bool?) {
-        let newComplete: Bool = isCompleted ?? task.isCompleted
-        let newDescription: String = description ?? task.taskDescription!
-        let newTitle: String = title ?? task.taskTitle!
-        let newDueDate: Date = date ?? task.date!
-        coreDM.updateTask(task: task, description: newDescription, title: newTitle, date: newDueDate, isCompleted: newComplete)
-        self.update()
+    func saveTask(_ editor: TaskEditor) {
+        let newDate = editor.taskDueDate.removeTimeStamp!
+        let newDescription = editor.taskDescription
+        let newTitle = editor.taskTitle
+        if let newTask = editor.task {
+            TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted)
+        } else {
+            TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate)
+        }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }

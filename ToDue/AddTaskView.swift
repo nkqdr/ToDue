@@ -11,12 +11,11 @@ struct AddTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
     @Binding var isPresented: Bool
     @StateObject var taskEditor: TaskEditor
-    @State private var saveButtonDisabled = true
     
     private var dateRange: PartialRangeFrom<Date> {
         let task = taskEditor.task
         let calendar = Calendar.current
-        let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: task != nil ? min(task!.date!, Date.now) : Date.now)
+        let startComponents = calendar.dateComponents([.year, .month, .day], from: task != nil ? min(task!.date!, Date.now) : Date.now)
         return calendar.date(from: startComponents)!...
     }
     
@@ -27,13 +26,7 @@ struct AddTaskView: View {
                 Group {
                     Section("Information") {
                         TextField("Title", text: $taskEditor.taskTitle)
-                            .onChange(of: taskEditor.taskTitle) {
-                                if ($0.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
-                                    saveButtonDisabled = false
-                                } else {
-                                    saveButtonDisabled = true
-                                }
-                            }
+                            .onChange(of: taskEditor.taskTitle, perform: taskEditor.changeTitle)
                         DatePicker("Due date:", selection: $taskEditor.taskDueDate, in: dateRange, displayedComponents: .date)
                     }
                     Section("Additional Notes: (Optional)") {
@@ -43,7 +36,7 @@ struct AddTaskView: View {
                             .submitLabel(.done)
                     }
                 }
-                .listRowBackground(Color("Accent2").opacity(0.3))
+                .themedListRowBackground()
             }
             .navigationTitle(editMode ? "Edit task" : "New task")
             .toolbar {
@@ -54,7 +47,7 @@ struct AddTaskView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save", action: handleSave)
-                        .disabled(editMode ? taskEditor.taskTitle == "" : saveButtonDisabled)
+                        .disabled(editMode ? taskEditor.taskTitle == "" : taskEditor.saveButtonDisabled)
                 }
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
@@ -70,14 +63,7 @@ struct AddTaskView: View {
     }
     
     private func handleSave() {
-        let newDate = taskEditor.taskDueDate.removeTimeStamp!
-        let newDescription = taskEditor.taskDescription
-        let newTitle = taskEditor.taskTitle
-        if let newTask = taskEditor.task {
-            taskManager.updateTask(newTask, description: newDescription, title: newTitle, date: newDate, isCompleted: newTask.isCompleted)
-        } else {
-            taskManager.addNewTask(description: newDescription, title: newTitle, date: newDate)
-        }
+        taskManager.saveTask(taskEditor)
         isPresented = false
     }
 }

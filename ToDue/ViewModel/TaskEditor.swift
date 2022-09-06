@@ -14,6 +14,7 @@ class TaskEditor: ObservableObject {
     @Published var taskTitle: String
     @Published var taskDescription: String
     @Published var taskDueDate: Date
+    @Published var saveButtonDisabled: Bool = true
     
     init(task: Task?) {
         self.task = task
@@ -26,5 +27,15 @@ class TaskEditor: ObservableObject {
         self.taskTitle = ""
         self.taskDescription = ""
         self.taskDueDate = Date()
+    }
+    
+    // MARK: - Intents
+    
+    func changeTitle(newValue: String) {
+        if (newValue.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
+            saveButtonDisabled = false
+        } else {
+            saveButtonDisabled = true
+        }
     }
 }
