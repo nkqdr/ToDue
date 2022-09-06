@@ -10,7 +10,7 @@ import WidgetKit
 import Combine
 
 class TaskManager: ObservableObject {
-    @Published private(set) var container = CoreDataManager.shared.persistentContainer
+    @Published private(set) var container = PersistenceController.shared.persistentContainer
     
     @Published var incompleteTasks: [Task] = []
     @Published var completeTasks: [Task] = []

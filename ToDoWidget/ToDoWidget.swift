@@ -21,7 +21,7 @@ struct Provider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (TaskEntry) -> ()) {
-        let allTasks = CoreDataManager.shared.getIncompleteTasks()
+        let allTasks = PersistenceController.shared.getIncompleteTasks()
         let entry: TaskEntry
         if (allTasks.isEmpty) {
             entry = TaskEntry(task: nil, secondTask: nil)
@@ -32,7 +32,7 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<TaskEntry>) -> ()) {
-        let newTasks = CoreDataManager.shared.getIncompleteTasks()
+        let newTasks = PersistenceController.shared.getIncompleteTasks()
         let entry = TaskEntry(task: newTasks.isEmpty ? nil : newTasks[0], secondTask: newTasks.count < 2 ? nil : newTasks[1])
         let timeline = Timeline(entries: [entry], policy: .atEnd)
         completion(timeline)

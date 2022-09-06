@@ -20,7 +20,7 @@ class TaskStorage: NSObject, ObservableObject {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Task.date, ascending: true)]
         taskFetchController = NSFetchedResultsController(
             fetchRequest: request,
-            managedObjectContext: CoreDataManager.shared.persistentContainer.viewContext,
+            managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
@@ -35,32 +35,32 @@ class TaskStorage: NSObject, ObservableObject {
     }
     
     func add(title: String, description: String, date: Date) {
-        let task = Task(context: CoreDataManager.shared.persistentContainer.viewContext)
+        let task = Task(context: PersistenceController.shared.persistentContainer.viewContext)
         task.date = date
         task.taskDescription = description
         task.taskTitle = title
         task.isCompleted = false
         task.id = UUID()
         task.subTasks = []
-        try? CoreDataManager.shared.persistentContainer.viewContext.save()
+        try? PersistenceController.shared.persistentContainer.viewContext.save()
     }
     
     func update(_ task: Task, title: String?, description: String?, date: Date?, isCompleted: Bool?) {
-        CoreDataManager.shared.persistentContainer.viewContext.performAndWait {
+        PersistenceController.shared.persistentContainer.viewContext.performAndWait {
             task.isCompleted = isCompleted ?? task.isCompleted
             task.taskDescription = description ?? task.taskDescription!
             task.taskTitle = title ?? task.taskTitle!
             task.date = date ?? task.date!
-            try? CoreDataManager.shared.persistentContainer.viewContext.save()
+            try? PersistenceController.shared.persistentContainer.viewContext.save()
         }
     }
     
     func delete(_ task: Task) {
-        CoreDataManager.shared.persistentContainer.viewContext.delete(task)
+        PersistenceController.shared.persistentContainer.viewContext.delete(task)
         do {
-            try CoreDataManager.shared.persistentContainer.viewContext.save()
+            try PersistenceController.shared.persistentContainer.viewContext.save()
         } catch {
-            CoreDataManager.shared.persistentContainer.viewContext.rollback()
+            PersistenceController.shared.persistentContainer.viewContext.rollback()
             print("Failed to save context \(error.localizedDescription)")
         }
     }

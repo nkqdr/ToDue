@@ -26,7 +26,7 @@
 		60809E9327D394A30027AE84 /* ToDoWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 60809E8E27D394A10027AE84 /* ToDoWidget.intentdefinition */; };
 		60809E9627D394A30027AE84 /* ToDoWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 60809E8527D394A10027AE84 /* ToDoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		60809E9D27D397C20027AE84 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */; };
-		60809E9E27D399860027AE84 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */; };
+		60809E9E27D399860027AE84 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742827D2B2AB00DD19AD /* PersistenceController.swift */; };
 		60809E9F27D3A1F30027AE84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60DD741B27D2B16C00DD19AD /* Assets.xcassets */; };
 		608F053728ABAE1800ACD45B /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F053628ABAE1800ACD45B /* TaskManager.swift */; };
 		608F053928ABC92800ACD45B /* ProgressPie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F053828ABC92800ACD45B /* ProgressPie.swift */; };
@@ -48,7 +48,7 @@
 		60DD741C27D2B16C00DD19AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60DD741B27D2B16C00DD19AD /* Assets.xcassets */; };
 		60DD741F27D2B16C00DD19AD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60DD741E27D2B16C00DD19AD /* Preview Assets.xcassets */; };
 		60DD742727D2B1C300DD19AD /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */; };
-		60DD742927D2B2AB00DD19AD /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */; };
+		60DD742927D2B2AB00DD19AD /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742827D2B2AB00DD19AD /* PersistenceController.swift */; };
 		60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742D27D2D22E00DD19AD /* TaskContainer.swift */; };
 		60E62CA828BF3889002F727C /* TaskEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62CA728BF3889002F727C /* TaskEditor.swift */; };
 		60E62CAA28BF409A002F727C /* SubtaskEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62CA928BF409A002F727C /* SubtaskEditor.swift */; };
@@ -122,7 +122,7 @@
 		60DD741B27D2B16C00DD19AD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		60DD741E27D2B16C00DD19AD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		60DD742627D2B1C300DD19AD /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
-		60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		60DD742827D2B2AB00DD19AD /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		60DD742D27D2D22E00DD19AD /* TaskContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskContainer.swift; sourceTree = "<group>"; };
 		60E62CA728BF3889002F727C /* TaskEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditor.swift; sourceTree = "<group>"; };
 		60E62CA928BF409A002F727C /* SubtaskEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtaskEditor.swift; sourceTree = "<group>"; };
@@ -278,7 +278,7 @@
 			children = (
 				60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */,
 				60A6AAC228B243CC00B5C278 /* MappingModelV1toV2.xcmappingmodel */,
-				60DD742827D2B2AB00DD19AD /* CoreDataManager.swift */,
+				60DD742827D2B2AB00DD19AD /* PersistenceController.swift */,
 				60C4CBEF28C113DF00F0B1BF /* TaskStorage.swift */,
 			);
 			path = Model;
@@ -416,7 +416,7 @@
 				60809E9D27D397C20027AE84 /* DataModel.xcdatamodeld in Sources */,
 				60A92DB927ECFB6700BA81B3 /* DateExtension.swift in Sources */,
 				60809E9227D394A30027AE84 /* ToDoWidget.intentdefinition in Sources */,
-				60809E9E27D399860027AE84 /* CoreDataManager.swift in Sources */,
+				60809E9E27D399860027AE84 /* PersistenceController.swift in Sources */,
 				60809E8D27D394A10027AE84 /* ToDoWidget.swift in Sources */,
 				60E68A3E28B68CB400CD7709 /* Utils.swift in Sources */,
 				60AD290128B77159002640C4 /* MailView.swift in Sources */,
@@ -443,7 +443,7 @@
 				60B4D06827D3CA1900A1BDBE /* MorePageView.swift in Sources */,
 				60DD741A27D2B16A00DD19AD /* IncompleteTaskView.swift in Sources */,
 				60DD741827D2B16A00DD19AD /* ToDueApp.swift in Sources */,
-				60DD742927D2B2AB00DD19AD /* CoreDataManager.swift in Sources */,
+				60DD742927D2B2AB00DD19AD /* PersistenceController.swift in Sources */,
 				60E62CAA28BF409A002F727C /* SubtaskEditor.swift in Sources */,
 				60FBBB5328B89E6E00CBDC68 /* FAQView.swift in Sources */,
 				60AD28F728B76A25002640C4 /* ContactEmail.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  CoreDataManager.swift
+//  PersistenceController.swift
 //  ToDue
 //
 //  Created by Niklas Kuder on 04.03.22.
@@ -8,8 +8,8 @@
 import Foundation
 import CoreData
 
-class CoreDataManager: ObservableObject {
-    static let shared = CoreDataManager()
+class PersistenceController {
+    static let shared = PersistenceController()
     let persistentContainer: NSPersistentCloudKitContainer
     
     private init() {
