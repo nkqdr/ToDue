@@ -12,7 +12,7 @@ class PersistenceController {
     static let shared = PersistenceController()
     let persistentContainer: NSPersistentCloudKitContainer
     
-    private init() {
+    init(inMemory: Bool = false) {
         persistentContainer = NSPersistentCloudKitContainer(name: "DataModel")
         
         let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.niklaskuder.ToDue")!
@@ -20,6 +20,10 @@ class PersistenceController {
         let storeDescription = NSPersistentStoreDescription(url: storeURL)
         storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: "iCloud.com.niklaskuder.ToDue")
         persistentContainer.persistentStoreDescriptions = [storeDescription]
+        
+        if inMemory {
+            persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+        }
         
         persistentContainer.loadPersistentStores { (description, error) in
             if let error = error {

@@ -10,8 +10,6 @@ import WidgetKit
 import Combine
 
 class TaskManager: ObservableObject {
-    @Published private(set) var container = PersistenceController.shared.persistentContainer
-    
     @Published var incompleteTasks: [Task] = []
     @Published var completeTasks: [Task] = []
     @Published var tasks: [Task] = [] {
@@ -65,10 +63,7 @@ class TaskManager: ObservableObject {
     // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
-        container.viewContext.performAndWait {
-            task.isCompleted = !task.isCompleted
-            try? container.viewContext.save()
-        }
+        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: !task.isCompleted)
         WidgetCenter.shared.reloadAllTimelines()
     }
     
