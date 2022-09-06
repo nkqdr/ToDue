@@ -7,6 +7,7 @@
 
 import Foundation
 import WidgetKit
+import UserNotifications
 import Combine
 
 class TaskManager: ObservableObject {
@@ -62,13 +63,41 @@ class TaskManager: ObservableObject {
         return filtered
     }
     
+    private func scheduleNewNotification(for uuid: UUID, on date: Date, withTime: DateComponents = DateComponents(hour: 8, minute: 0, second: 0)) {
+        let content = UNMutableNotificationContent()
+        content.title = "Task is almost due!"
+        content.subtitle = "Check the app to see details."
+        content.sound = UNNotificationSound.default
+        
+        var dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        dateComponents.hour = withTime.hour
+        dateComponents.minute = withTime.minute
+        dateComponents.second = withTime.second
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: uuid.uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
+    }
+    
+    private func cancelNotification(with uuid: UUID) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [uuid.uuidString])
+    }
+    
+    private func getOneDayBeforeDate(_ date: Date) -> Date {
+        return Calendar.current.date(byAdding: .day, value: -1, to: date)!
+    }
+    
     // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
-        container.viewContext.performAndWait {
-            task.isCompleted = !task.isCompleted
-            try? container.viewContext.save()
+        if task.isCompleted {
+            // Task will now be incomplete
+            scheduleNewNotification(for: task.id!, on: getOneDayBeforeDate(task.date!))
+        } else {
+            // Task will now be complete
+            cancelNotification(with: task.id!)
         }
+        TaskStorage.shared.toggleCompleted(for: task)
         WidgetCenter.shared.reloadAllTimelines()
     }
     
@@ -100,7 +129,8 @@ class TaskManager: ObservableObject {
         if let newTask = editor.task {
             TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted)
         } else {
-            TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate)
+            let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate)
+            scheduleNewNotification(for: task.id!, on: getOneDayBeforeDate(task.date!))
         }
         WidgetCenter.shared.reloadAllTimelines()
     }

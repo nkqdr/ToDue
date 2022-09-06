@@ -13,6 +13,13 @@ struct ToDueApp: App {
     
     var body: some Scene {
         UITableView.appearance().backgroundColor = .clear
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            if success {
+                print("All set!")
+            } else if let error = error {
+                print(error.localizedDescription)
+            }
+        }
         return WindowGroup {
             TabView {
                 IncompleteTaskView()
