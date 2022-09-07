@@ -40,4 +40,49 @@ class Utils {
             return "No tasks!"
         }
     }
+    
+    // MARK: - Notifications
+    
+    private static func getTaskNotificationContent(for task: Task) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.title = task.taskTitle ?? "Unknown Task"
+        content.body = NSString.localizedUserNotificationString(forKey: "Task_almost_due", arguments: nil)
+        content.sound = UNNotificationSound.default
+        return content
+    }
+    
+    /// This function is only used for debugging
+    static func scheduleTestNotification(for task: Task) {
+        let content = getTaskNotificationContent(for: task)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        if let uuid = task.id {
+            print("Scheduling")
+            let request = UNNotificationRequest(identifier: uuid.uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request)
+        }
+    }
+    
+    static func scheduleNewNotification(for task: Task, on date: Date, withTime: DateComponents = DateComponents(hour: 8, minute: 0, second: 0)) {
+        let content = getTaskNotificationContent(for: task)
+        
+        var dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        dateComponents.hour = withTime.hour
+        dateComponents.minute = withTime.minute
+        dateComponents.second = withTime.second
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        
+        if let uuid = task.id,
+            let scheduleDate = Calendar.current.date(from: dateComponents),
+            scheduleDate > Date.now {
+            let request = UNNotificationRequest(identifier: uuid.uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request)
+        }
+    }
+    
+    static func cancelNotification(for task: Task) {
+        if let uuid = task.id {
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [uuid.uuidString])
+        }
+    }
 }

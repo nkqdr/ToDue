@@ -17,6 +17,9 @@
 "Are you sure you want to delete this?" = "Sind Sie sicher, dass Sie das löschen wollen?";
 
 /* No comment provided by engineer. */
+"Cancel" = "Abbrechen";
+
+/* No comment provided by engineer. */
 "Complete this task by tapping the circle!" = "Auf den Kreis tippen um die Aufgabe abzuschließen!";
 
 /* (No Comment) */
@@ -45,6 +48,9 @@
 
 /* No comment provided by engineer. */
 "Edit task" = "Aufgabe bearbeiten";
+
+/* No comment provided by engineer. */
+"Edit subtask" = "Teilaufgabe bearbeiten";
 
 /* No comment provided by engineer. */
 "Enter a short description:" = "Geben Sie eine kurze Beschreibung an:";
@@ -123,6 +129,9 @@
 
 /* No comment provided by engineer. */
 "Sub-Tasks" = "Teilaufgaben";
+
+/* No comment provided by engineer. */
+"Task_almost_due" = "Aufgabe ist bald fällig!";
 
 /* No comment provided by engineer. */
 "Task is past due!" = "Aufgabe ist überfällig!";

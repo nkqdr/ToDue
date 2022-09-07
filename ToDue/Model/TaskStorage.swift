@@ -34,7 +34,14 @@ class TaskStorage: NSObject, ObservableObject {
         }
     }
     
-    func add(title: String, description: String, date: Date) {
+    func toggleCompleted(for task: Task) {
+        PersistenceController.shared.persistentContainer.viewContext.performAndWait {
+            task.isCompleted = !task.isCompleted
+            try? PersistenceController.shared.persistentContainer.viewContext.save()
+        }
+    }
+    
+    func add(title: String, description: String, date: Date) -> Task {
         let task = Task(context: PersistenceController.shared.persistentContainer.viewContext)
         task.date = date
         task.taskDescription = description
@@ -43,6 +50,7 @@ class TaskStorage: NSObject, ObservableObject {
         task.id = UUID()
         task.subTasks = []
         try? PersistenceController.shared.persistentContainer.viewContext.save()
+        return task
     }
     
     func update(_ task: Task, title: String?, description: String?, date: Date?, isCompleted: Bool?) {
