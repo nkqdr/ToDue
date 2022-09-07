@@ -131,6 +131,9 @@
 "Sub-Tasks" = "Teilaufgaben";
 
 /* No comment provided by engineer. */
+"Task_almost_due" = "Aufgabe ist bald fällig!";
+
+/* No comment provided by engineer. */
 "Task is past due!" = "Aufgabe ist überfällig!";
 
 /* No comment provided by engineer. */

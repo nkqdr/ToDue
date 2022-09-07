@@ -46,7 +46,7 @@ class Utils {
     private static func getTaskNotificationContent(for task: Task) -> UNMutableNotificationContent {
         let content = UNMutableNotificationContent()
         content.title = task.taskTitle ?? "Unknown Task"
-        content.subtitle = "Task is almost due!"
+        content.body = NSString.localizedUserNotificationString(forKey: "Task_almost_due", arguments: nil)
         content.sound = UNNotificationSound.default
         return content
     }
