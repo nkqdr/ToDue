@@ -11,15 +11,25 @@ import SwiftUI
 struct ToDueApp: App {
     @StateObject var taskManager = TaskManager()
     
+    private func checkNotificationPermissions() {
+        let current = UNUserNotificationCenter.current()
+        current.getNotificationSettings(completionHandler: { (settings) in
+            if settings.authorizationStatus != .authorized {
+                current.requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                    if success {
+                        print("All set!")
+                    } else if let error = error {
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+        })
+    }
+    
     var body: some Scene {
         UITableView.appearance().backgroundColor = .clear
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-            if success {
-                print("All set!")
-            } else if let error = error {
-                print(error.localizedDescription)
-            }
-        }
+        checkNotificationPermissions()
+        
         return WindowGroup {
             TabView {
                 IncompleteTaskView()
