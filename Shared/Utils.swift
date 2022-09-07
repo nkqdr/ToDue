@@ -62,6 +62,20 @@ class Utils {
         }
     }
     
+    static func scheduleNewNotification(for task: Task) {
+        if let date = task.date {
+            let newDayDelta = UserDefaults.standard.integer(forKey: "notificationDayDelta")
+            let newReminderTime = Date(rawValue: UserDefaults.standard.string(forKey: "notificationReminderTime")!)
+            if let time = newReminderTime {
+                let reminderComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: time)
+                scheduleNewNotification(for: task, on: Calendar.current.date(byAdding: .day, value: newDayDelta * -1, to: date)!, withTime: reminderComponents)
+            } else {
+                scheduleNewNotification(for: task, on: Calendar.current.date(byAdding: .day, value: newDayDelta * -1, to: date)!)
+            }
+            
+        }
+    }
+    
     static func scheduleNewNotification(for task: Task, on date: Date, withTime: DateComponents = DateComponents(hour: 8, minute: 0, second: 0)) {
         let content = getTaskNotificationContent(for: task)
         
@@ -71,12 +85,12 @@ class Utils {
         dateComponents.second = withTime.second
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        
         if let uuid = task.id,
             let scheduleDate = Calendar.current.date(from: dateComponents),
             scheduleDate > Date.now {
             let request = UNNotificationRequest(identifier: uuid.uuidString, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request)
+            print("Scheduled notification for \(task.taskTitle ?? "Unknown") on \(dateComponents.description)")
         }
     }
     

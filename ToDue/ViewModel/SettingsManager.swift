@@ -6,25 +6,29 @@
 //
 
 import Foundation
+import UserNotifications
+import Combine
 
 class SettingsManager: ObservableObject {
     static let shared: SettingsManager = SettingsManager()
-    static let defaultNotificationReminderTime: Date = Calendar.current.date(from: DateComponents(hour: 8, minute: 0, second: 0))!
-    static let defaultNotificationDayDelta: Int = 1
+    private var incompleteTasks: [Task] = []
+    private var taskCancellable: AnyCancellable?
     
-    @Published var notificationReminderTime: Date = defaultNotificationReminderTime {
-        willSet {
-            let components = Calendar.current.dateComponents([.hour, .minute], from: newValue)
-            print(components)
-        }
-    }
-    @Published var notificationDayDelta: Int = defaultNotificationDayDelta {
-        willSet {
-            print(newValue)
+    private init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher()) {
+        taskCancellable = taskPublisher.sink { tasks in
+            print("Updating tasks in SettingsManager...")
+            self.incompleteTasks = tasks.filter { !$0.isCompleted }
         }
     }
     
-    private init() {
-        // TODO: Load current UserDefaults
+    func refreshNotifications() {
+        print("Executing refresh on \(incompleteTasks.count) tasks")
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        for task in incompleteTasks {
+            Utils.scheduleNewNotification(for: task)
+        }
+        UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: { notifications in
+            print(notifications.count)
+        })
     }
 }
