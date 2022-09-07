@@ -2,6 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>%lld days_until_due</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@days_until_due@</string>
+		<key>days_until_due</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%lld day before</string>
+			<key>zero</key>
+			<string>%lld days before</string>
+			<key>other</key>
+			<string>%lld days before</string>
+		</dict>
+	</dict>
 	<key>%lld Months, %lld Days</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>

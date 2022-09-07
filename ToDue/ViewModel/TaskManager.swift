@@ -62,16 +62,12 @@ class TaskManager: ObservableObject {
         return filtered
     }
     
-    private func getOneDayBeforeDate(_ date: Date) -> Date {
-        return Calendar.current.date(byAdding: .day, value: -1, to: date)!
-    }
-    
     // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
         if task.isCompleted {
             // Task will now be incomplete
-            Utils.scheduleNewNotification(for: task, on: getOneDayBeforeDate(task.date!))
+            Utils.scheduleNewNotification(for: task)
         } else {
             // Task will now be complete
             Utils.cancelNotification(for: task)
@@ -109,7 +105,7 @@ class TaskManager: ObservableObject {
             TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted)
         } else {
             let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate)
-            Utils.scheduleNewNotification(for: task, on: getOneDayBeforeDate(task.date!))
+            Utils.scheduleNewNotification(for: task)
         }
         WidgetCenter.shared.reloadAllTimelines()
     }
