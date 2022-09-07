@@ -35,9 +35,6 @@
 "Delete" = "Löschen";
 
 /* No comment provided by engineer. */
-"Description..." = "Beschreibung...";
-
-/* No comment provided by engineer. */
 "Due date:" = "Fälligkeitsdatum:";
 
 /* Label in detail view that displays when this task is due. */
@@ -47,13 +44,10 @@
 "Edit" = "Bearbeiten";
 
 /* No comment provided by engineer. */
-"Edit task" = "Aufgabe bearbeiten";
-
-/* No comment provided by engineer. */
 "Edit subtask" = "Teilaufgabe bearbeiten";
 
 /* No comment provided by engineer. */
-"Enter a short description:" = "Geben Sie eine kurze Beschreibung an:";
+"Edit task" = "Aufgabe bearbeiten";
 
 /* (No Comment) */
 "FAQ" = "Häufige Fragen";
@@ -115,8 +109,14 @@
 /* No comment provided by engineer. */
 "Notes:" = "Notizen:";
 
+/* No comment provided by engineer. */
+"Reminders" = "Erinnerungen";
+
 /* (No Comment) */
 "Overview" = "Übersicht";
+
+/* No comment provided by engineer. */
+"Remind me at" = "Erinnere mich um";
 
 /* No comment provided by engineer. */
 "Save" = "Speichern";
@@ -131,23 +131,20 @@
 "Sub-Tasks" = "Teilaufgaben";
 
 /* No comment provided by engineer. */
-"Task_almost_due" = "Aufgabe ist bald fällig!";
-
-/* No comment provided by engineer. */
 "Task is past due!" = "Aufgabe ist überfällig!";
+
+/* (No Comment) */
+"Task_almost_due" = "Aufgabe ist bald fällig!";
 
 /* No comment provided by engineer. */
 "The tasks are sorted by their due date, so you will always see the next task at the top." = "Die Aufgaben werden nach ihrem Fälligkeitsdatum sortiert, sodass du die nächste Aufgabe immer ganz oben siehst.";
 
 /* No comment provided by engineer. */
-"There is no undo" = "Es gibt kein Zurück";
+"Title" = "Titel";
 
 /* No comment provided by engineer. */
-"Title" = "Titel";
+"To enable/disable notifications entirely, please go to your settings app." = "Um Benachrichtigungen vollständig zu aktivieren/deaktivieren, benutzen Sie bitte die Einstellungen-App.";
 
 /* Label that displays how many tasks have been completed in total. */
 "Total: %lld" = "Insgesamt: %lld";
-
-/* No comment provided by engineer. */
-"Type here..." = "Hier tippen...";
 
