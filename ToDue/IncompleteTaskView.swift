@@ -24,10 +24,10 @@ struct IncompleteTaskView: View {
                 ToolbarItem(placement: .principal) {
                     VStack(alignment: .center) {
                         Text("Next Due Date in")
-                            .font(.subheadline)
+                            .font(.footnote)
                             .foregroundColor(.gray)
                         Text(deadlineLabel)
-                            .font(.headline.weight(.bold))
+                            .font(.subheadline.weight(.bold))
                     }
                     .opacity(titleOpacity)
                 }

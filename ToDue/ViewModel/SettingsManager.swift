@@ -21,14 +21,27 @@ class SettingsManager: ObservableObject {
         }
     }
     
-    func refreshNotifications() {
-        print("Executing refresh on \(incompleteTasks.count) tasks")
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        for task in incompleteTasks {
-            Utils.scheduleNewNotification(for: task)
-        }
+    private func printNotificationCount() {
         UNUserNotificationCenter.current().getPendingNotificationRequests(completionHandler: { notifications in
             print(notifications.count)
         })
+    }
+    
+    func removeAllReminderNotifications() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        printNotificationCount()
+    }
+    
+    func setAllReminderNotifications() {
+        for task in incompleteTasks {
+            Utils.scheduleNewNotification(for: task)
+        }
+        printNotificationCount()
+    }
+    
+    func refreshNotifications() {
+        print("Executing refresh on \(incompleteTasks.count) tasks")
+        removeAllReminderNotifications()
+        setAllReminderNotifications()
     }
 }

@@ -11,26 +11,39 @@ struct SettingsView: View {
     @ObservedObject var settingsManager = SettingsManager.shared
     @AppStorage("notificationDayDelta") private var notificationDayDelta: Int = 1
     @AppStorage("notificationReminderTime") private var notificationReminderTime: Date = Calendar.current.date(from: DateComponents(hour: 8, minute: 0, second: 0))!
+    @AppStorage("shouldUseReminders") private var shouldUseReminders = true
     
     var body: some View {
         List {
-            notificationSection
+            remindersSection
         }
         .navigationTitle("Settings")
         .background(Color("Background"))
     }
     
-    var notificationSection: some View {
+    var remindersSection: some View {
         Section(header: Text("Reminders"),
-                footer: Text("To enable/disable notifications entirely, please go to your settings app.")) {
-            Stepper("\(notificationDayDelta) days_until_due", value: $notificationDayDelta, in: 1...31)
-                .onChange(of: notificationDayDelta) { _ in
-                    settingsManager.refreshNotifications()
+                footer: Text("reminder_settings_footer")) {
+            Toggle("Enable reminders", isOn: $shouldUseReminders)
+                .onChange(of: shouldUseReminders) { newValue in
+                    if newValue {
+                        settingsManager.setAllReminderNotifications()
+                    } else {
+                        settingsManager.removeAllReminderNotifications()
+                    }
                 }
-            DatePicker("Remind me at", selection: $notificationReminderTime, displayedComponents: [.hourAndMinute])
-                .onChange(of: notificationReminderTime) { _ in
-                    settingsManager.refreshNotifications()
-                }
+            Group {
+                Stepper("\(notificationDayDelta) days_until_due", value: $notificationDayDelta, in: 1...31)
+                    .onChange(of: notificationDayDelta) { _ in
+                        settingsManager.refreshNotifications()
+                    }
+                DatePicker("Remind me at", selection: $notificationReminderTime, displayedComponents: [.hourAndMinute])
+                    .onChange(of: notificationReminderTime) { _ in
+                        settingsManager.refreshNotifications()
+                    }
+            }
+            .foregroundColor(!shouldUseReminders ? .secondary : nil)
+            .disabled(!shouldUseReminders)
         }
         .themedListRowBackground()
     }

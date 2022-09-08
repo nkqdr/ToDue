@@ -13,3 +13,4 @@
 "Create a task" = "Create a task";
 "FAQ" = "FAQ";
 "Task_almost_due" = "Task is almost due!";
+"reminder_settings_footer" = "To allow or prohibit notifications entirely, please go to your settings app.";

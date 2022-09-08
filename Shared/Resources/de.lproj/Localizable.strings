@@ -49,6 +49,9 @@
 /* No comment provided by engineer. */
 "Edit task" = "Aufgabe bearbeiten";
 
+/* No comment provided by engineer. */
+"Enable reminders" = "Erinnerungen aktivieren";
+
 /* (No Comment) */
 "FAQ" = "Häufige Fragen";
 
@@ -143,7 +146,7 @@
 "Title" = "Titel";
 
 /* No comment provided by engineer. */
-"To enable/disable notifications entirely, please go to your settings app." = "Um Benachrichtigungen vollständig zu aktivieren/deaktivieren, benutzen Sie bitte die Einstellungen-App.";
+"reminder_settings_footer" = "Um Benachrichtigungen vollständig zu erlauben oder verbieten, benutzen Sie bitte die Einstellungen-App.";
 
 /* Label that displays how many tasks have been completed in total. */
 "Total: %lld" = "Insgesamt: %lld";
