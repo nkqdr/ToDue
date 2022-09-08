@@ -98,7 +98,7 @@ class TaskManager: ObservableObject {
     }
     
     func saveTask(_ editor: TaskEditor) {
-        let newDate = editor.taskDueDate.removeTimeStamp!
+        let newDate = editor.hasDeadline ? editor.taskDueDate.removeTimeStamp! : Date.distantFuture
         let newDescription = editor.taskDescription
         let newTitle = editor.taskTitle
         if let newTask = editor.task {

@@ -138,13 +138,16 @@ struct TaskDetailView: View {
         }
     }
     
+    @ViewBuilder
     var dueDate: some View {
-        Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
-            .fontWeight(.semibold)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.headline)
-            .foregroundColor(.secondary)
-            .padding(.bottom, DrawingConstants.dueDatePadding)
+        if let date = task.date, date < Date.distantFuture {
+            Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.headline)
+                .foregroundColor(.secondary)
+                .padding(.bottom, DrawingConstants.dueDatePadding)
+        }
     }
     
     @ViewBuilder
