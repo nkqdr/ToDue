@@ -48,6 +48,7 @@ struct TaskDetailView: View {
             }
         }
         .background(Color("Background"))
+        .scrollContentBackground(.hidden)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -63,7 +64,7 @@ struct TaskDetailView: View {
             currentSubTask = nil
         }) {
             AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(currentSubTask, on: task))
-            // TODO: Once iOS 16 is out, use .presentationDetents here!
+                .presentationDetents([.medium, .large])
         }
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))

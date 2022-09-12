@@ -66,6 +66,7 @@ struct AddTaskView: View {
                 }
             }
             .background(Color("Background"))
+            .scrollContentBackground(.hidden)
         }
     }
     

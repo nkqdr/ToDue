@@ -24,7 +24,7 @@
 		60809E9027D394A30027AE84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60809E8F27D394A30027AE84 /* Assets.xcassets */; };
 		60809E9227D394A30027AE84 /* ToDoWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 60809E8E27D394A10027AE84 /* ToDoWidget.intentdefinition */; };
 		60809E9327D394A30027AE84 /* ToDoWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 60809E8E27D394A10027AE84 /* ToDoWidget.intentdefinition */; };
-		60809E9627D394A30027AE84 /* ToDoWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 60809E8527D394A10027AE84 /* ToDoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		60809E9627D394A30027AE84 /* ToDoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 60809E8527D394A10027AE84 /* ToDoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		60809E9D27D397C20027AE84 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */; };
 		60809E9E27D399860027AE84 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742827D2B2AB00DD19AD /* PersistenceController.swift */; };
 		60809E9F27D3A1F30027AE84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60DD741B27D2B16C00DD19AD /* Assets.xcassets */; };
@@ -73,15 +73,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		60809E9727D394A30027AE84 /* Embed App Extensions */ = {
+		60809E9727D394A30027AE84 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				60809E9627D394A30027AE84 /* ToDoWidgetExtension.appex in Embed App Extensions */,
+				60809E9627D394A30027AE84 /* ToDoWidgetExtension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -336,7 +336,7 @@
 				60DD741027D2B16A00DD19AD /* Sources */,
 				60DD741127D2B16A00DD19AD /* Frameworks */,
 				60DD741227D2B16A00DD19AD /* Resources */,
-				60809E9727D394A30027AE84 /* Embed App Extensions */,
+				60809E9727D394A30027AE84 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -356,7 +356,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1320;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					60809E8427D394A10027AE84 = {
 						CreatedOnToolsVersion = 13.2.1;
@@ -694,6 +694,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -726,6 +727,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
