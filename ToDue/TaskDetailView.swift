@@ -32,22 +32,26 @@ struct TaskDetailView: View {
                 addSubTaskButton
             }
             .themedListRowBackground()
-            .confirmationDialog(
-                Text("Are you sure you want to delete this?"),
-                isPresented: $showingAlert,
-                titleVisibility: .visible
-            ) {
-                 Button("Delete", role: .destructive) {
-                     withAnimation(.easeInOut) {
-                         taskManager.deleteTask(currentSubTask!)
-                     }
-                 }
-            } message: {
-                Text(currentSubTask?.wrappedTitle ?? "")
-                    .font(.headline).fontWeight(.bold)
-            }
         }
         .background(Color("Background"))
+        .confirmationDialog(
+            Text("Are you sure you want to delete this?"),
+            isPresented: $showingAlert,
+            titleVisibility: .visible
+        ) {
+             Button("Delete", role: .destructive) {
+                 withAnimation(.easeInOut) {
+                     taskManager.deleteTask(currentSubTask!)
+                 }
+             }
+            Button("Cancel", role: .cancel) {
+                showingAlert = false
+                currentSubTask = nil
+            }
+        } message: {
+            Text(currentSubTask?.wrappedTitle ?? "")
+                .font(.headline).fontWeight(.bold)
+        }
         .scrollContentBackground(.hidden)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -71,38 +75,6 @@ struct TaskDetailView: View {
         }
     }
     
-    func subTaskView(_ subTask: SubTask) -> some View {
-            HStack {
-                Text(subTask.title ?? "")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .strikethrough(subTask.isCompleted, color: Color("Text"))
-                Spacer()
-                Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.title)
-                    .frame(width: DrawingConstants.completeIndicatorSize, height: DrawingConstants.completeIndicatorSize)
-                    .onTapGesture {
-                        Haptics.shared.play(.medium)
-                        taskManager.toggleCompleted(subTask)
-                    }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .swipeActions(edge: .trailing) {
-                deleteSubTaskButton(subTask)
-            }
-            .swipeActions(edge: .leading) {
-                toggleSubTaskCompleteButton(subTask)
-                    .tint(.mint)
-                editSubTaskButton(subTask)
-                    .tint(.indigo)
-            }
-            .contextMenu {
-                editSubTaskButton(subTask)
-                deleteSubTaskButton(subTask)
-            }
-            .listRowInsets(DrawingConstants.subTaskListRowInsets)
-    }
-    
     private func editSubTaskButton(_ subTask: SubTask) -> some View {
         Button {
             currentSubTask = subTask
@@ -112,21 +84,14 @@ struct TaskDetailView: View {
         }
     }
     
-    private func toggleSubTaskCompleteButton(_ subTask: SubTask) -> some View {
-        Button {
-            taskManager.toggleCompleted(subTask)
-        } label: {
-            Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
-        }
-    }
-    
     private func deleteSubTaskButton(_ subTask: SubTask) -> some View {
-        Button(role: .destructive, action: {
+        Button(action: {
             currentSubTask = subTask
             showingAlert = true
         }, label: {
             Label("Delete", systemImage: "trash")
         })
+        .tint(.red)
     }
     
     var addSubTaskButton: some View {
@@ -175,7 +140,29 @@ struct TaskDetailView: View {
             if !incomplete.isEmpty {
                 Section("Sub-Tasks") {
                     ForEach(incomplete) { subTask in
-                        subTaskView(subTask)
+                        SubtaskView(subTask: subTask)
+                            .swipeActions(edge: .trailing) {
+                                deleteSubTaskButton(subTask)
+                            }
+                            .swipeActions(edge: .leading) {
+                                Button {
+                                    taskManager.toggleCompleted(subTask)
+                                } label: {
+                                    Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
+                                }
+                                    .tint(.mint)
+                                editSubTaskButton(subTask)
+                                .tint(.indigo)
+                            }
+                            .contextMenu {
+                                editSubTaskButton(subTask)
+                                Button(role: .destructive, action: {
+                                    currentSubTask = subTask
+                                    showingAlert = true
+                                }, label: {
+                                    Label("Delete", systemImage: "trash")
+                                })
+                            }
                     }
                 }
             }
@@ -183,7 +170,29 @@ struct TaskDetailView: View {
             if !completed.isEmpty {
                 Section("Completed") {
                     ForEach(completed) { subTask in
-                        subTaskView(subTask)
+                        SubtaskView(subTask: subTask)
+                            .swipeActions(edge: .trailing) {
+                                deleteSubTaskButton(subTask)
+                            }
+                            .swipeActions(edge: .leading) {
+                                Button {
+                                    taskManager.toggleCompleted(subTask)
+                                } label: {
+                                    Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
+                                }
+                                    .tint(.mint)
+                                editSubTaskButton(subTask)
+                                .tint(.indigo)
+                            }
+                            .contextMenu {
+                                editSubTaskButton(subTask)
+                                Button(role: .destructive, action: {
+                                    currentSubTask = subTask
+                                    showingAlert = true
+                                }, label: {
+                                    Label("Delete", systemImage: "trash")
+                                })
+                            }
                     }
                 }
             }
