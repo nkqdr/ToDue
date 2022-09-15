@@ -66,6 +66,8 @@ Alle verknüpften Aufgaben werden ebenfalls gelöscht.
 /* (No Comment) */
 "FAQ" = "Häufige Fragen";
 
+"Filter by category" = "Filter nach Kategorie";
+
 /* No comment provided by engineer. */
 "First tap on a task to select it. Now you should see a button that says 'Add subtask'." = "Tippe dafür zunächst auf eine Aufgabe um sie auszuwählen. Nun solltest du einen Knopf sehen, auf dem 'Teilaufgabe hinzufügen' steht.";
 

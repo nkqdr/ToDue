@@ -20,6 +20,15 @@ class TaskManager: ObservableObject {
             completeTasks = newValue.filter { $0.isCompleted }.reversed()
         }
     }
+    @Published var selectedCategory: TaskCategory? {
+        willSet {
+            if let category = newValue {
+                incompleteTasks = tasks.filter { !$0.isCompleted && $0.category == category }
+            } else {
+                incompleteTasks = tasks.filter { !$0.isCompleted }
+            }
+        }
+    }
     
     @Published var subTasks: [SubTask] = []
     
