@@ -25,9 +25,16 @@ struct AddTaskView: View {
             Form {
                 Group {
                     Section("Information") {
+                        Picker("Task type", selection: $taskEditor.hasDeadline) {
+                            Text("Deadline").tag(true)
+                            Text("No Deadline").tag(false)
+                        }
+                        .pickerStyle(.segmented)
                         TextField("Title", text: $taskEditor.taskTitle)
                             .onChange(of: taskEditor.taskTitle, perform: taskEditor.changeTitle)
-                        DatePicker("Due date:", selection: $taskEditor.taskDueDate, in: dateRange, displayedComponents: .date)
+                        if taskEditor.hasDeadline {
+                            DatePicker("Due date:", selection: $taskEditor.taskDueDate, in: dateRange, displayedComponents: .date)
+                        }
                     }
                     Section("Additional Notes: (Optional)") {
                         TextEditor(text: $taskEditor.taskDescription)
@@ -59,6 +66,7 @@ struct AddTaskView: View {
                 }
             }
             .background(Color("Background"))
+            .scrollContentBackground(.hidden)
         }
     }
     

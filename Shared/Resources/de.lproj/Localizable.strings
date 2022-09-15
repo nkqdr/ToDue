@@ -35,7 +35,7 @@
 "Delete" = "Löschen";
 
 /* No comment provided by engineer. */
-"Due date:" = "Fälligkeitsdatum:";
+"Due date:" = "Deadline:";
 
 /* Label in detail view that displays when this task is due. */
 "Due: %@" = "Fällig: %@";
@@ -150,4 +150,13 @@
 
 /* Label that displays how many tasks have been completed in total. */
 "Total: %lld" = "Insgesamt: %lld";
+
+/* No comment provided by engineer. */
+"Task type" = "Art der Aufgabe";
+
+/* No comment provided by engineer. */
+"Deadline" = "Mit Deadline";
+
+/* No comment provided by engineer. */
+"No Deadline" = "Ohne Deadline";
 

@@ -18,6 +18,7 @@ struct FAQView: View {
         }
         .navigationTitle("FAQ")
         .background(Color("Background"))
+        .scrollContentBackground(.hidden)
     }
     
     var overviewSection: some View {

@@ -31,6 +31,7 @@ struct MorePageView: View {
                 .themedListRowBackground()
             }
             .background(Color("Background"))
+            .scrollContentBackground(.hidden)
             .navigationTitle("More")
             .sheet(isPresented: $showEmail) {
                 MailView(supportEmail: $email) { result in

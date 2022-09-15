@@ -10,8 +10,8 @@ import SwiftUI
 
 class Utils {
     static func _remainingTime(_ givenTask: Task?) -> DateComponents {
-        if let task = givenTask {
-            let diff = Calendar.current.dateComponents([.month, .day], from: Date.now.removeTimeStamp!, to: task.date!)
+        if let task = givenTask, let date = task.date, date < Date.distantFuture {
+            let diff = Calendar.current.dateComponents([.month, .day], from: Date.now.removeTimeStamp!, to: date)
             return diff
         } else {
             return Calendar.current.dateComponents([], from: Date.distantPast)
@@ -63,7 +63,7 @@ class Utils {
     }
     
     static func scheduleNewNotification(for task: Task) {
-        if let date = task.date {
+        if let date = task.date, date < Date.distantFuture {
             let newDayDelta = UserDefaults.standard.integer(forKey: "notificationDayDelta")
             let newReminderTime = Date(rawValue: UserDefaults.standard.string(forKey: "notificationReminderTime") ?? "")
             if let time = newReminderTime {
@@ -72,7 +72,6 @@ class Utils {
             } else {
                 scheduleNewNotification(for: task, on: Calendar.current.date(byAdding: .day, value: newDayDelta * -1, to: date)!)
             }
-            
         }
     }
     

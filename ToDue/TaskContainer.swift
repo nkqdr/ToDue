@@ -18,11 +18,13 @@ struct TaskContainer: View {
             containerBackground
             HStack {
                 VStack(alignment: .leading) {
-                    Text(Utils.dateFormatter.string(from: task.date ?? Date.now))
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    if let date = task.date, date < Date.distantFuture {
+                        Text(Utils.dateFormatter.string(from: task.date ?? Date.now))
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
                     Text(task.taskTitle ?? "")
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)

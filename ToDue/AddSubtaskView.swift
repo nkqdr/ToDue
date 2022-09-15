@@ -24,6 +24,7 @@ struct AddSubtaskView: View {
                 .listRowBackground(Color("Accent2").opacity(0.3))
             }
             .background(Color("Background"))
+            .scrollContentBackground(.hidden)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {

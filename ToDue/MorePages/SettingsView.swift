@@ -19,11 +19,12 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .background(Color("Background"))
+        .scrollContentBackground(.hidden)
     }
     
     var remindersSection: some View {
         Section(header: Text("Reminders"),
-                footer: Text("reminder_settings_footer")) {
+                footer: Text("reminder_settings_footer").listRowBackground(Color.clear)) {
             Toggle("Enable reminders", isOn: $shouldUseReminders)
                 .onChange(of: shouldUseReminders) { newValue in
                     if newValue {
