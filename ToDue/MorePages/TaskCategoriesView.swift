@@ -60,7 +60,7 @@ struct TaskCategoriesView: View {
                     Spacer()
                     Button("Add category") {
                         categoryEditor = TaskCategoryEditor()
-                        showAddCategory = true
+                        showAddCategory.toggle()
                     }
                     .buttonStyle(.borderless)
                     Spacer()
@@ -81,13 +81,13 @@ struct TaskCategoriesView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Cancel") {
-                            showAddCategory = false
+                            showAddCategory.toggle()
                         }
                     }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button("Save") {
                             manager.saveCategory(categoryEditor)
-                            showAddCategory = false
+                            showAddCategory.toggle()
                         }
                     }
                 }

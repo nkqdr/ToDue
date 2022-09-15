@@ -1,4 +1,7 @@
 /* No comment provided by engineer. */
+"About" = "Über";
+
+/* No comment provided by engineer. */
 "Add subtask" = "Neue Teilaufgabe";
 
 "Add category" = "Neue Kategorie";
@@ -25,7 +28,7 @@ Alle verknüpften Aufgaben werden ebenfalls gelöscht.
 ";
 
 /* Indicator of how many tasks are related to a category */
-"Tasks: %lld" = "Aufgaben %lld";
+"Tasks: %lld" = "Aufgaben: %lld";
 
 /* No comment provided by engineer. */
 "Cancel" = "Abbrechen";
@@ -133,6 +136,9 @@ Alle verknüpften Aufgaben werden ebenfalls gelöscht.
 
 /* No comment provided by engineer. */
 "Remind me at" = "Erinnere mich um";
+
+/* Button text for when filter is active and no tasks appear */
+"Remove filter" = "Filter entfernen";
 
 /* No comment provided by engineer. */
 "Save" = "Speichern";

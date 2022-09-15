@@ -12,12 +12,6 @@ struct MorePageView: View {
     @State private var toggle = false
     @State private var showEmail = false
     @State private var email = ContactEmail(toAddress: "contact@niklas-kuder.de", subject: "App contact inquiry", messageHeader: "Please enter your message below")
-    enum AppTheme: String, CaseIterable, Identifiable {
-        case system, light, dark
-        var id: Self { self }
-    }
-
-    @State private var selectedFlavor: AppTheme = .system
     
     var body: some View {
         NavigationView {
@@ -25,7 +19,6 @@ struct MorePageView: View {
                 Group {
                     generalSettings
                     configurationSection
-//                    appearanceSettings
                     helpSection
                     pageFooter
                 }
@@ -67,26 +60,6 @@ struct MorePageView: View {
         }
     }
     
-    var appearanceSettings: some View {
-        Section("Appearance") {
-            Menu {
-                Picker(selection: $selectedFlavor, label: Text("Select Theme")) {
-                    ForEach(AppTheme.allCases) { appTheme in
-                        Text(appTheme.rawValue.capitalized).tag(appTheme)
-                    }
-                }
-            } label: {
-                HStack {
-                    Text("App Theme")
-                        .foregroundColor(Color("Text"))
-                    Spacer()
-                    Text(selectedFlavor.rawValue.capitalized)
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-    }
-    
     var helpSection: some View {
         Section("Help") {
             NavigationLink(destination: FAQView()) {
@@ -110,22 +83,20 @@ struct MorePageView: View {
     }
     
     var pageFooter: some View {
-        Section {
+        Section("About") {
             HStack {
                 Image(systemName: "heart")
                 VStack(alignment: .leading) {
-                    Text("Made with Love in Karlsruhe")
-                    Text("Version 0.1.0")
+                    Text("Made in Karlsruhe")
+                    Text("Version \(Bundle.main.appVersion)")
                 }
                 .font(.footnote)
+                .padding(.horizontal)
             }
             .foregroundColor(.secondary)
+            .padding(.horizontal, 3)
         }
     }
-    
-    func placeOrder() { }
-    func adjustOrder() { }
-    func cancelOrder() { }
 }
 
 struct MorePageView_Previews: PreviewProvider {

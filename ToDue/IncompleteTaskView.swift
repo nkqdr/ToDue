@@ -77,6 +77,15 @@ struct IncompleteTaskView: View {
                         showAddingPage.toggle()
                     }
                     .buttonStyle(.bordered)
+                    if let _ = taskManager.selectedCategory {
+                        Button("Remove filter") {
+                            withAnimation(.easeInOut) {
+                                taskManager.selectedCategory = nil
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .padding()
+                    }
                 }
                 .frame(maxWidth: .infinity)
             }
