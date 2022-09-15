@@ -102,9 +102,9 @@ class TaskManager: ObservableObject {
         let newDescription = editor.taskDescription
         let newTitle = editor.taskTitle
         if let newTask = editor.task {
-            TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted)
+            TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted, category: editor.category)
         } else {
-            let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate)
+            let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate, category: editor.category)
             Utils.scheduleNewNotification(for: task)
         }
         WidgetCenter.shared.reloadAllTimelines()

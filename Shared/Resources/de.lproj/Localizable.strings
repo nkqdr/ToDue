@@ -1,5 +1,7 @@
 /* No comment provided by engineer. */
-"Add subtask" = "Teilaufgabe hinzufügen";
+"Add subtask" = "Neue Teilaufgabe";
+
+"Add category" = "Neue Kategorie";
 
 /* No comment provided by engineer. */
 "Additional Notes: (Optional)" = "Zusätzliche Notizen";
@@ -15,6 +17,15 @@
 
 /* No comment provided by engineer. */
 "Are you sure you want to delete this?" = "Sind Sie sicher, dass Sie das löschen wollen?";
+
+"Are you sure you want to delete this?
+All related tasks will be deleted aswell." = "
+Sind Sie sicher, dass Sie das löschen wollen?
+Alle verknüpften Aufgaben werden ebenfalls gelöscht.
+";
+
+/* Indicator of how many tasks are related to a category */
+"Tasks: %lld" = "Aufgaben %lld";
 
 /* No comment provided by engineer. */
 "Cancel" = "Abbrechen";
@@ -159,4 +170,16 @@
 
 /* No comment provided by engineer. */
 "No Deadline" = "Ohne Deadline";
+
+/* Section title on the 'More' Page */
+"Configuration" = "Konfiguration";
+
+/* Navigation Link to task categories settings */
+"Task categories" = "Aufgabenkategorien";
+
+/* Form title for category field */
+"Category:" = "Kategorie:";
+
+/* Label for when no category is selected */
+"None" = "Keine";
 

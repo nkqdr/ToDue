@@ -24,6 +24,7 @@ struct MorePageView: View {
             List {
                 Group {
                     generalSettings
+                    configurationSection
 //                    appearanceSettings
                     helpSection
                     pageFooter
@@ -52,6 +53,15 @@ struct MorePageView: View {
         Section("General") {
             NavigationLink(destination: SettingsView()) {
                 Label("Settings", systemImage: "gear")
+                    .foregroundColor(Color("Text"))
+            }
+        }
+    }
+    
+    var configurationSection: some View {
+        Section("Configuration") {
+            NavigationLink(destination: TaskCategoriesView()) {
+                Label("Task categories", systemImage: "tray.full")
                     .foregroundColor(Color("Text"))
             }
         }

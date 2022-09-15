@@ -16,11 +16,13 @@ class TaskEditor: ObservableObject {
     @Published var taskDueDate: Date
     @Published var saveButtonDisabled: Bool = true
     @Published var hasDeadline: Bool
+    @Published var category: TaskCategory?
     
     init(task: Task?) {
         self.task = task
         self.taskTitle = task?.taskTitle ?? ""
         self.taskDescription = task?.taskDescription ?? ""
+        self.category = task?.category
         if let task = task, let date = task.date {
             self.taskDueDate = date == Date.distantFuture ? Date.now : date
             self.hasDeadline = date != Date.distantFuture

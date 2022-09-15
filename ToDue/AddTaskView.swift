@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
+    @ObservedObject private var categoryManager = TaskCategoryManager.shared
     @Binding var isPresented: Bool
     @StateObject var taskEditor: TaskEditor
     
@@ -34,6 +35,12 @@ struct AddTaskView: View {
                             .onChange(of: taskEditor.taskTitle, perform: taskEditor.changeTitle)
                         if taskEditor.hasDeadline {
                             DatePicker("Due date:", selection: $taskEditor.taskDueDate, in: dateRange, displayedComponents: .date)
+                        }
+                        Picker("Category:", selection: $taskEditor.category) {
+                            Text("None").tag(TaskCategory?.none)
+                            ForEach($categoryManager.categories) { $category in
+                                Text(category.categoryTitle ?? "").tag(category as TaskCategory?)
+                            }
                         }
                     }
                     Section("Additional Notes: (Optional)") {
