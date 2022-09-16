@@ -9,6 +9,7 @@ import SwiftUI
 
 struct IncompleteTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
+    @StateObject private var categoryManager = TaskCategoryManager.shared
     @State private var showAddingPage = false
     @State private var scrollOffset: CGFloat = 0.0
     @State private var titleOpacity = 0.0
@@ -21,6 +22,19 @@ struct IncompleteTaskView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        Text("Filter by category")
+                        Picker("Filter", selection: $taskManager.selectedCategory) {
+                            Text("None").tag(TaskCategory?.none)
+                            ForEach($categoryManager.categories) { $category in
+                                Text(category.categoryTitle ?? "").tag(category as TaskCategory?)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "tray.full")
+                    }
+                }
                 ToolbarItem(placement: .principal) {
                     VStack(alignment: .center) {
                         Text("Next Due Date in")
@@ -63,6 +77,15 @@ struct IncompleteTaskView: View {
                         showAddingPage.toggle()
                     }
                     .buttonStyle(.bordered)
+                    if let _ = taskManager.selectedCategory {
+                        Button("Remove filter") {
+                            withAnimation(.easeInOut) {
+                                taskManager.selectedCategory = nil
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .padding()
+                    }
                 }
                 .frame(maxWidth: .infinity)
             }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
+    @ObservedObject private var categoryManager = TaskCategoryManager.shared
     @Binding var isPresented: Bool
     @StateObject var taskEditor: TaskEditor
     
@@ -24,19 +25,31 @@ struct AddTaskView: View {
         return NavigationView {
             Form {
                 Group {
+                    Section {
+                        TextField("Title", text: $taskEditor.taskTitle)
+                            .onChange(of: taskEditor.taskTitle, perform: taskEditor.changeTitle)
+                    }
                     Section("Information") {
                         Picker("Task type", selection: $taskEditor.hasDeadline) {
                             Text("Deadline").tag(true)
                             Text("No Deadline").tag(false)
                         }
                         .pickerStyle(.segmented)
-                        TextField("Title", text: $taskEditor.taskTitle)
-                            .onChange(of: taskEditor.taskTitle, perform: taskEditor.changeTitle)
                         if taskEditor.hasDeadline {
                             DatePicker("Due date:", selection: $taskEditor.taskDueDate, in: dateRange, displayedComponents: .date)
                         }
+                        Picker("Category:", selection: $taskEditor.category) {
+                            Text("None").tag(TaskCategory?.none)
+                            ForEach($categoryManager.categories) { $category in
+                                Text(category.categoryTitle ?? "").tag(category as TaskCategory?)
+                            }
+                        }
                     }
                     Section("Additional Notes: (Optional)") {
+///                       Possibly replace this in the future?
+//                        TextField("Test", text: $taskEditor.taskDescription,  axis: .vertical)
+//                            .lineLimit(5...10)
+//                            .disableAutocorrection(true)
                         TextEditor(text: $taskEditor.taskDescription)
                             .frame(minHeight: 100)
                             .disableAutocorrection(true)
@@ -46,6 +59,7 @@ struct AddTaskView: View {
                 .themedListRowBackground()
             }
             .navigationTitle(editMode ? "Edit task" : "New task")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {

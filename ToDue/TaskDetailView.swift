@@ -20,6 +20,15 @@ struct TaskDetailView: View {
             Group {
                 VStack(alignment: .leading) {
                     dueDate
+                    if let category = task.category {
+                        Text(category.categoryTitle ?? "")
+                            .font(.callout)
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .foregroundColor(.secondary)
+                            .background(.regularMaterial, in: Capsule())
+                            .padding(.bottom, DrawingConstants.dueDatePadding)
+                    }
                     taskDesc
                     if !task.subTaskArray.isEmpty {
                         ProgressBar(progress: taskManager.progress(for: task))
@@ -100,6 +109,7 @@ struct TaskDetailView: View {
             Button("Add subtask") {
                 showAddSubtaskSheet.toggle()
             }
+            .buttonStyle(.borderless)
             Spacer()
         }
     }
@@ -112,7 +122,7 @@ struct TaskDetailView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.headline)
                 .foregroundColor(.secondary)
-                .padding(.bottom, DrawingConstants.dueDatePadding)
+                
         }
     }
     

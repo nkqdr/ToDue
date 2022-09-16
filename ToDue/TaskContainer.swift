@@ -46,6 +46,16 @@ struct TaskContainer: View {
                 .multilineTextAlignment(.leading)
                 .padding()
                 Spacer()
+                if let category = task.category {
+                    Text(category.categoryTitle ?? "")
+                        .font(.footnote)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
+                        .foregroundColor(.secondary)
+                        .background(.thinMaterial, in: Capsule())
+                    Spacer()
+                    Spacer()
+                }
                 progressCircle
             }
         }
