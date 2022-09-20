@@ -16,6 +16,7 @@ class TaskManager: ObservableObject {
     @Published var completeTasks: [Task] = []
     @Published var tasks: [Task] = [] {
         willSet {
+            selectedCategory = nil
             incompleteTasks = newValue.filter { !$0.isCompleted }
             completeTasks = newValue.filter { $0.isCompleted }.reversed()
         }

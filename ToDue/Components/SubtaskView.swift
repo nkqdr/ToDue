@@ -11,7 +11,6 @@ struct SubtaskView: View {
     @EnvironmentObject private var taskManager: TaskManager
     @State private var showingAlert: Bool = false
     var subTask: SubTask
-//    @Binding var showAddSubtaskSheet: Bool
     var onEdit: (SubTask) -> Void
     
     var body: some View {
