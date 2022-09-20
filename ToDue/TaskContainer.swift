@@ -14,7 +14,7 @@ struct TaskContainer: View {
     var showBackground: Bool = false
     
     var body: some View {
-        return ZStack {
+        return ZStack(alignment: .topTrailing) {
             containerBackground
             HStack {
                 VStack(alignment: .leading) {
@@ -36,6 +36,14 @@ struct TaskContainer: View {
                             .font(.subheadline)
                             .lineLimit(1)
                     }
+//                    if let category = task.category {
+//                        Text(category.categoryTitle ?? "")
+//                            .font(.footnote)
+//                            .padding(.vertical, 5)
+//                            .padding(.horizontal, 10)
+//                            .foregroundColor(.secondary)
+//                            .background(.thinMaterial, in: Capsule())
+//                    }
                     Spacer()
                     if taskManager.progress(for: task) == 1 && !task.isCompleted {
                         Text("Complete this task by tapping the circle!")
@@ -46,16 +54,6 @@ struct TaskContainer: View {
                 .multilineTextAlignment(.leading)
                 .padding()
                 Spacer()
-                if let category = task.category {
-                    Text(category.categoryTitle ?? "")
-                        .font(.footnote)
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .foregroundColor(.secondary)
-                        .background(.thinMaterial, in: Capsule())
-                    Spacer()
-                    Spacer()
-                }
                 progressCircle
             }
         }

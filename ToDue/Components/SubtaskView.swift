@@ -9,7 +9,10 @@ import SwiftUI
 
 struct SubtaskView: View {
     @EnvironmentObject private var taskManager: TaskManager
+    @State private var showingAlert: Bool = false
     var subTask: SubTask
+//    @Binding var showAddSubtaskSheet: Bool
+    var onEdit: (SubTask) -> Void
     
     var body: some View {
         HStack {
@@ -27,6 +30,57 @@ struct SubtaskView: View {
                 }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .swipeActions(edge: .trailing) {
+            Button(action: {
+                showingAlert = true
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
+            .tint(.red)
+        }
+        .swipeActions(edge: .leading) {
+            Button {
+                taskManager.toggleCompleted(subTask)
+            } label: {
+                Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
+            }
+                .tint(.mint)
+            Button {
+                onEdit(subTask)
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+            .tint(.indigo)
+        }
+        .contextMenu {
+            Button {
+                onEdit(subTask)
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+            Button(role: .destructive, action: {
+                showingAlert = true
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
+        }
+        .confirmationDialog(
+            Text("Are you sure you want to delete this?"),
+            isPresented: $showingAlert,
+            titleVisibility: .visible
+        ) {
+             Button("Delete", role: .destructive) {
+                 withAnimation(.easeInOut) {
+                     taskManager.deleteTask(subTask)
+                 }
+             }
+            Button("Cancel", role: .cancel) {
+                showingAlert = false
+            }
+        } message: {
+            Text(subTask.wrappedTitle)
+                .font(.headline).fontWeight(.bold)
+        }
         .listRowInsets(DrawingConstants.subTaskListRowInsets)
     }
     
@@ -38,6 +92,8 @@ struct SubtaskView: View {
 
 struct SubtaskView_Previews: PreviewProvider {
     static var previews: some View {
-        SubtaskView(subTask: SubTask())
+        SubtaskView(subTask: SubTask()) { subTask in
+            print(subTask)
+        }
     }
 }

@@ -60,8 +60,13 @@ struct IncompleteTaskView: View {
             if let task = taskManager.incompleteTasks.first {
                 TaskDetailView(task: task)
             } else {
-                Color("Background")
-                    .ignoresSafeArea()
+                ZStack {
+                    Color("Background")
+                        .ignoresSafeArea()
+                    Text("Open the sidebar to create a new task!")
+                        .font(.headline)
+                        .foregroundColor(Color("Text"))
+                }
             }
         }
         .currentDeviceNavigationViewStyle()
@@ -111,6 +116,15 @@ struct IncompleteTaskView: View {
     var mainScrollView: some View {
         ObservableScrollView(scrollOffset: $scrollOffset, showsIndicators: false) { proxy in
             largePageTitle
+            if let category = taskManager.selectedCategory {
+                HStack {
+                    Text("Filter: \(category.categoryTitle ?? "")")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                .padding()
+            }
             maybeAddTaskButton
             ForEach (taskManager.incompleteTasks) { task in
                 let isFirst: Bool = taskManager.incompleteTasks.first == task

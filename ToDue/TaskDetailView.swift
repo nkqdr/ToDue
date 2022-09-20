@@ -43,6 +43,7 @@ struct TaskDetailView: View {
             .themedListRowBackground()
         }
         .background(Color("Background"))
+        .scrollContentBackground(.hidden)
         .confirmationDialog(
             Text("Are you sure you want to delete this?"),
             isPresented: $showingAlert,
@@ -61,7 +62,6 @@ struct TaskDetailView: View {
             Text(currentSubTask?.wrappedTitle ?? "")
                 .font(.headline).fontWeight(.bold)
         }
-        .scrollContentBackground(.hidden)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -84,25 +84,25 @@ struct TaskDetailView: View {
         }
     }
     
-    private func editSubTaskButton(_ subTask: SubTask) -> some View {
-        Button {
-            currentSubTask = subTask
-            showAddSubtaskSheet.toggle()
-        } label: {
-            Label("Edit", systemImage: "pencil")
-        }
-    }
-    
-    private func deleteSubTaskButton(_ subTask: SubTask) -> some View {
-        Button(action: {
-            currentSubTask = subTask
-            showingAlert = true
-        }, label: {
-            Label("Delete", systemImage: "trash")
-        })
-        .tint(.red)
-    }
-    
+//    private func editSubTaskButton(_ subTask: SubTask) -> some View {
+//        Button {
+//            currentSubTask = subTask
+//            showAddSubtaskSheet.toggle()
+//        } label: {
+//            Label("Edit", systemImage: "pencil")
+//        }
+//    }
+//
+//    private func deleteSubTaskButton(_ subTask: SubTask) -> some View {
+//        Button(action: {
+//            currentSubTask = subTask
+//            showingAlert = true
+//        }, label: {
+//            Label("Delete", systemImage: "trash")
+//        })
+//        .tint(.red)
+//    }
+//
     var addSubTaskButton: some View {
         HStack {
             Spacer()
@@ -142,6 +142,11 @@ struct TaskDetailView: View {
         }
     }
     
+    func launchEditSubtask(subTask: SubTask) {
+        currentSubTask = subTask
+        showAddSubtaskSheet.toggle()
+    }
+    
     @ViewBuilder
     var subTaskList: some View {
         let subTaskArray = task.subTaskArray
@@ -150,29 +155,7 @@ struct TaskDetailView: View {
             if !incomplete.isEmpty {
                 Section("Sub-Tasks") {
                     ForEach(incomplete) { subTask in
-                        SubtaskView(subTask: subTask)
-                            .swipeActions(edge: .trailing) {
-                                deleteSubTaskButton(subTask)
-                            }
-                            .swipeActions(edge: .leading) {
-                                Button {
-                                    taskManager.toggleCompleted(subTask)
-                                } label: {
-                                    Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
-                                }
-                                    .tint(.mint)
-                                editSubTaskButton(subTask)
-                                .tint(.indigo)
-                            }
-                            .contextMenu {
-                                editSubTaskButton(subTask)
-                                Button(role: .destructive, action: {
-                                    currentSubTask = subTask
-                                    showingAlert = true
-                                }, label: {
-                                    Label("Delete", systemImage: "trash")
-                                })
-                            }
+                        SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
                     }
                 }
             }
@@ -180,29 +163,7 @@ struct TaskDetailView: View {
             if !completed.isEmpty {
                 Section("Completed") {
                     ForEach(completed) { subTask in
-                        SubtaskView(subTask: subTask)
-                            .swipeActions(edge: .trailing) {
-                                deleteSubTaskButton(subTask)
-                            }
-                            .swipeActions(edge: .leading) {
-                                Button {
-                                    taskManager.toggleCompleted(subTask)
-                                } label: {
-                                    Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
-                                }
-                                    .tint(.mint)
-                                editSubTaskButton(subTask)
-                                .tint(.indigo)
-                            }
-                            .contextMenu {
-                                editSubTaskButton(subTask)
-                                Button(role: .destructive, action: {
-                                    currentSubTask = subTask
-                                    showingAlert = true
-                                }, label: {
-                                    Label("Delete", systemImage: "trash")
-                                })
-                            }
+                        SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
                     }
                 }
             }
