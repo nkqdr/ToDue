@@ -19,7 +19,7 @@ struct TaskContainer: View {
             HStack {
                 VStack(alignment: .leading) {
                     if let date = task.date, date < Date.distantFuture {
-                        Text(Utils.dateFormatter.string(from: task.date ?? Date.now))
+                        Text(Utils.dateFormatter.string(from: task.date ?? Date()))
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.subheadline)

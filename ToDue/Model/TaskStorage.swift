@@ -59,7 +59,7 @@ class TaskStorage: NSObject, ObservableObject {
             task.isCompleted = isCompleted ?? task.isCompleted
             task.taskDescription = description ?? task.taskDescription!
             task.taskTitle = title ?? task.taskTitle!
-            task.category = category ?? task.category
+            task.category = category
             task.date = date ?? task.date!
             try? PersistenceController.shared.persistentContainer.viewContext.save()
         }

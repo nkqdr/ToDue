@@ -77,7 +77,7 @@ struct TaskCategoriesView: View {
                 .navigationTitle("Add category")
                 .navigationBarTitleDisplayMode(.inline)
                 .background(Color("Background"))
-                .scrollContentBackground(.hidden)
+                .hideScrollContentBackgroundIfNecessary()
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button("Cancel") {
@@ -92,10 +92,10 @@ struct TaskCategoriesView: View {
                     }
                 }
             }
-            .presentationDetents([.medium, .large])
+            .versionAwarePresentationDetents()
         }
         .background(Color("Background"))
-        .scrollContentBackground(.hidden)
+        .hideScrollContentBackgroundIfNecessary()
         .navigationTitle("Task categories")
     }
 }

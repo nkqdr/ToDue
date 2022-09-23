@@ -30,6 +30,50 @@ extension View {
     func themedListRowBackground() -> some View {
         self.listRowBackground(Color("Accent2").opacity(0.3))
     }
+    
+    func hideScrollContentBackgroundIfNecessary() -> some View {
+        if #available(iOS 16.0, *) {
+            return self.scrollContentBackground(.hidden)
+        } else {
+            return self
+        }
+    }
+    
+    func versionAwareSearchable(text searchValue: Binding<String>) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.searchable(text: searchValue)
+        } else {
+            return self
+        }
+    }
+    
+    func versionAwareBorderedButtonStyle() -> some View {
+        if #available(iOS 15.0, *) {
+            return self.buttonStyle(.bordered)
+        } else {
+            return self.buttonStyle(.automatic)
+        }
+    }
+    
+    func versionAwarePresentationDetents() -> some View {
+        if #available(iOS 16.0, *) {
+            return self.presentationDetents([.medium, .large])
+        } else {
+            return self
+        }
+    }
+    
+    func versionAwarePickerStyle(displayTitle: String) -> some View {
+        if #available(iOS 16.0, *) {
+            return self
+        } else {
+            return HStack {
+                Text(displayTitle)
+                Spacer()
+                self.pickerStyle(.menu)
+            }
+        }
+    }
 }
 
 struct RoundedCorner: Shape {

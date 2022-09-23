@@ -25,7 +25,7 @@ struct MorePageView: View {
                 .themedListRowBackground()
             }
             .background(Color("Background"))
-            .scrollContentBackground(.hidden)
+            .hideScrollContentBackgroundIfNecessary()
             .navigationTitle("More")
             .sheet(isPresented: $showEmail) {
                 MailView(supportEmail: $email) { result in
@@ -43,7 +43,7 @@ struct MorePageView: View {
     }
     
     var generalSettings: some View {
-        Section("General") {
+        Section(header: Text("General")) {
             NavigationLink(destination: SettingsView()) {
                 Label("Settings", systemImage: "gear")
                     .foregroundColor(Color("Text"))
@@ -52,7 +52,7 @@ struct MorePageView: View {
     }
     
     var configurationSection: some View {
-        Section("Configuration") {
+        Section(header: Text("Configuration")) {
             NavigationLink(destination: TaskCategoriesView()) {
                 Label("Task categories", systemImage: "tray.full")
                     .foregroundColor(Color("Text"))
@@ -61,7 +61,7 @@ struct MorePageView: View {
     }
     
     var helpSection: some View {
-        Section("Help") {
+        Section(header: Text("Help")) {
             NavigationLink(destination: FAQView()) {
                 Label("FAQ", systemImage: "questionmark.circle.fill")
                     .foregroundColor(Color("Text"))
@@ -83,7 +83,7 @@ struct MorePageView: View {
     }
     
     var pageFooter: some View {
-        Section("About") {
+        Section(header: Text("About")) {
             HStack {
                 Image(systemName: "heart")
                 VStack(alignment: .leading) {

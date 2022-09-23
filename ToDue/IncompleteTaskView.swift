@@ -81,14 +81,14 @@ struct IncompleteTaskView: View {
                     Button("Create a task") {
                         showAddingPage.toggle()
                     }
-                    .buttonStyle(.bordered)
+                    .versionAwareBorderedButtonStyle()
                     if let _ = taskManager.selectedCategory {
                         Button("Remove filter") {
                             withAnimation(.easeInOut) {
                                 taskManager.selectedCategory = nil
                             }
                         }
-                        .buttonStyle(.bordered)
+                        .versionAwareBorderedButtonStyle()
                         .padding()
                     }
                 }

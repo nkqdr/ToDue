@@ -19,7 +19,7 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .background(Color("Background"))
-        .scrollContentBackground(.hidden)
+        .hideScrollContentBackgroundIfNecessary()
     }
     
     var remindersSection: some View {

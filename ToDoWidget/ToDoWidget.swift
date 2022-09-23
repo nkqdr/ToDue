@@ -9,7 +9,7 @@ import WidgetKit
 import SwiftUI
 
 struct TaskEntry: TimelineEntry {
-    let date: Date = Date.now
+    let date: Date = Date()
     let task: Task?
     let secondTask: Task?
 }
