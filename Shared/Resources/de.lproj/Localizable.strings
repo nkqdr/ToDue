@@ -1,5 +1,10 @@
 /* No comment provided by engineer. */
-"Add subtask" = "Teilaufgabe hinzufügen";
+"About" = "Über";
+
+/* No comment provided by engineer. */
+"Add subtask" = "Neue Teilaufgabe";
+
+"Add category" = "Neue Kategorie";
 
 /* No comment provided by engineer. */
 "Additional Notes: (Optional)" = "Zusätzliche Notizen";
@@ -15,6 +20,18 @@
 
 /* No comment provided by engineer. */
 "Are you sure you want to delete this?" = "Sind Sie sicher, dass Sie das löschen wollen?";
+
+"Are you sure you want to delete this?
+All related tasks will be deleted aswell." = "
+Sind Sie sicher, dass Sie das löschen wollen?
+Alle verknüpften Aufgaben werden ebenfalls gelöscht.
+";
+
+/* Indicator of how many tasks are related to a category */
+"Tasks: %lld" = "Aufgaben: %lld";
+
+/* No comment provided by engineer. */
+"Cancel" = "Abbrechen";
 
 /* No comment provided by engineer. */
 "Complete this task by tapping the circle!" = "Auf den Kreis tippen um die Aufgabe abzuschließen!";
@@ -32,10 +49,7 @@
 "Delete" = "Löschen";
 
 /* No comment provided by engineer. */
-"Description..." = "Beschreibung...";
-
-/* No comment provided by engineer. */
-"Due date:" = "Fälligkeitsdatum:";
+"Due date:" = "Deadline:";
 
 /* Label in detail view that displays when this task is due. */
 "Due: %@" = "Fällig: %@";
@@ -44,13 +58,18 @@
 "Edit" = "Bearbeiten";
 
 /* No comment provided by engineer. */
+"Edit subtask" = "Teilaufgabe bearbeiten";
+
+/* No comment provided by engineer. */
 "Edit task" = "Aufgabe bearbeiten";
 
 /* No comment provided by engineer. */
-"Enter a short description:" = "Geben Sie eine kurze Beschreibung an:";
+"Enable reminders" = "Erinnerungen aktivieren";
 
 /* (No Comment) */
 "FAQ" = "Häufige Fragen";
+
+"Filter by category" = "Filter nach Kategorie";
 
 /* No comment provided by engineer. */
 "First tap on a task to select it. Now you should see a button that says 'Add subtask'." = "Tippe dafür zunächst auf eine Aufgabe um sie auszuwählen. Nun solltest du einen Knopf sehen, auf dem 'Teilaufgabe hinzufügen' steht.";
@@ -109,8 +128,17 @@
 /* No comment provided by engineer. */
 "Notes:" = "Notizen:";
 
+/* No comment provided by engineer. */
+"Reminders" = "Erinnerungen";
+
 /* (No Comment) */
 "Overview" = "Übersicht";
+
+/* No comment provided by engineer. */
+"Remind me at" = "Erinnere mich um";
+
+/* Button text for when filter is active and no tasks appear */
+"Remove filter" = "Filter entfernen";
 
 /* No comment provided by engineer. */
 "Save" = "Speichern";
@@ -127,18 +155,39 @@
 /* No comment provided by engineer. */
 "Task is past due!" = "Aufgabe ist überfällig!";
 
+/* (No Comment) */
+"Task_almost_due" = "Aufgabe ist bald fällig!";
+
 /* No comment provided by engineer. */
 "The tasks are sorted by their due date, so you will always see the next task at the top." = "Die Aufgaben werden nach ihrem Fälligkeitsdatum sortiert, sodass du die nächste Aufgabe immer ganz oben siehst.";
 
 /* No comment provided by engineer. */
-"There is no undo" = "Es gibt kein Zurück";
+"Title" = "Titel";
 
 /* No comment provided by engineer. */
-"Title" = "Titel";
+"reminder_settings_footer" = "Um Benachrichtigungen vollständig zu erlauben oder verbieten, benutzen Sie bitte die Einstellungen-App.";
 
 /* Label that displays how many tasks have been completed in total. */
 "Total: %lld" = "Insgesamt: %lld";
 
 /* No comment provided by engineer. */
-"Type here..." = "Hier tippen...";
+"Task type" = "Art der Aufgabe";
+
+/* No comment provided by engineer. */
+"Deadline" = "Mit Deadline";
+
+/* No comment provided by engineer. */
+"No Deadline" = "Ohne Deadline";
+
+/* Section title on the 'More' Page */
+"Configuration" = "Konfiguration";
+
+/* Navigation Link to task categories settings */
+"Task categories" = "Aufgabenkategorien";
+
+/* Form title for category field */
+"Category:" = "Kategorie:";
+
+/* Label for when no category is selected */
+"None" = "Keine";
 

@@ -9,7 +9,7 @@ import WidgetKit
 import SwiftUI
 
 struct TaskEntry: TimelineEntry {
-    let date: Date = Date.now
+    let date: Date = Date()
     let task: Task?
     let secondTask: Task?
 }
@@ -78,53 +78,65 @@ struct MediumWidget : View {
                     .fontWeight(.bold)
                 Spacer()
             }
-            .padding(.vertical)
-            .padding(.leading)
+            .padding(.trailing, 25)
             .frame(maxWidth: .infinity, alignment: .leading)
             Spacer()
             VStack {
                 if let task = entry.task {
-                    TaskContainer(task: task, cornerRadius: 20, descriptionLineLimit: 4)
+                    TaskContainer(task: task, descriptionLineLimit: 4, innerTaskContainerPadding: 6)
+                }
+                if let task = entry.secondTask {
+                    TaskContainer(task: task, backgroundColor: Color("Accent2").opacity(0.3), innerTaskContainerPadding: 6)
                 }
             }
         }
-    }
-}
-
-struct LargeWidget : View {
-    var entry: Provider.Entry
-    var remainingTime: LocalizedStringKey
-    
-    var body: some View {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        return VStack (alignment: .leading) {
-            Text("Next Due Date in")
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundColor(.gray)
-            Text(remainingTime)
-                .font(.title2)
-                .fontWeight(.bold)
-            Spacer()
-            if let task = entry.task {
-                TaskContainer(task: task)
-            }
-            if let task = entry.secondTask {
-                TaskContainer(task: task, backgroundColor: Color("Accent2").opacity(0.3))
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .padding()
     }
 }
+
+//struct LargeWidget : View {
+//    var entry: Provider.Entry
+//    var remainingTime: LocalizedStringKey
+//
+//    var body: some View {
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateStyle = .long
+//        dateFormatter.timeStyle = .none
+//        return VStack (alignment: .leading) {
+//            Text("Next Due Date in")
+//                .font(.title3)
+//                .fontWeight(.bold)
+//                .foregroundColor(.gray)
+//            Text(remainingTime)
+//                .font(.title2)
+//                .fontWeight(.bold)
+//            Spacer()
+//            if let task = entry.task {
+//                TaskContainer(task: task, includeDescription: true)
+//            }
+//            if let task = entry.secondTask {
+//                TaskContainer(task: task, backgroundColor: Color("Accent2").opacity(0.3), includeDescription: true)
+//            }
+//        }
+//        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+//        .padding()
+//    }
+//}
 
 struct TaskContainer: View {
     var task: Task
     var backgroundColor: Color = Color("Accent1")
     var cornerRadius: CGFloat = 10
     var descriptionLineLimit: Int = 2
+    var innerTaskContainerPadding: CGFloat?
+    var includeDescription: Bool = false
+    
+    private var horizontalPadding: CGFloat? {
+        if let p = innerTaskContainerPadding {
+            return p + 2
+        }
+        return nil
+    }
     
     var body: some View {
         let dateFormatter = DateFormatter()
@@ -133,18 +145,17 @@ struct TaskContainer: View {
         return VStack (alignment: .leading) {
             Text(dateFormatter.string(from: task.date!))
                 .foregroundColor(.secondary)
-                .font(.headline)
+                .font(.caption)
                 .fontWeight(.bold)
-                .padding(.vertical, 8)
             Group {
                 Text(task.taskTitle!)
                     .foregroundColor(Color("Text"))
-                    .font(.subheadline)
+                    .font(.footnote)
                     .fontWeight(.bold)
-                if descriptionLineLimit > 0 {
+                if descriptionLineLimit > 0, includeDescription {
                     Text(task.taskDescription ?? "")
                         .foregroundColor(.secondary)
-                        .font(.footnote)
+                        .font(.caption)
                         .fontWeight(.bold)
                         .lineLimit(descriptionLineLimit)
                 }
@@ -152,7 +163,8 @@ struct TaskContainer: View {
             .lineLimit(1)
             Spacer()
         }
-        .padding(.all, 8)
+        .padding(.vertical, innerTaskContainerPadding ?? 15)
+        .padding(.horizontal, horizontalPadding ?? 15)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: cornerRadius).fill(backgroundColor))
     }
@@ -171,10 +183,10 @@ struct ToDoWidgetEntryView : View {
             switch family {
             case .systemSmall:
                 SmallWidget(entry: entry, remainingTime: label)
-            case .systemMedium:
-                MediumWidget(entry: entry, remainingTime: label)
             default:
-                LargeWidget(entry: entry, remainingTime: label)
+                MediumWidget(entry: entry, remainingTime: label)
+//            default:
+//                LargeWidget(entry: entry, remainingTime: label)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -190,7 +202,7 @@ struct ToDoWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             ToDoWidgetEntryView(entry: entry)
         }
-        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+        .supportedFamilies([.systemSmall, .systemMedium])
         .configurationDisplayName("Next Task Widget")
         .description("Always have your next task on your home screen.")
     }
@@ -206,8 +218,8 @@ struct ToDoWidget_Preview: PreviewProvider {
             ToDoWidgetEntryView(entry: TaskEntry(task: nil, secondTask: nil))
                 .preferredColorScheme(.dark)
                 .previewContext(WidgetPreviewContext(family: .systemMedium))
-            ToDoWidgetEntryView(entry: TaskEntry(task: nil, secondTask: nil))
-                .previewContext(WidgetPreviewContext(family: .systemLarge))
+//            ToDoWidgetEntryView(entry: TaskEntry(task: nil, secondTask: nil))
+//                .previewContext(WidgetPreviewContext(family: .systemLarge))
         }
     }
 }

@@ -20,6 +20,15 @@ struct TaskDetailView: View {
             Group {
                 VStack(alignment: .leading) {
                     dueDate
+                    if let category = task.category {
+                        Text(category.categoryTitle ?? "")
+                            .font(.callout)
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .foregroundColor(.secondary)
+                            .versionAwareRegularMaterialBackground()
+                            .padding(.bottom, DrawingConstants.dueDatePadding)
+                    }
                     taskDesc
                     if !task.subTaskArray.isEmpty {
                         ProgressBar(progress: taskManager.progress(for: task))
@@ -32,22 +41,19 @@ struct TaskDetailView: View {
                 addSubTaskButton
             }
             .themedListRowBackground()
-            .confirmationDialog(
-                Text("Are you sure you want to delete this?"),
-                isPresented: $showingAlert,
-                titleVisibility: .visible
-            ) {
-                 Button("Delete", role: .destructive) {
-                     withAnimation(.easeInOut) {
-                         taskManager.deleteTask(currentSubTask!)
-                     }
-                 }
-            } message: {
-                Text(currentSubTask?.wrappedTitle ?? "")
-                    .font(.headline).fontWeight(.bold)
-            }
         }
-        .background(Color("Background"))
+        .groupListStyleIfNecessary()
+        .background(Color("Background").ignoresSafeArea())
+        .hideScrollContentBackgroundIfNecessary()
+        .versionAwareConfirmationDialog(
+            $showingAlert,
+            title: "Are you sure you want to delete this?",
+            message: currentSubTask?.wrappedTitle ?? "",
+            onDelete: { taskManager.deleteTask(currentSubTask!) },
+            onCancel: {
+            showingAlert = false
+            currentSubTask = nil
+        })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -58,93 +64,58 @@ struct TaskDetailView: View {
             }
         }
         .navigationTitle(task.taskTitle ?? "")
-        .navigationBarTitleDisplayMode(.large)
+        .versionAwareNavigationTitleDisplayMode()
         .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
             currentSubTask = nil
         }) {
             AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(currentSubTask, on: task))
-            // TODO: Once iOS 16 is out, use .presentationDetents here!
+                .versionAwarePresentationDetents()
         }
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
         }
     }
     
-    func subTaskView(_ subTask: SubTask) -> some View {
-            HStack {
-                Text(subTask.title ?? "")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .strikethrough(subTask.isCompleted, color: Color("Text"))
-                Spacer()
-                Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.title)
-                    .frame(width: DrawingConstants.completeIndicatorSize, height: DrawingConstants.completeIndicatorSize)
-                    .onTapGesture {
-                        Haptics.shared.play(.medium)
-                        taskManager.toggleCompleted(subTask)
-                    }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .swipeActions(edge: .trailing) {
-                deleteSubTaskButton(subTask)
-            }
-            .swipeActions(edge: .leading) {
-                toggleSubTaskCompleteButton(subTask)
-                    .tint(.mint)
-                editSubTaskButton(subTask)
-                    .tint(.indigo)
-            }
-            .contextMenu {
-                editSubTaskButton(subTask)
-                deleteSubTaskButton(subTask)
-            }
-            .listRowInsets(DrawingConstants.subTaskListRowInsets)
-    }
-    
-    private func editSubTaskButton(_ subTask: SubTask) -> some View {
-        Button {
-            currentSubTask = subTask
-            showAddSubtaskSheet.toggle()
-        } label: {
-            Label("Edit", systemImage: "pencil")
-        }
-    }
-    
-    private func toggleSubTaskCompleteButton(_ subTask: SubTask) -> some View {
-        Button {
-            taskManager.toggleCompleted(subTask)
-        } label: {
-            Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
-        }
-    }
-    
-    private func deleteSubTaskButton(_ subTask: SubTask) -> some View {
-        Button(role: .destructive, action: {
-            currentSubTask = subTask
-            showingAlert = true
-        }, label: {
-            Label("Delete", systemImage: "trash")
-        })
-    }
-    
+//    private func editSubTaskButton(_ subTask: SubTask) -> some View {
+//        Button {
+//            currentSubTask = subTask
+//            showAddSubtaskSheet.toggle()
+//        } label: {
+//            Label("Edit", systemImage: "pencil")
+//        }
+//    }
+//
+//    private func deleteSubTaskButton(_ subTask: SubTask) -> some View {
+//        Button(action: {
+//            currentSubTask = subTask
+//            showingAlert = true
+//        }, label: {
+//            Label("Delete", systemImage: "trash")
+//        })
+//        .tint(.red)
+//    }
+//
     var addSubTaskButton: some View {
         HStack {
             Spacer()
             Button("Add subtask") {
                 showAddSubtaskSheet.toggle()
             }
+            .buttonStyle(.borderless)
             Spacer()
         }
     }
     
+    @ViewBuilder
     var dueDate: some View {
-        Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
-            .fontWeight(.semibold)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.headline)
-            .foregroundColor(.secondary)
-            .padding(.bottom, DrawingConstants.dueDatePadding)
+        if let date = task.date, date < Date.distantFuture {
+            Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date()))", comment: "Label in detail view that displays when this task is due.")
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.headline)
+                .foregroundColor(.secondary)
+                
+        }
     }
     
     @ViewBuilder
@@ -163,23 +134,28 @@ struct TaskDetailView: View {
         }
     }
     
+    func launchEditSubtask(subTask: SubTask) {
+        currentSubTask = subTask
+        showAddSubtaskSheet.toggle()
+    }
+    
     @ViewBuilder
     var subTaskList: some View {
         let subTaskArray = task.subTaskArray
         if !subTaskArray.isEmpty {
             let incomplete = subTaskArray.filter { !$0.isCompleted }
             if !incomplete.isEmpty {
-                Section("Sub-Tasks") {
+                Section(header: Text("Sub-Tasks")) {
                     ForEach(incomplete) { subTask in
-                        subTaskView(subTask)
+                        SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
                     }
                 }
             }
             let completed = subTaskArray.filter { $0.isCompleted }
             if !completed.isEmpty {
-                Section("Completed") {
+                Section(header: Text("Completed")) {
                     ForEach(completed) { subTask in
-                        subTaskView(subTask)
+                        SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
                     }
                 }
             }

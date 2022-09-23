@@ -9,6 +9,7 @@ import SwiftUI
 
 struct IncompleteTaskView: View {
     @EnvironmentObject var taskManager: TaskManager
+    @StateObject private var categoryManager = TaskCategoryManager.shared
     @State private var showAddingPage = false
     @State private var scrollOffset: CGFloat = 0.0
     @State private var titleOpacity = 0.0
@@ -21,13 +22,26 @@ struct IncompleteTaskView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        Text("Filter by category")
+                        Picker("Filter", selection: $taskManager.selectedCategory) {
+                            Text("None").tag(TaskCategory?.none)
+                            ForEach($categoryManager.categories) { $category in
+                                Text(category.categoryTitle ?? "").tag(category as TaskCategory?)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "tray.full")
+                    }
+                }
                 ToolbarItem(placement: .principal) {
                     VStack(alignment: .center) {
                         Text("Next Due Date in")
-                            .font(.subheadline)
+                            .font(.footnote)
                             .foregroundColor(.gray)
                         Text(deadlineLabel)
-                            .font(.headline.weight(.bold))
+                            .font(.subheadline.weight(.bold))
                     }
                     .opacity(titleOpacity)
                 }
@@ -39,15 +53,20 @@ struct IncompleteTaskView: View {
                     }
                 }
             }
-            .background(Color("Background"))
+            .background(Color("Background").ignoresSafeArea())
             .sheet(isPresented: $showAddingPage) {
                 AddTaskView(isPresented: $showAddingPage, taskEditor: TaskEditor())
             }
             if let task = taskManager.incompleteTasks.first {
                 TaskDetailView(task: task)
             } else {
-                Color("Background")
-                    .ignoresSafeArea()
+                ZStack {
+                    Color("Background")
+                        .ignoresSafeArea()
+                    Text("Open the sidebar to create a new task!")
+                        .font(.headline)
+                        .foregroundColor(Color("Text"))
+                }
             }
         }
         .currentDeviceNavigationViewStyle()
@@ -62,7 +81,16 @@ struct IncompleteTaskView: View {
                     Button("Create a task") {
                         showAddingPage.toggle()
                     }
-                    .buttonStyle(.bordered)
+                    .versionAwareBorderedButtonStyle()
+                    if let _ = taskManager.selectedCategory {
+                        Button("Remove filter") {
+                            withAnimation(.easeInOut) {
+                                taskManager.selectedCategory = nil
+                            }
+                        }
+                        .versionAwareBorderedButtonStyle()
+                        .padding()
+                    }
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -88,6 +116,15 @@ struct IncompleteTaskView: View {
     var mainScrollView: some View {
         ObservableScrollView(scrollOffset: $scrollOffset, showsIndicators: false) { proxy in
             largePageTitle
+            if let category = taskManager.selectedCategory {
+                HStack {
+                    Text("Filter: \(category.categoryTitle ?? "")")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                .padding()
+            }
             maybeAddTaskButton
             ForEach (taskManager.incompleteTasks) { task in
                 let isFirst: Bool = taskManager.incompleteTasks.first == task

@@ -14,15 +14,17 @@ struct TaskContainer: View {
     var showBackground: Bool = false
     
     var body: some View {
-        return ZStack {
+        return ZStack(alignment: .topTrailing) {
             containerBackground
             HStack {
                 VStack(alignment: .leading) {
-                    Text(Utils.dateFormatter.string(from: task.date ?? Date.now))
-                        .fontWeight(.semibold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    if let date = task.date, date < Date.distantFuture {
+                        Text(Utils.dateFormatter.string(from: task.date ?? Date()))
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
                     Text(task.taskTitle ?? "")
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -34,6 +36,14 @@ struct TaskContainer: View {
                             .font(.subheadline)
                             .lineLimit(1)
                     }
+//                    if let category = task.category {
+//                        Text(category.categoryTitle ?? "")
+//                            .font(.footnote)
+//                            .padding(.vertical, 5)
+//                            .padding(.horizontal, 10)
+//                            .foregroundColor(.secondary)
+//                            .background(.thinMaterial, in: Capsule())
+//                    }
                     Spacer()
                     if taskManager.progress(for: task) == 1 && !task.isCompleted {
                         Text("Complete this task by tapping the circle!")
@@ -48,33 +58,38 @@ struct TaskContainer: View {
             }
         }
         .frame(minHeight: showBackground && !task.isCompleted ? DrawingConstants.topTaskMinHeight : 0)
-        .confirmationDialog(
-            Text("Are you sure you want to delete this?"),
-            isPresented: $showingAlert,
-            titleVisibility: .visible
-        ) {
-             Button("Delete", role: .destructive) {
-                 withAnimation(.easeInOut) {
-                     taskManager.deleteTask(task)
-                 }
-             }
-        } message: {
-            Text(task.taskTitle ?? "")
-                .font(.headline).fontWeight(.bold)
-        }
+        .versionAwareConfirmationDialog(
+            $showingAlert,
+            title: "Are you sure you want to delete this?",
+            message: task.taskTitle ?? "",
+            onDelete: { taskManager.deleteTask(task) },
+            onCancel: { showingAlert = false })
         .contextMenu {
-            Button(role: .cancel, action: {
+            Button(action: {
                 taskManager.toggleCompleted(task)
             }, label: {
                 Label(task.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
+            VersionAwareDestructiveButton()
+        }
+        .padding(.bottom, 5)
+    }
+    
+    @ViewBuilder
+    private func VersionAwareDestructiveButton() -> some View {
+        if #available(iOS 15.0, *) {
             Button(role: .destructive, action: {
                 showingAlert = true
             }, label: {
                 Label("Delete", systemImage: "trash")
             })
+        } else {
+            Button(action: {
+                showingAlert = true
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
         }
-        .padding(.bottom, 5)
     }
     
     @ViewBuilder

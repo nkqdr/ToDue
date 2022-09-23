@@ -39,7 +39,7 @@ class SubtaskStorage: NSObject, ObservableObject {
         subTask.title = title
         subTask.id = UUID()
         subTask.isCompleted = false
-        subTask.createdAt = Date.now
+        subTask.createdAt = Date()
         
         task.addToSubTasks(subTask)
         try? PersistenceController.shared.persistentContainer.viewContext.save()

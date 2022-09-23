@@ -14,8 +14,18 @@ class TaskManager: ObservableObject {
     @Published var completeTasks: [Task] = []
     @Published var tasks: [Task] = [] {
         willSet {
+            selectedCategory = nil
             incompleteTasks = newValue.filter { !$0.isCompleted }
             completeTasks = newValue.filter { $0.isCompleted }.reversed()
+        }
+    }
+    @Published var selectedCategory: TaskCategory? {
+        willSet {
+            if let category = newValue {
+                incompleteTasks = tasks.filter { !$0.isCompleted && $0.category == category }
+            } else {
+                incompleteTasks = tasks.filter { !$0.isCompleted }
+            }
         }
     }
     
@@ -63,7 +73,14 @@ class TaskManager: ObservableObject {
     // MARK: - Intents
     
     func toggleCompleted(_ task: Task) {
-        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: !task.isCompleted)
+        if task.isCompleted {
+            // Task will now be incomplete
+            Utils.scheduleNewNotification(for: task)
+        } else {
+            // Task will now be complete
+            Utils.cancelNotification(for: task)
+        }
+        TaskStorage.shared.toggleCompleted(for: task)
         WidgetCenter.shared.reloadAllTimelines()
     }
     
@@ -89,13 +106,14 @@ class TaskManager: ObservableObject {
     }
     
     func saveTask(_ editor: TaskEditor) {
-        let newDate = editor.taskDueDate.removeTimeStamp!
+        let newDate = editor.hasDeadline ? editor.taskDueDate.removeTimeStamp! : Date.distantFuture
         let newDescription = editor.taskDescription
         let newTitle = editor.taskTitle
         if let newTask = editor.task {
-            TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted)
+            TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted, category: editor.category)
         } else {
-            TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate)
+            let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate, category: editor.category)
+            Utils.scheduleNewNotification(for: task)
         }
         WidgetCenter.shared.reloadAllTimelines()
     }
