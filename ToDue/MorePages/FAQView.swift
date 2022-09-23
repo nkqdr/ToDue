@@ -16,13 +16,14 @@ struct FAQView: View {
             }
             .themedListRowBackground()
         }
+        .groupListStyleIfNecessary()
         .navigationTitle("FAQ")
-        .background(Color("Background"))
-        .scrollContentBackground(.hidden)
+        .background(Color("Background").ignoresSafeArea())
+        .hideScrollContentBackgroundIfNecessary()
     }
     
     var overviewSection: some View {
-        Section("Overview") {
+        Section(header: Text("Overview")) {
             DisclosureGroup {
                 Text("If you press and hold a task for a short time, several functions are displayed. There you can also delete them, among other things.")
                     .foregroundColor(.secondary)
@@ -48,7 +49,7 @@ struct FAQView: View {
     }
     
     var subTasksSection: some View {
-        Section("Sub-Tasks") {
+        Section(header: Text("Sub-Tasks")) {
             DisclosureGroup {
                 Text("First tap on a task to select it. Now you should see a button that says 'Add subtask'.")
                     .foregroundColor(.secondary)

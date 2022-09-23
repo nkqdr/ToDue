@@ -17,14 +17,15 @@ struct SettingsView: View {
         List {
             remindersSection
         }
+        .groupListStyleIfNecessary()
         .navigationTitle("Settings")
-        .background(Color("Background"))
-        .scrollContentBackground(.hidden)
+        .background(Color("Background").ignoresSafeArea())
+        .hideScrollContentBackgroundIfNecessary()
     }
     
     var remindersSection: some View {
         Section(header: Text("Reminders"),
-                footer: Text("reminder_settings_footer").listRowBackground(Color.clear)) {
+                footer: Text("reminder_settings_footer").listRowBackground(Color("Background"))) {
             Toggle("Enable reminders", isOn: $shouldUseReminders)
                 .onChange(of: shouldUseReminders) { newValue in
                     if newValue {

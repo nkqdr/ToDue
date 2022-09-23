@@ -24,7 +24,7 @@ class TaskEditor: ObservableObject {
         self.taskDescription = task?.taskDescription ?? ""
         self.category = task?.category
         if let task = task, let date = task.date {
-            self.taskDueDate = date == Date.distantFuture ? Date.now : date
+            self.taskDueDate = date == Date.distantFuture ? Date() : date
             self.hasDeadline = date != Date.distantFuture
         } else {
             self.taskDueDate = Date()

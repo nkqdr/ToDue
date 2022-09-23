@@ -53,7 +53,7 @@ struct IncompleteTaskView: View {
                     }
                 }
             }
-            .background(Color("Background"))
+            .background(Color("Background").ignoresSafeArea())
             .sheet(isPresented: $showAddingPage) {
                 AddTaskView(isPresented: $showAddingPage, taskEditor: TaskEditor())
             }
@@ -81,14 +81,14 @@ struct IncompleteTaskView: View {
                     Button("Create a task") {
                         showAddingPage.toggle()
                     }
-                    .buttonStyle(.bordered)
+                    .versionAwareBorderedButtonStyle()
                     if let _ = taskManager.selectedCategory {
                         Button("Remove filter") {
                             withAnimation(.easeInOut) {
                                 taskManager.selectedCategory = nil
                             }
                         }
-                        .buttonStyle(.bordered)
+                        .versionAwareBorderedButtonStyle()
                         .padding()
                     }
                 }

@@ -50,9 +50,9 @@ struct CompletedTasksView: View {
                 .padding(.horizontal)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color("Background"))
+            .background(Color("Background").ignoresSafeArea())
             .navigationTitle("Completed")
-            .searchable(text: $searchValue)
+            .versionAwareSearchable(text: $searchValue)
             .onChange(of: searchValue) { newValue in
                 DispatchQueue.global(qos: .userInitiated).async {
                     let newTasks = taskManager.filterTasks(taskManager.completeTasks.map { $0 }, by: searchValue)

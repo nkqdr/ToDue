@@ -23,7 +23,7 @@ struct ProgressBar: View {
                 }
                 ZStack (alignment: .leading) {
                     Capsule()
-                        .fill(.ultraThickMaterial)
+                        .versionAwareUltraThickFill()
                         .frame(maxWidth: .infinity)
                     Capsule()
                         .fill(.blue)

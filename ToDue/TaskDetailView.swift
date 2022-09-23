@@ -26,7 +26,7 @@ struct TaskDetailView: View {
                             .padding(.vertical, 5)
                             .padding(.horizontal, 10)
                             .foregroundColor(.secondary)
-                            .background(.regularMaterial, in: Capsule())
+                            .versionAwareRegularMaterialBackground()
                             .padding(.bottom, DrawingConstants.dueDatePadding)
                     }
                     taskDesc
@@ -42,26 +42,18 @@ struct TaskDetailView: View {
             }
             .themedListRowBackground()
         }
-        .background(Color("Background"))
-        .scrollContentBackground(.hidden)
-        .confirmationDialog(
-            Text("Are you sure you want to delete this?"),
-            isPresented: $showingAlert,
-            titleVisibility: .visible
-        ) {
-             Button("Delete", role: .destructive) {
-                 withAnimation(.easeInOut) {
-                     taskManager.deleteTask(currentSubTask!)
-                 }
-             }
-            Button("Cancel", role: .cancel) {
-                showingAlert = false
-                currentSubTask = nil
-            }
-        } message: {
-            Text(currentSubTask?.wrappedTitle ?? "")
-                .font(.headline).fontWeight(.bold)
-        }
+        .groupListStyleIfNecessary()
+        .background(Color("Background").ignoresSafeArea())
+        .hideScrollContentBackgroundIfNecessary()
+        .versionAwareConfirmationDialog(
+            $showingAlert,
+            title: "Are you sure you want to delete this?",
+            message: currentSubTask?.wrappedTitle ?? "",
+            onDelete: { taskManager.deleteTask(currentSubTask!) },
+            onCancel: {
+            showingAlert = false
+            currentSubTask = nil
+        })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -72,12 +64,12 @@ struct TaskDetailView: View {
             }
         }
         .navigationTitle(task.taskTitle ?? "")
-        .navigationBarTitleDisplayMode(.large)
+        .versionAwareNavigationTitleDisplayMode()
         .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
             currentSubTask = nil
         }) {
             AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(currentSubTask, on: task))
-                .presentationDetents([.medium, .large])
+                .versionAwarePresentationDetents()
         }
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
@@ -117,7 +109,7 @@ struct TaskDetailView: View {
     @ViewBuilder
     var dueDate: some View {
         if let date = task.date, date < Date.distantFuture {
-            Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date.now))", comment: "Label in detail view that displays when this task is due.")
+            Text("Due: \(Utils.dateFormatter.string(from: task.date ?? Date()))", comment: "Label in detail view that displays when this task is due.")
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.headline)
@@ -153,7 +145,7 @@ struct TaskDetailView: View {
         if !subTaskArray.isEmpty {
             let incomplete = subTaskArray.filter { !$0.isCompleted }
             if !incomplete.isEmpty {
-                Section("Sub-Tasks") {
+                Section(header: Text("Sub-Tasks")) {
                     ForEach(incomplete) { subTask in
                         SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
                     }
@@ -161,7 +153,7 @@ struct TaskDetailView: View {
             }
             let completed = subTaskArray.filter { $0.isCompleted }
             if !completed.isEmpty {
-                Section("Completed") {
+                Section(header: Text("Completed")) {
                     ForEach(completed) { subTask in
                         SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
                     }

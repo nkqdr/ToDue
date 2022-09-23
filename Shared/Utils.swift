@@ -11,7 +11,7 @@ import SwiftUI
 class Utils {
     static func _remainingTime(_ givenTask: Task?) -> DateComponents {
         if let task = givenTask, let date = task.date, date < Date.distantFuture {
-            let diff = Calendar.current.dateComponents([.month, .day], from: Date.now.removeTimeStamp!, to: date)
+            let diff = Calendar.current.dateComponents([.month, .day], from: Date().removeTimeStamp!, to: date)
             return diff
         } else {
             return Calendar.current.dateComponents([], from: Date.distantPast)
@@ -86,7 +86,7 @@ class Utils {
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         if let uuid = task.id,
             let scheduleDate = Calendar.current.date(from: dateComponents),
-            scheduleDate > Date.now {
+            scheduleDate > Date() {
             let request = UNNotificationRequest(identifier: uuid.uuidString, content: content, trigger: trigger)
             UNUserNotificationCenter.current().add(request)
             print("Scheduled notification for \(task.taskTitle ?? "Unknown") on \(dateComponents.description)")

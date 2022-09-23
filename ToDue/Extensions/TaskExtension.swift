@@ -13,7 +13,7 @@ extension SubTask {
     }
     
     public var wrappedCreatedAt: Date {
-        createdAt ?? Date.now
+        createdAt ?? Date()
     }
 }
 
