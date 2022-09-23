@@ -12,39 +12,13 @@ struct TaskCategoriesView: View {
     @State private var showingAlert: Bool = false
     @State private var showAddCategory: Bool = false
     @State private var categoryEditor: TaskCategoryEditor = TaskCategoryEditor()
-    @State private var toBeDeleted: TaskCategory?
     
     var body: some View {
         List {
             Section {
                 ForEach($manager.categories) { $category in
-                    HStack {
-                        Text(category.categoryTitle ?? "")
-                        Spacer()
-                        Text("Tasks: \(category.taskArray.count)")
-                            .foregroundColor(.secondary)
-                            .font(.callout)
-                    }
-                    .versionAwareDeleteSwipeAction {
-                        showingAlert = true
-                        toBeDeleted = category
-                    }
-                    .themedListRowBackground()
+                    TaskCategoryView(category: category)
                 }
-                .versionAwareConfirmationDialog(
-                    $showingAlert,
-                    title: """
-                         Are you sure you want to delete this?
-                         All related tasks will be deleted aswell.
-                         """,
-                    message: toBeDeleted?.categoryTitle ?? "",
-                    onDelete: {
-                        if let delete = toBeDeleted {
-                            manager.deleteCategory(delete)
-                        }
-                    }, onCancel: {
-                        showingAlert = false
-                    })
             }
             Section {
                 HStack {
