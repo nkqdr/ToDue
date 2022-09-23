@@ -39,13 +39,7 @@ struct AddTaskView: View {
                         if taskEditor.hasDeadline {
                             DatePicker("Due date:", selection: $taskEditor.taskDueDate, in: dateRange, displayedComponents: .date)
                         }
-                        Picker("Category:", selection: $taskEditor.category) {
-                            Text("None").tag(TaskCategory?.none)
-                            ForEach($categoryManager.categories) { $category in
-                                Text(category.categoryTitle ?? "").tag(category as TaskCategory?)
-                            }
-                        }
-                        .versionAwarePickerStyle(displayTitle: "Category:")
+                        VersionAwarePicker
                     }
                     Section(header: Text("Additional Notes: (Optional)")) {
 ///                       Possibly replace this in the future?
@@ -62,8 +56,32 @@ struct AddTaskView: View {
             .navigationTitle(editMode ? "Edit task" : "New task")
             .navigationBarTitleDisplayMode(.inline)
             .versionAwareSheetFormToolbar(isPresented: $isPresented, disableButton: disableSaveButton, onSave: handleSave)
-            .background(Color("Background"))
+            .background(Color("Background").ignoresSafeArea())
             .hideScrollContentBackgroundIfNecessary()
+        }
+    }
+    
+    @ViewBuilder
+    private var VersionAwarePicker: some View {
+        if #available(iOS 16.0, *) {
+            Picker("Category:", selection: $taskEditor.category) {
+                Text("None").tag(TaskCategory?.none)
+                ForEach($categoryManager.categories) { $category in
+                    Text(category.categoryTitle ?? "").tag(category as TaskCategory?)
+                }
+            }
+        } else {
+            HStack {
+                Text("Category:")
+                Spacer()
+                Picker("\(taskEditor.category?.categoryTitle ?? "None")", selection: $taskEditor.category) {
+                    Text("None").tag(TaskCategory?.none)
+                    ForEach($categoryManager.categories) { $category in
+                        Text(category.categoryTitle ?? "").tag(category as TaskCategory?)
+                    }
+                }
+                .pickerStyle(.menu)
+            }
         }
     }
     

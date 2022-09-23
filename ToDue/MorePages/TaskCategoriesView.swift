@@ -25,35 +25,26 @@ struct TaskCategoriesView: View {
                             .foregroundColor(.secondary)
                             .font(.callout)
                     }
-                        .swipeActions(edge: .trailing) {
-                            Button(action: {
-                                showingAlert = true
-                                toBeDeleted = category
-                            }, label: {
-                                Label("Delete", systemImage: "trash")
-                            })
-                            .tint(.red)
-                        }
+                    .versionAwareDeleteSwipeAction {
+                        showingAlert = true
+                        toBeDeleted = category
+                    }
                     .themedListRowBackground()
                 }
-                .confirmationDialog(
-                    Text("""
+                .versionAwareConfirmationDialog(
+                    $showingAlert,
+                    title: """
                          Are you sure you want to delete this?
                          All related tasks will be deleted aswell.
-                         """),
-                    isPresented: $showingAlert,
-                    titleVisibility: .visible
-                ) {
-                    Button("Delete", role: .destructive) {
+                         """,
+                    message: toBeDeleted?.categoryTitle ?? "",
+                    onDelete: {
                         if let delete = toBeDeleted {
-                            withAnimation(.easeInOut) {
-                                manager.deleteCategory(delete)
-                            }
+                            manager.deleteCategory(delete)
                         }
-                    }
-                } message: {
-                    Text(toBeDeleted?.categoryTitle ?? "")
-                }
+                    }, onCancel: {
+                        showingAlert = false
+                    })
             }
             Section {
                 HStack {
@@ -68,6 +59,7 @@ struct TaskCategoriesView: View {
                 .themedListRowBackground()
             }
         }
+        .groupListStyleIfNecessary()
         .sheet(isPresented: $showAddCategory) {
             NavigationView {
                 Form {
@@ -76,7 +68,7 @@ struct TaskCategoriesView: View {
                 }
                 .navigationTitle("Add category")
                 .navigationBarTitleDisplayMode(.inline)
-                .background(Color("Background"))
+                .background(Color("Background").ignoresSafeArea())
                 .hideScrollContentBackgroundIfNecessary()
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -94,7 +86,7 @@ struct TaskCategoriesView: View {
             }
             .versionAwarePresentationDetents()
         }
-        .background(Color("Background"))
+        .background(Color("Background").ignoresSafeArea())
         .hideScrollContentBackgroundIfNecessary()
         .navigationTitle("Task categories")
     }

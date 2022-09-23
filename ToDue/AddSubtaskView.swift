@@ -22,7 +22,7 @@ struct AddSubtaskView: View {
                 }
                 .listRowBackground(Color("Accent2").opacity(0.3))
             }
-            .background(Color("Background"))
+            .background(Color("Background").ignoresSafeArea())
             .hideScrollContentBackgroundIfNecessary()
             .versionAwareSheetFormToolbar(isPresented: $isPresented, disableButton: disableSaveButton, onSave: handleSave)
             .navigationTitle(editMode ? "Edit subtask" : "Add subtask")
@@ -81,14 +81,6 @@ extension View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save", action: onSave)
                         .disabled(disableButton)
-                }
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Spacer()
-                    Button {
-                        hideKeyboard()
-                    } label: {
-                        Image(systemName: "keyboard.chevron.compact.down")
-                    }
                 }
             }
         }

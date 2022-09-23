@@ -26,7 +26,7 @@ struct TaskDetailView: View {
                             .padding(.vertical, 5)
                             .padding(.horizontal, 10)
                             .foregroundColor(.secondary)
-                            .background(.regularMaterial, in: Capsule())
+                            .versionAwareRegularMaterialBackground()
                             .padding(.bottom, DrawingConstants.dueDatePadding)
                     }
                     taskDesc
@@ -42,26 +42,18 @@ struct TaskDetailView: View {
             }
             .themedListRowBackground()
         }
-        .background(Color("Background"))
+        .groupListStyleIfNecessary()
+        .background(Color("Background").ignoresSafeArea())
         .hideScrollContentBackgroundIfNecessary()
-        .confirmationDialog(
-            Text("Are you sure you want to delete this?"),
-            isPresented: $showingAlert,
-            titleVisibility: .visible
-        ) {
-             Button("Delete", role: .destructive) {
-                 withAnimation(.easeInOut) {
-                     taskManager.deleteTask(currentSubTask!)
-                 }
-             }
-            Button("Cancel", role: .cancel) {
-                showingAlert = false
-                currentSubTask = nil
-            }
-        } message: {
-            Text(currentSubTask?.wrappedTitle ?? "")
-                .font(.headline).fontWeight(.bold)
-        }
+        .versionAwareConfirmationDialog(
+            $showingAlert,
+            title: "Are you sure you want to delete this?",
+            message: currentSubTask?.wrappedTitle ?? "",
+            onDelete: { taskManager.deleteTask(currentSubTask!) },
+            onCancel: {
+            showingAlert = false
+            currentSubTask = nil
+        })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -72,7 +64,7 @@ struct TaskDetailView: View {
             }
         }
         .navigationTitle(task.taskTitle ?? "")
-        .navigationBarTitleDisplayMode(.large)
+        .versionAwareNavigationTitleDisplayMode()
         .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
             currentSubTask = nil
         }) {

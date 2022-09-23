@@ -50,7 +50,7 @@ struct CompletedTasksView: View {
                 .padding(.horizontal)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color("Background"))
+            .background(Color("Background").ignoresSafeArea())
             .navigationTitle("Completed")
             .versionAwareSearchable(text: $searchValue)
             .onChange(of: searchValue) { newValue in

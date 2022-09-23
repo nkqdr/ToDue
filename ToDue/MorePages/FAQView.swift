@@ -16,8 +16,9 @@ struct FAQView: View {
             }
             .themedListRowBackground()
         }
+        .groupListStyleIfNecessary()
         .navigationTitle("FAQ")
-        .background(Color("Background"))
+        .background(Color("Background").ignoresSafeArea())
         .hideScrollContentBackgroundIfNecessary()
     }
     

@@ -58,33 +58,38 @@ struct TaskContainer: View {
             }
         }
         .frame(minHeight: showBackground && !task.isCompleted ? DrawingConstants.topTaskMinHeight : 0)
-        .confirmationDialog(
-            Text("Are you sure you want to delete this?"),
-            isPresented: $showingAlert,
-            titleVisibility: .visible
-        ) {
-             Button("Delete", role: .destructive) {
-                 withAnimation(.easeInOut) {
-                     taskManager.deleteTask(task)
-                 }
-             }
-        } message: {
-            Text(task.taskTitle ?? "")
-                .font(.headline).fontWeight(.bold)
-        }
+        .versionAwareConfirmationDialog(
+            $showingAlert,
+            title: "Are you sure you want to delete this?",
+            message: task.taskTitle ?? "",
+            onDelete: { taskManager.deleteTask(task) },
+            onCancel: { showingAlert = false })
         .contextMenu {
-            Button(role: .cancel, action: {
+            Button(action: {
                 taskManager.toggleCompleted(task)
             }, label: {
                 Label(task.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
+            VersionAwareDestructiveButton()
+        }
+        .padding(.bottom, 5)
+    }
+    
+    @ViewBuilder
+    private func VersionAwareDestructiveButton() -> some View {
+        if #available(iOS 15.0, *) {
             Button(role: .destructive, action: {
                 showingAlert = true
             }, label: {
                 Label("Delete", systemImage: "trash")
             })
+        } else {
+            Button(action: {
+                showingAlert = true
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
         }
-        .padding(.bottom, 5)
     }
     
     @ViewBuilder

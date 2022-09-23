@@ -53,7 +53,7 @@ struct IncompleteTaskView: View {
                     }
                 }
             }
-            .background(Color("Background"))
+            .background(Color("Background").ignoresSafeArea())
             .sheet(isPresented: $showAddingPage) {
                 AddTaskView(isPresented: $showAddingPage, taskEditor: TaskEditor())
             }

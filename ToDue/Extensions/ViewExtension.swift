@@ -74,6 +74,97 @@ extension View {
             }
         }
     }
+    
+    func versionAwareConfirmationDialog(_ isPresented: Binding<Bool>, title: LocalizedStringKey, message: String, onDelete: @escaping () -> Void, onCancel: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.confirmationDialog(
+                Text(title),
+                isPresented: isPresented,
+                titleVisibility: .visible
+            ) {
+                Button("Delete", role: .destructive) {
+                    withAnimation(.easeInOut) {
+                        onDelete()
+                    }
+                }
+                Button("Cancel", role: .cancel) {
+                    onCancel()
+                }
+            } message: {
+                Text(message)
+                    .font(.headline).fontWeight(.bold)
+            }
+        } else {
+            return self.alert(isPresented: isPresented) {
+                Alert(
+                    title: Text(title),
+                    message: Text(message).font(.headline).fontWeight(.bold),
+                    primaryButton: .destructive(Text("Delete")) {
+                        withAnimation(.easeInOut) {
+                            onDelete()
+                        }
+                    },
+                    secondaryButton: .cancel(Text("Cancel")) {
+                        onCancel()
+                    }
+                )
+            }
+        }
+    }
+    
+    func versionAwareRegularMaterialBackground() -> some View {
+        if #available(iOS 15.0, *) {
+            return self.background(.regularMaterial, in: Capsule())
+        } else {
+            return ZStack(alignment: .center) {
+                Capsule()
+                    .fill(Color.secondary.opacity(0.2))
+                self
+            }
+            .frame(maxWidth: 100)
+        }
+    }
+    
+    func groupListStyleIfNecessary() -> some View {
+        if #available(iOS 15.0, *) {
+            return self
+        } else {
+            return self.listStyle(InsetGroupedListStyle())
+        }
+    }
+    
+    @ViewBuilder
+    func versionAwareDeleteSwipeAction(showContextMenuInstead: Bool = true, onDelete: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            self.swipeActions(edge: .trailing) {
+                Button(action: onDelete, label: {
+                    Label("Delete", systemImage: "trash")
+                })
+                .tint(.red)
+            }
+        } else {
+            if showContextMenuInstead {
+                self.contextMenu {
+                    Button {
+                        onDelete()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                            .foregroundColor(.red)
+                    }
+                }
+            } else {
+                self
+            }
+        }
+    }
+    
+    func versionAwareNavigationTitleDisplayMode() -> some View {
+        if #available(iOS 15.0, *) {
+            return self.navigationBarTitleDisplayMode(.large)
+        } else {
+            return self.navigationBarTitleDisplayMode(.large)
+        }
+    }
 }
 
 struct RoundedCorner: Shape {

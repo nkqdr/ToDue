@@ -34,7 +34,11 @@ struct ToDueApp: App {
             TabView {
                 IncompleteTaskView()
                     .tabItem {
-                        Image(systemName: "checklist")
+                        if #available(iOS 15.0, *) {
+                            Image(systemName: "checklist")
+                        } else {
+                            Image(systemName: "list.bullet")
+                        }
                         Text("Overview")
                     }
                 CompletedTasksView()
@@ -44,7 +48,11 @@ struct ToDueApp: App {
                     }
                 MorePageView()
                     .tabItem {
-                        Image(systemName: "ellipsis")
+                        if #available(iOS 15.0, *) {
+                            Image(systemName: "ellipsis")
+                        } else {
+                            Image(systemName: "ellipsis.circle")
+                        }
                         Text("More")
                     }
             }

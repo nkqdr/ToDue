@@ -14,7 +14,7 @@ extension Shape {
             return self.fill(.ultraThickMaterial)
         } else {
             // Fallback on earlier versions
-            return self.fill(Color("Accent1"))
+            return self.fill(Color.secondary.opacity(0.2))
         }
     }
 }

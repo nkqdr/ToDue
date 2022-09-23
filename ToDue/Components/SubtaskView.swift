@@ -29,63 +29,86 @@ struct SubtaskView: View {
                 }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .swipeActions(edge: .trailing) {
-            Button(action: {
-                showingAlert = true
-            }, label: {
-                Label("Delete", systemImage: "trash")
-            })
-            .tint(.red)
+        .versionAwareDeleteSwipeAction(showContextMenuInstead: false) {
+            showingAlert = true
         }
-        .swipeActions(edge: .leading) {
-            Button {
+        .versionAwareSubtaskCompleteSwipeAction(
+            labelText: subTask.isCompleted ? "Mark as incomplete" : "Mark as complete",
+            labelImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill") {
                 taskManager.toggleCompleted(subTask)
-            } label: {
-                Label(subTask.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill")
             }
-                .tint(.mint)
-            Button {
+            .versionAwareSubtaskEditSwipeAction(labelText: "Edit", labelImage: "pencil") {
                 onEdit(subTask)
-            } label: {
-                Label("Edit", systemImage: "pencil")
             }
-            .tint(.indigo)
-        }
         .contextMenu {
             Button {
                 onEdit(subTask)
             } label: {
                 Label("Edit", systemImage: "pencil")
             }
+            VersionAwareDestructiveButton()
+        }
+        .versionAwareConfirmationDialog(
+            $showingAlert,
+            title: "Are you sure you want to delete this?",
+            message: subTask.wrappedTitle,
+            onDelete: { taskManager.deleteTask(subTask) },
+            onCancel: { showingAlert = false })
+        .listRowInsets(DrawingConstants.subTaskListRowInsets)
+    }
+    
+    @ViewBuilder
+    private func VersionAwareDestructiveButton() -> some View {
+        if #available(iOS 15.0, *) {
             Button(role: .destructive, action: {
                 showingAlert = true
             }, label: {
                 Label("Delete", systemImage: "trash")
             })
+        } else {
+            Button(action: {
+                showingAlert = true
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
         }
-        .confirmationDialog(
-            Text("Are you sure you want to delete this?"),
-            isPresented: $showingAlert,
-            titleVisibility: .visible
-        ) {
-             Button("Delete", role: .destructive) {
-                 withAnimation(.easeInOut) {
-                     taskManager.deleteTask(subTask)
-                 }
-             }
-            Button("Cancel", role: .cancel) {
-                showingAlert = false
-            }
-        } message: {
-            Text(subTask.wrappedTitle)
-                .font(.headline).fontWeight(.bold)
-        }
-        .listRowInsets(DrawingConstants.subTaskListRowInsets)
     }
     
     private struct DrawingConstants {
         static let completeIndicatorSize: CGFloat = 50
         static let subTaskListRowInsets: EdgeInsets = EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+    }
+}
+
+fileprivate extension View {
+    func versionAwareSubtaskCompleteSwipeAction(labelText: LocalizedStringKey, labelImage: String, onComplete: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.swipeActions(edge: .leading) {
+                Button {
+                    onComplete()
+                } label: {
+                    Label(labelText, systemImage: labelImage)
+                }
+                .tint(.mint)
+            }
+        } else {
+            return self
+        }
+    }
+    
+    func versionAwareSubtaskEditSwipeAction(labelText: LocalizedStringKey, labelImage: String, onEdit: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.swipeActions(edge: .leading) {
+                Button {
+                    onEdit()
+                } label: {
+                    Label(labelText, systemImage: labelImage)
+                }
+                .tint(.indigo)
+            }
+        } else {
+            return self
+        }
     }
 }
 

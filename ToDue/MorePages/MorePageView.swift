@@ -24,7 +24,8 @@ struct MorePageView: View {
                 }
                 .themedListRowBackground()
             }
-            .background(Color("Background"))
+            .groupListStyleIfNecessary()
+            .background(Color("Background").ignoresSafeArea())
             .hideScrollContentBackgroundIfNecessary()
             .navigationTitle("More")
             .sheet(isPresented: $showEmail) {
@@ -49,6 +50,7 @@ struct MorePageView: View {
                     .foregroundColor(Color("Text"))
             }
         }
+        .background(Color.clear)
     }
     
     var configurationSection: some View {
