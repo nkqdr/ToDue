@@ -12,10 +12,12 @@ struct SettingsView: View {
     @AppStorage("notificationDayDelta") private var notificationDayDelta: Int = 1
     @AppStorage("notificationReminderTime") private var notificationReminderTime: Date = Calendar.current.date(from: DateComponents(hour: 8, minute: 0, second: 0))!
     @AppStorage("shouldUseReminders") private var shouldUseReminders = true
+    @AppStorage("shouldUseIcloudSync") private var shouldUseIcloudSync = true
     
     var body: some View {
         List {
             remindersSection
+            icloudSection
         }
         .groupListStyleIfNecessary()
         .navigationTitle("Settings")
@@ -23,7 +25,17 @@ struct SettingsView: View {
         .hideScrollContentBackgroundIfNecessary()
     }
     
-    var remindersSection: some View {
+    private var icloudSection: some View {
+        Section(header: Text("sync"), footer: Text("Decide whether or not you want to synchronize your data between all of your devices.").listRowBackground(Color("Background"))) {
+            Toggle("iCloud Sync", isOn: $shouldUseIcloudSync)
+                .onChange(of: shouldUseIcloudSync) { newValue in
+                    print(newValue)
+                }
+        }
+        .themedListRowBackground()
+    }
+    
+    private var remindersSection: some View {
         Section(header: Text("Reminders"),
                 footer: Text("reminder_settings_footer").listRowBackground(Color("Background"))) {
             Toggle("Enable reminders", isOn: $shouldUseReminders)
