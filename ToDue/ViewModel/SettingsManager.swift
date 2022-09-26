@@ -32,12 +32,11 @@ class SettingsManager: ObservableObject {
     
     func handleIcloudSyncToggle(_ newValue: Bool) {
         print(newValue)
-        // set the icloud_sync key to be true/false depending on the toggle state
+        // set the use_icloud_sync key to be true/false depending on the toggle state
         NSUbiquitousKeyValueStore.default.set(newValue, forKey: "use_icloud_sync")
         
         // delete the zone in iCloud if user switch off iCloud sync
         if !newValue {
-            // replace the identifier with your container identifier
             let container = CKContainer(identifier: "iCloud.com.niklaskuder.ToDue")
             let database = container.privateCloudDatabase
             // instruct iCloud to delete the whole zone (and all of its records)

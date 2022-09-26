@@ -39,7 +39,7 @@ struct SettingsView: View {
             .foregroundColor(.secondary.opacity(0.8))
             .listRowBackground(Color("Background"))
             .padding(.top, 30)
-            Section {
+            Section(footer: Text("The changes take effect after restarting the app")) {
                 Toggle("iCloud Sync", isOn: $shouldUseIcloudSync)
                     .themedListRowBackground()
                     .onChange(of: shouldUseIcloudSync) { newValue in

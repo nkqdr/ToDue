@@ -208,3 +208,5 @@
 /* Label that displays how many tasks have been completed in total. */
 "Total: %lld" = "Insgesamt: %lld";
 
+/* Footer text for the iCloud sync toggle*/
+"The changes take effect after restarting the app" = "Die Änderungen werden nach einem Neustart der App wirksam";
