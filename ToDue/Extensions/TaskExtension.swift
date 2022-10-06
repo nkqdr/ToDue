@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension SubTask {
     public var wrappedTitle: String {
@@ -24,6 +25,22 @@ extension TaskCategory {
         return set.sorted {
             return $0.wrappedDate < $1.wrappedDate
         }
+    }
+}
+
+extension TaskCategory {
+    public var wrappedColor: Color? {
+        if !self.useDefaultColor {
+            return Color(red: self.categoryColorRed, green: self.categoryColorGreen, blue: self.categoryColorBlue)
+        }
+        return nil
+    }
+    
+    public var useDefaultColor: Bool {
+        if self.categoryColorRed > 0 || self.categoryColorGreen > 0 || self.categoryColorBlue > 0 {
+            return false
+        }
+        return true
     }
 }
 

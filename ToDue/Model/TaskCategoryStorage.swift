@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import CoreData
+import SwiftUI
 
 class TaskCategoryStorage: NSObject, ObservableObject {
     var categories = CurrentValueSubject<[TaskCategory], Never>([])
@@ -34,16 +35,36 @@ class TaskCategoryStorage: NSObject, ObservableObject {
         }
     }
     
-    func add(title: String) {
+    func add(title: String, useDefaultColor: Bool, color: Color) {
         let category = TaskCategory(context: PersistenceController.shared.persistentContainer.viewContext)
+        let components = UIColor(color).cgColor.components
+        if !useDefaultColor, let comps = components {
+            category.categoryColorRed = Double(comps[0])
+            category.categoryColorGreen = Double(comps[1])
+            category.categoryColorBlue = Double(comps[2])
+        } else {
+            category.categoryColorRed = -1
+            category.categoryColorGreen = -1
+            category.categoryColorBlue = -1
+        }
         category.categoryTitle = title
         category.id = UUID()
         category.tasks = []
         try? PersistenceController.shared.persistentContainer.viewContext.save()
     }
     
-    func update(_ category: TaskCategory, title: String?) {
+    func update(_ category: TaskCategory, title: String?, useDefaultColor: Bool, color: Color) {
+        let components = UIColor(color).cgColor.components
         PersistenceController.shared.persistentContainer.viewContext.performAndWait {
+            if !useDefaultColor, let comps = components {
+                category.categoryColorRed = Double(comps[0])
+                category.categoryColorGreen = Double(comps[1])
+                category.categoryColorBlue = Double(comps[2])
+            } else {
+                category.categoryColorRed = -1
+                category.categoryColorGreen = -1
+                category.categoryColorBlue = -1
+            }
             category.categoryTitle = title ?? category.categoryTitle!
             try? PersistenceController.shared.persistentContainer.viewContext.save()
         }

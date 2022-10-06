@@ -10,6 +10,7 @@ import SwiftUI
 struct TaskCategoryView: View {
     @ObservedObject private var manager: TaskCategoryManager = TaskCategoryManager.shared
     var category: TaskCategory
+    var onEdit: (TaskCategory) -> Void
     @State private var showingAlert: Bool = false
     
     var body: some View {
@@ -20,8 +21,16 @@ struct TaskCategoryView: View {
                 .foregroundColor(.secondary)
                 .font(.callout)
         }
-        .versionAwareDeleteSwipeAction {
+        .versionAwareDeleteSwipeAction(showContextMenuInstead: false) {
             showingAlert = true
+        }
+        .contextMenu {
+            Button {
+                onEdit(category)
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+            VersionAwareDestructiveButton()
         }
         .themedListRowBackground()
         .versionAwareConfirmationDialog(
@@ -35,6 +44,24 @@ struct TaskCategoryView: View {
                 manager.deleteCategory(category)
             }, onCancel: {
                 showingAlert = false
+            }
+        )
+    }
+    
+    @ViewBuilder
+    private func VersionAwareDestructiveButton() -> some View {
+        if #available(iOS 15.0, *) {
+            Button(role: .destructive, action: {
+                showingAlert = true
+            }, label: {
+                Label("Delete", systemImage: "trash")
             })
+        } else {
+            Button(action: {
+                showingAlert = true
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
+        }
     }
 }

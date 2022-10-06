@@ -13,11 +13,17 @@ struct TaskCategoriesView: View {
     @State private var showAddCategory: Bool = false
     @State private var categoryEditor: TaskCategoryEditor = TaskCategoryEditor()
     
+    func launchEditCategory(category: TaskCategory) {
+        categoryEditor = TaskCategoryEditor(category)
+        print(category)
+        showAddCategory.toggle()
+    }
+    
     var body: some View {
         List {
             Section {
                 ForEach($manager.categories) { $category in
-                    TaskCategoryView(category: category)
+                    TaskCategoryView(category: category, onEdit: launchEditCategory)
                 }
             }
             Section {
@@ -34,31 +40,10 @@ struct TaskCategoriesView: View {
             }
         }
         .groupListStyleIfNecessary()
-        .sheet(isPresented: $showAddCategory) {
-            NavigationView {
-                Form {
-                    TextField("Title", text: $categoryEditor.title)
-                        .themedListRowBackground()
-                }
-                .navigationTitle("Add category")
-                .navigationBarTitleDisplayMode(.inline)
-                .background(Color("Background").ignoresSafeArea())
-                .hideScrollContentBackgroundIfNecessary()
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel") {
-                            showAddCategory.toggle()
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Save") {
-                            manager.saveCategory(categoryEditor)
-                            showAddCategory.toggle()
-                        }
-                    }
-                }
-            }
-            .versionAwarePresentationDetents()
+        .sheet(isPresented: $showAddCategory, onDismiss: {
+            categoryEditor = TaskCategoryEditor()
+        }) {
+            AddTaskCategoryView(categoryEditor: categoryEditor, isOpen: $showAddCategory)
         }
         .background(Color("Background").ignoresSafeArea())
         .hideScrollContentBackgroundIfNecessary()

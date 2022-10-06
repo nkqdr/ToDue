@@ -94,7 +94,9 @@ struct TaskContainer: View {
     }
     
     var containerBackgroundColor: Color {
-        if taskManager.progress(for: task) == 1 {
+        if let category = task.category, !category.useDefaultColor, let color = category.wrappedColor {
+            return color
+        } else if taskManager.progress(for: task) == 1 {
             return DrawingConstants.completeTaskBackgroundColor
         } else if showBackground && !task.isCompleted {
             return DrawingConstants.topTaskBackgroundColor

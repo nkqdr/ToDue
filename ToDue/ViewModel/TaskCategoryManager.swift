@@ -26,9 +26,9 @@ class TaskCategoryManager: ObservableObject {
     
     func saveCategory(_ categoryEditor: TaskCategoryEditor) {
         if let category = categoryEditor.category {
-            TaskCategoryStorage.shared.update(category, title: categoryEditor.title)
+            TaskCategoryStorage.shared.update(category, title: categoryEditor.title, useDefaultColor: categoryEditor.useDefaultColor, color: categoryEditor.categoryColor)
         } else {
-            TaskCategoryStorage.shared.add(title: categoryEditor.title)
+            TaskCategoryStorage.shared.add(title: categoryEditor.title, useDefaultColor: categoryEditor.useDefaultColor, color: categoryEditor.categoryColor)
         }
     }
     

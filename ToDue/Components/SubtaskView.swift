@@ -36,10 +36,10 @@ struct SubtaskView: View {
             labelText: subTask.isCompleted ? "Mark as incomplete" : "Mark as complete",
             labelImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill") {
                 taskManager.toggleCompleted(subTask)
-            }
-            .versionAwareSubtaskEditSwipeAction(labelText: "Edit", labelImage: "pencil") {
-                onEdit(subTask)
-            }
+        }
+        .versionAwareSubtaskEditSwipeAction(labelText: "Edit", labelImage: "pencil") {
+            onEdit(subTask)
+        }
         .contextMenu {
             Button {
                 onEdit(subTask)
