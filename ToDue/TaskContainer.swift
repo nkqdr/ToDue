@@ -15,7 +15,8 @@ struct TaskContainer: View {
     
     var body: some View {
         return ZStack(alignment: .topTrailing) {
-            containerBackground
+            RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
+                .fill(containerBackgroundColor)
             HStack {
                 VStack(alignment: .leading) {
                     if let date = task.date, date < Date.distantFuture {
@@ -92,19 +93,13 @@ struct TaskContainer: View {
         }
     }
     
-    @ViewBuilder
-    var containerBackground: some View {
+    var containerBackgroundColor: Color {
         if taskManager.progress(for: task) == 1 {
-            RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
-                .fill(DrawingConstants.completeTaskBackgroundColor)
+            return DrawingConstants.completeTaskBackgroundColor
         } else if showBackground && !task.isCompleted {
-            RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
-                .fill(DrawingConstants.topTaskBackgroundColor)
+            return DrawingConstants.topTaskBackgroundColor
         } else {
-            RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
-            .fill(
-                DrawingConstants.defaultTaskBackgroundColor
-            )
+            return DrawingConstants.defaultTaskBackgroundColor
         }
     }
     
@@ -125,13 +120,12 @@ struct TaskContainer: View {
             ZStack {
                 // This circle is needed so that the TapGesture is also recognized within the stroked circle.
                 Circle()
-                    .foregroundColor(.clear)
+                    .foregroundColor(containerBackgroundColor)
                 Circle()
                     .strokeBorder(lineWidth: DrawingConstants.progressCircleStrokeWidth)
-                    .animation(.easeInOut, value: progress)
                 ProgressPie(progress: progress)
-                    .animation(.easeInOut, value: progress)
             }
+            .animation(.easeInOut, value: progress)
             .foregroundColor(Color("Text"))
             .frame(width: DrawingConstants.progressCircleSize, height: DrawingConstants.progressCircleSize)
             .padding(.trailing)

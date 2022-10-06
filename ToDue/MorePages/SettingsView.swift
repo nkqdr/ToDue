@@ -12,10 +12,12 @@ struct SettingsView: View {
     @AppStorage("notificationDayDelta") private var notificationDayDelta: Int = 1
     @AppStorage("notificationReminderTime") private var notificationReminderTime: Date = Calendar.current.date(from: DateComponents(hour: 8, minute: 0, second: 0))!
     @AppStorage("shouldUseReminders") private var shouldUseReminders = true
+    @State private var shouldUseIcloudSync: Bool = NSUbiquitousKeyValueStore.default.bool(forKey: "use_icloud_sync")
     
     var body: some View {
         List {
             remindersSection
+            icloudSection
         }
         .groupListStyleIfNecessary()
         .navigationTitle("Settings")
@@ -23,7 +25,54 @@ struct SettingsView: View {
         .hideScrollContentBackgroundIfNecessary()
     }
     
-    var remindersSection: some View {
+    private var iCloudListView: some View {
+        List {
+            HStack {
+                Spacer()
+                VStack(alignment: .center) {
+                    Image(systemName: "icloud")
+                        .font(.system(size: 60))
+                    Text("Synchronize app data via iCloud.")
+                        .padding(.vertical)
+                        .multilineTextAlignment(.center)
+                    Text("Make sure to sign in to your iCloud account. \nOn the Home screen, launch Settings, tap iCloud, and enter your Apple ID. Turn iCloud Drive on.")
+                        .multilineTextAlignment(.center)
+                }
+                .foregroundColor(.secondary.opacity(0.8))
+                .padding(.top, 30)
+                Spacer()
+            }
+            .listRowBackground(Color("Background"))
+            Section(footer: Text("The changes take effect after restarting the app.")) {
+                Toggle("iCloud Sync", isOn: $shouldUseIcloudSync)
+                    .themedListRowBackground()
+                    .onChange(of: shouldUseIcloudSync) { newValue in
+                        settingsManager.handleIcloudSyncToggle(newValue)
+                    }
+            }
+        }
+        .onReceive(settingsManager.pub) { newValue in
+            if let obj = newValue.object, let real_obj = obj as? NSUbiquitousKeyValueStore {
+                shouldUseIcloudSync = real_obj.bool(forKey: "use_icloud_sync")
+            }
+        }
+        .groupListStyleIfNecessary()
+        .navigationTitle("iCloud Backup")
+        .navigationBarTitleDisplayMode(.inline)
+        .background(Color("Background").ignoresSafeArea())
+        .hideScrollContentBackgroundIfNecessary()
+    }
+    
+    private var icloudSection: some View {
+        Section(header: Text("sync"), footer: Text("Decide whether or not you want to synchronize your data between all of your devices.").listRowBackground(Color("Background"))) {
+            NavigationLink("iCloud Backup") {
+                iCloudListView
+            }
+        }
+        .themedListRowBackground()
+    }
+    
+    private var remindersSection: some View {
         Section(header: Text("Reminders"),
                 footer: Text("reminder_settings_footer").listRowBackground(Color("Background"))) {
             Toggle("Enable reminders", isOn: $shouldUseReminders)
