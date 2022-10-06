@@ -209,4 +209,4 @@
 "Total: %lld" = "Insgesamt: %lld";
 
 /* Footer text for the iCloud sync toggle*/
-"The changes take effect after restarting the app" = "Die Änderungen werden nach einem Neustart der App wirksam";
+"The changes take effect after restarting the app." = "Die Änderungen werden nach einem Neustart der App wirksam.";
