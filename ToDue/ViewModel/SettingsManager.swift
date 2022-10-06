@@ -15,6 +15,8 @@ class SettingsManager: ObservableObject {
     private var incompleteTasks: [Task] = []
     private var taskCancellable: AnyCancellable?
     
+    let pub = NotificationCenter.default.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification).receive(on: RunLoop.main)
+    
     private init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher()) {
         taskCancellable = taskPublisher.sink { tasks in
             print("Updating tasks in SettingsManager...")

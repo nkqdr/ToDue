@@ -51,6 +51,11 @@ struct SettingsView: View {
                     }
             }
         }
+        .onReceive(settingsManager.pub) { newValue in
+            if let obj = newValue.object, let real_obj = obj as? NSUbiquitousKeyValueStore {
+                shouldUseIcloudSync = real_obj.bool(forKey: "use_icloud_sync")
+            }
+        }
         .groupListStyleIfNecessary()
         .navigationTitle("iCloud Backup")
         .navigationBarTitleDisplayMode(.inline)
