@@ -31,7 +31,6 @@ class SettingsManager: ObservableObject {
     // MARK: - Intents
     
     func handleIcloudSyncToggle(_ newValue: Bool) {
-        print(newValue)
         // set the use_icloud_sync key to be true/false depending on the toggle state
         NSUbiquitousKeyValueStore.default.set(newValue, forKey: "use_icloud_sync")
         

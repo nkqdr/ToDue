@@ -27,18 +27,22 @@ struct SettingsView: View {
     
     private var iCloudListView: some View {
         List {
-            VStack(alignment: .center) {
-                Image(systemName: "icloud")
-                    .font(.system(size: 60))
-                Text("Synchronize app data via iCloud.")
-                    .padding(.vertical)
-                    .multilineTextAlignment(.center)
-                Text("Make sure to sign in to your iCloud account. \nOn the Home screen, launch Settings, tap iCloud, and enter your Apple ID. Turn iCloud Drive on.")
-                    .multilineTextAlignment(.center)
+            HStack {
+                Spacer()
+                VStack(alignment: .center) {
+                    Image(systemName: "icloud")
+                        .font(.system(size: 60))
+                    Text("Synchronize app data via iCloud.")
+                        .padding(.vertical)
+                        .multilineTextAlignment(.center)
+                    Text("Make sure to sign in to your iCloud account. \nOn the Home screen, launch Settings, tap iCloud, and enter your Apple ID. Turn iCloud Drive on.")
+                        .multilineTextAlignment(.center)
+                }
+                .foregroundColor(.secondary.opacity(0.8))
+                .padding(.top, 30)
+                Spacer()
             }
-            .foregroundColor(.secondary.opacity(0.8))
             .listRowBackground(Color("Background"))
-            .padding(.top, 30)
             Section(footer: Text("The changes take effect after restarting the app")) {
                 Toggle("iCloud Sync", isOn: $shouldUseIcloudSync)
                     .themedListRowBackground()
