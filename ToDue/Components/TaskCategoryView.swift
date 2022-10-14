@@ -24,6 +24,9 @@ struct TaskCategoryView: View {
         .versionAwareDeleteSwipeAction(showContextMenuInstead: false) {
             showingAlert = true
         }
+        .versionAwareEditSwipeAction(showContextMenuInstead: false) {
+            onEdit(category)
+        }
         .contextMenu {
             Button {
                 onEdit(category)

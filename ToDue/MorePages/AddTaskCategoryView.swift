@@ -9,8 +9,8 @@ import SwiftUI
 
 struct AddTaskCategoryView: View {
     @ObservedObject private var manager: TaskCategoryManager = TaskCategoryManager.shared
-    @StateObject var categoryEditor: TaskCategoryEditor
     @Binding var isOpen: Bool
+    @ObservedObject var categoryEditor: TaskCategoryEditor
     
     var body: some View {
         NavigationView {
@@ -21,9 +21,6 @@ struct AddTaskCategoryView: View {
                     Toggle("Use default color", isOn: $categoryEditor.useDefaultColor)
                     if !categoryEditor.useDefaultColor {
                         ColorPicker("Category color", selection: $categoryEditor.categoryColor, supportsOpacity: false)
-                            .onChange(of: categoryEditor.categoryColor) { newValue in
-                                print(String(describing: newValue))
-                            }
                     }
                 }
                 .themedListRowBackground()
@@ -52,6 +49,6 @@ struct AddTaskCategoryView: View {
 
 struct AddTaskCategoryView_Previews: PreviewProvider {
     static var previews: some View {
-        AddTaskCategoryView(categoryEditor: TaskCategoryEditor(), isOpen: .constant(true))
+        AddTaskCategoryView(isOpen: .constant(true), categoryEditor: TaskCategoryEditor())
     }
 }

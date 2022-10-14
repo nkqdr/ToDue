@@ -16,12 +16,10 @@ class TaskCategoryEditor: ObservableObject, Identifiable {
     
     var category: TaskCategory?
     
-    init(_ category: TaskCategory?) {
+    init(_ category: TaskCategory? = nil) {
         self.category = category
         self.title = category?.categoryTitle ?? ""
         self.useDefaultColor = category?.useDefaultColor ?? false
         self.categoryColor = category?.wrappedColor ?? .white
     }
-    
-    init() {}
 }

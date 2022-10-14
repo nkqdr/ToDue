@@ -11,11 +11,10 @@ struct TaskCategoriesView: View {
     @ObservedObject private var manager: TaskCategoryManager = TaskCategoryManager.shared
     @State private var showingAlert: Bool = false
     @State private var showAddCategory: Bool = false
-    @State private var categoryEditor: TaskCategoryEditor = TaskCategoryEditor()
+    @State private var currentCategory: TaskCategory? = nil
     
-    func launchEditCategory(category: TaskCategory) {
-        categoryEditor = TaskCategoryEditor(category)
-        print(category)
+    func launchEditCategory(_ category: TaskCategory) {
+        currentCategory = category
         showAddCategory.toggle()
     }
     
@@ -30,7 +29,7 @@ struct TaskCategoriesView: View {
                 HStack {
                     Spacer()
                     Button("Add category") {
-                        categoryEditor = TaskCategoryEditor()
+                        currentCategory = nil
                         showAddCategory.toggle()
                     }
                     .buttonStyle(.borderless)
@@ -40,10 +39,13 @@ struct TaskCategoriesView: View {
             }
         }
         .groupListStyleIfNecessary()
-        .sheet(isPresented: $showAddCategory, onDismiss: {
-            categoryEditor = TaskCategoryEditor()
-        }) {
-            AddTaskCategoryView(categoryEditor: categoryEditor, isOpen: $showAddCategory)
+        .sheet(isPresented: $showAddCategory) {
+            AddTaskCategoryView(isOpen: $showAddCategory, categoryEditor: TaskCategoryEditor(currentCategory))
+        }
+        .onChange(of: showAddCategory) { newValue in
+            if !newValue {
+                currentCategory = nil
+            }
         }
         .background(Color("Background").ignoresSafeArea())
         .hideScrollContentBackgroundIfNecessary()
