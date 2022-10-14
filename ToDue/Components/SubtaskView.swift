@@ -19,6 +19,7 @@ struct SubtaskView: View {
                 .font(.headline)
                 .fontWeight(.bold)
                 .strikethrough(subTask.isCompleted, color: Color("Text"))
+                .padding(.vertical, 10)
             Spacer()
             Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
                 .font(.title)

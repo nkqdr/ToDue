@@ -19,7 +19,6 @@ class SettingsManager: ObservableObject {
     
     private init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher()) {
         taskCancellable = taskPublisher.sink { tasks in
-            print("Updating tasks in SettingsManager...")
             self.incompleteTasks = tasks.filter { !$0.isCompleted }
         }
     }

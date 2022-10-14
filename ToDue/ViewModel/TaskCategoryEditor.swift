@@ -17,7 +17,6 @@ class TaskCategoryEditor: ObservableObject, Identifiable {
     var category: TaskCategory?
     
     init(_ category: TaskCategory?) {
-        print(category)
         self.category = category
         self.title = category?.categoryTitle ?? ""
         self.useDefaultColor = category?.useDefaultColor ?? false

@@ -84,7 +84,7 @@ class TaskCategoryStorage: NSObject, ObservableObject {
 extension TaskCategoryStorage: NSFetchedResultsControllerDelegate {
     public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         guard let categories = controller.fetchedObjects as? [TaskCategory] else { return }
-        print("Context has changed, reloading tasks")
+        print("Context has changed, reloading categories")
         self.categories.value = categories
     }
 }
