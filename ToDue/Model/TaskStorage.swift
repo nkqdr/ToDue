@@ -11,14 +11,19 @@ import CoreData
 
 class TaskStorage: NSObject, ObservableObject {
     var tasks = CurrentValueSubject<[Task], Never>([])
-    private let taskFetchController: NSFetchedResultsController<Task>
+    private let taskFetchController: RichFetchedResultsController<Task>
     
     static let shared: TaskStorage = TaskStorage()
     
     private override init() {
-        let request = Task.fetchRequest()
+        let request = RichFetchRequest<Task>(entityName: "Task")
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Task.date, ascending: true)]
-        taskFetchController = NSFetchedResultsController(
+        request.relationshipKeyPathsForRefreshing = [
+            #keyPath(Task.category.categoryColorRed),
+            #keyPath(Task.category.categoryColorGreen),
+            #keyPath(Task.category.categoryColorBlue)
+        ]
+        taskFetchController = RichFetchedResultsController(
             fetchRequest: request,
             managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
             sectionNameKeyPath: nil,
@@ -28,7 +33,7 @@ class TaskStorage: NSObject, ObservableObject {
         taskFetchController.delegate = self
         do {
             try taskFetchController.performFetch()
-            tasks.value = taskFetchController.fetchedObjects ?? []
+            tasks.value = taskFetchController.fetchedObjects as? [Task] ?? []
         } catch {
             NSLog("Error: could not fetch objects")
         }

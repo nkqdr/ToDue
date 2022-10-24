@@ -19,6 +19,7 @@
 		60410E2C28D31A30008BBAA6 /* TaskCategoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60410E2B28D31A30008BBAA6 /* TaskCategoryStorage.swift */; };
 		60410E2E28D31B37008BBAA6 /* TaskCategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60410E2D28D31B37008BBAA6 /* TaskCategoryManager.swift */; };
 		60410E3028D31C1F008BBAA6 /* TaskCategoryEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60410E2F28D31C1F008BBAA6 /* TaskCategoryEditor.swift */; };
+		604E262028EF10A700A15046 /* AddTaskCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604E261F28EF10A700A15046 /* AddTaskCategoryView.swift */; };
 		6054104E28D26A40005506A8 /* SubtaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6054104D28D26A40005506A8 /* SubtaskView.swift */; };
 		605D562028B944920004EBB7 /* ObservableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605D561F28B944920004EBB7 /* ObservableScrollView.swift */; };
 		6061F80327D5360300772ACE /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6061F80227D5360300772ACE /* ProgressBar.swift */; };
@@ -38,6 +39,8 @@
 		608F770627D4A77A007BCC06 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770527D4A77A007BCC06 /* DateExtension.swift */; };
 		60960B3228DDA152000E1705 /* ShapeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60960B3128DDA152000E1705 /* ShapeExtension.swift */; };
 		60960B3428DDC8FD000E1705 /* TaskCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60960B3328DDC8FD000E1705 /* TaskCategoryView.swift */; };
+		60A4CFBD28F9AF3C007F392D /* RichFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A4CFBC28F9AF3C007F392D /* RichFetchRequest.swift */; };
+		60A4CFBE28F9AF3C007F392D /* RichFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A4CFBC28F9AF3C007F392D /* RichFetchRequest.swift */; };
 		60A6AAC328B243CC00B5C278 /* MappingModelV1toV2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 60A6AAC228B243CC00B5C278 /* MappingModelV1toV2.xcmappingmodel */; };
 		60A92DB927ECFB6700BA81B3 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770527D4A77A007BCC06 /* DateExtension.swift */; };
 		60AD28F728B76A25002640C4 /* ContactEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60AD28F628B76A25002640C4 /* ContactEmail.swift */; };
@@ -105,6 +108,7 @@
 		60410E2B28D31A30008BBAA6 /* TaskCategoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryStorage.swift; sourceTree = "<group>"; };
 		60410E2D28D31B37008BBAA6 /* TaskCategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryManager.swift; sourceTree = "<group>"; };
 		60410E2F28D31C1F008BBAA6 /* TaskCategoryEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryEditor.swift; sourceTree = "<group>"; };
+		604E261F28EF10A700A15046 /* AddTaskCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskCategoryView.swift; sourceTree = "<group>"; };
 		6054104D28D26A40005506A8 /* SubtaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtaskView.swift; sourceTree = "<group>"; };
 		605D561F28B944920004EBB7 /* ObservableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableScrollView.swift; sourceTree = "<group>"; };
 		6061F80227D5360300772ACE /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
@@ -123,6 +127,7 @@
 		608F770527D4A77A007BCC06 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		60960B3128DDA152000E1705 /* ShapeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeExtension.swift; sourceTree = "<group>"; };
 		60960B3328DDC8FD000E1705 /* TaskCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryView.swift; sourceTree = "<group>"; };
+		60A4CFBC28F9AF3C007F392D /* RichFetchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichFetchRequest.swift; sourceTree = "<group>"; };
 		60A6AAC128B241F400B5C278 /* TaskModel 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TaskModel 2.xcdatamodel"; sourceTree = "<group>"; };
 		60A6AAC228B243CC00B5C278 /* MappingModelV1toV2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = MappingModelV1toV2.xcmappingmodel; sourceTree = "<group>"; };
 		60AD28F628B76A25002640C4 /* ContactEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactEmail.swift; sourceTree = "<group>"; };
@@ -181,6 +186,7 @@
 				60E68A3C28B68C4600CD7709 /* Utils.swift */,
 				60AD28F628B76A25002640C4 /* ContactEmail.swift */,
 				60AD28FC28B77001002640C4 /* DeviceModels.json */,
+				60A4CFBC28F9AF3C007F392D /* RichFetchRequest.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -317,6 +323,7 @@
 				60FBBB5228B89E6E00CBDC68 /* FAQView.swift */,
 				60FBBB5528B8B24600CBDC68 /* SettingsView.swift */,
 				60410E2928D3153A008BBAA6 /* TaskCategoriesView.swift */,
+				604E261F28EF10A700A15046 /* AddTaskCategoryView.swift */,
 			);
 			path = MorePages;
 			sourceTree = "<group>";
@@ -440,6 +447,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60AD28F828B76A25002640C4 /* ContactEmail.swift in Sources */,
+				60A4CFBE28F9AF3C007F392D /* RichFetchRequest.swift in Sources */,
 				60809E9D27D397C20027AE84 /* DataModel.xcdatamodeld in Sources */,
 				60A92DB927ECFB6700BA81B3 /* DateExtension.swift in Sources */,
 				60809E9227D394A30027AE84 /* ToDoWidget.intentdefinition in Sources */,
@@ -465,12 +473,14 @@
 				608F770627D4A77A007BCC06 /* DateExtension.swift in Sources */,
 				60E62CA828BF3889002F727C /* TaskEditor.swift in Sources */,
 				60410E2E28D31B37008BBAA6 /* TaskCategoryManager.swift in Sources */,
+				604E262028EF10A700A15046 /* AddTaskCategoryView.swift in Sources */,
 				60C4B02428ACE8930056F044 /* TaskDetailView.swift in Sources */,
 				60410E3028D31C1F008BBAA6 /* TaskCategoryEditor.swift in Sources */,
 				6015556228032BE50049D84A /* TaskExtension.swift in Sources */,
 				60EE4B8C28C78865008E5F7D /* SubtaskStorage.swift in Sources */,
 				608F053728ABAE1800ACD45B /* TaskManager.swift in Sources */,
 				600A00C627D37CE200488289 /* AddTaskView.swift in Sources */,
+				60A4CFBD28F9AF3C007F392D /* RichFetchRequest.swift in Sources */,
 				60FBBB5628B8B24600CBDC68 /* SettingsView.swift in Sources */,
 				600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */,
 				60B4D06827D3CA1900A1BDBE /* MorePageView.swift in Sources */,

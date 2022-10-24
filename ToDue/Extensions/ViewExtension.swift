@@ -158,6 +158,30 @@ extension View {
         }
     }
     
+    @ViewBuilder
+    func versionAwareEditSwipeAction(showContextMenuInstead: Bool = true, onEdit: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            self.swipeActions(edge: .leading) {
+                Button(action: onEdit, label: {
+                    Label("Edit", systemImage: "pencil")
+                })
+                .tint(.indigo)
+            }
+        } else {
+            if showContextMenuInstead {
+                self.contextMenu {
+                    Button {
+                        onEdit()
+                    } label: {
+                        Label("Edit", systemImage: "pencil")
+                    }
+                }
+            } else {
+                self
+            }
+        }
+    }
+    
     func versionAwareNavigationTitleDisplayMode() -> some View {
         if #available(iOS 15.0, *) {
             return self.navigationBarTitleDisplayMode(.large)
