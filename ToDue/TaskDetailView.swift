@@ -126,8 +126,14 @@ struct TaskDetailView: View {
                     Text("Notes:")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    Text(desc)
-                        .fixedSize(horizontal: false, vertical: true)
+                    if #available(iOS 15.0, *) {
+                        Text(desc)
+                            .textSelection(.enabled)
+                            .fixedSize(horizontal: false, vertical: true)
+                    } else {
+                        Text(desc)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
