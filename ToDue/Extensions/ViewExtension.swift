@@ -189,6 +189,49 @@ extension View {
             return self.navigationBarTitleDisplayMode(.large)
         }
     }
+    
+    func versionAwareSwipeAction(labelText: LocalizedStringKey, labelImage: String, tint: Color?, leading: Bool = false, perform: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.swipeActions(edge: leading ? .leading : .trailing) {
+                Button {
+                    perform()
+                } label: {
+                    Label(labelText, systemImage: labelImage)
+                }
+                .tint(tint ?? .accentColor)
+            }
+        } else {
+            return self
+        }
+    }
+    
+    func versionAwareSubtaskCompleteSwipeAction(_ subTask: SubTask, onComplete: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.versionAwareSwipeAction(
+                labelText: subTask.isCompleted ? "Mark as incomplete" : "Mark as complete",
+                labelImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill",
+                tint: .mint,
+                leading: true,
+                perform: onComplete
+            )
+        } else {
+            return self
+        }
+    }
+    
+    func versionAwareTaskCompleteSwipeAction(_ task: Task, onComplete: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.versionAwareSwipeAction(
+                labelText: task.isCompleted ? "Mark as incomplete" : "Mark as complete",
+                labelImage: task.isCompleted ? "gobackward.minus" : "checkmark.circle.fill",
+                tint: .mint,
+                leading: true,
+                perform: onComplete
+            )
+        } else {
+            return self
+        }
+    }
 }
 
 struct RoundedCorner: Shape {

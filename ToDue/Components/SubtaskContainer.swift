@@ -10,6 +10,7 @@ import SwiftUI
 struct SubtaskContainer: View {
     var title: String
     var isCompleted: Bool
+    var progress: Double = 0
     var onToggleComplete: () -> Void
     
     var body: some View {
@@ -20,7 +21,7 @@ struct SubtaskContainer: View {
                 .strikethrough(isCompleted, color: Color("Text"))
                 .padding(.vertical, 10)
             Spacer()
-            ProgressCircle(isCompleted: isCompleted, progress: 0, onTap: onToggleComplete)
+            ProgressCircle(isCompleted: isCompleted, progress: progress, onTap: onToggleComplete)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .listRowInsets(DrawingConstants.subTaskListRowInsets)

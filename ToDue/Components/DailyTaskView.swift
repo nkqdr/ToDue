@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DailyTaskView: View {
     @ObservedObject private var dailyManager = DailyTaskManager()
+    @ObservedObject private var taskManager = TaskManager.shared
     private var taskDueDate: Date = Date()
     private var taskTitle: LocalizedStringKey = "Daily Task"
     
@@ -67,7 +68,6 @@ struct DailyTaskView: View {
         .hideScrollContentBackgroundIfNecessary()
         .navigationTitle(taskTitle)
         .navigationBarTitleDisplayMode(.large)
-        .listStyle(.sidebar)
     }
     
     var body: some View {
@@ -96,23 +96,47 @@ struct DailyTaskView: View {
                 Haptics.shared.play(.medium)
                 dailyManager.toggleCompleted(subTask)
             }
+            .versionAwareSubtaskCompleteSwipeAction(subTask) {
+                taskManager.toggleCompleted(subTask)
+            }
+        }
+    }
+    
+    func taskList(_ tasks: [Task]) -> some View {
+        ForEach(tasks) { task in
+            NavigationLink(destination: {
+                TaskDetailView(task: task)
+            }, label: {
+                SubtaskContainer(title: task.taskTitle ?? "", isCompleted: task.isCompleted, progress: taskManager.progress(for: task)) {
+                    Haptics.shared.play(.medium)
+                    dailyManager.toggleCompleted(task)
+                }
+                .versionAwareTaskCompleteSwipeAction(task) {
+                    taskManager.toggleCompleted(task)
+                }
+            })
         }
     }
     
     @ViewBuilder
     var subTaskList: some View {
         let subTaskArray = dailyManager.subTasks
+        let taskArray = dailyManager.tasks
         if !subTaskArray.isEmpty {
-            let incomplete = subTaskArray.filter { !$0.isCompleted }
-            if !incomplete.isEmpty {
+            let incompleteSubTasks = subTaskArray.filter { !$0.isCompleted }
+            let incompleteTasks = taskArray.filter({ !$0.isCompleted })
+            if !incompleteSubTasks.isEmpty || !incompleteTasks.isEmpty {
                 Section(header: Text("Open")) {
-                    subTaskList(incomplete)
+                    subTaskList(incompleteSubTasks)
+                    taskList(incompleteTasks)
                 }
             }
-            let completed = subTaskArray.filter { $0.isCompleted }
-            if !completed.isEmpty {
+            let completedSubTasks = subTaskArray.filter { $0.isCompleted }
+            let completedTasks = taskArray.filter({ $0.isCompleted })
+            if !completedSubTasks.isEmpty || !completedTasks.isEmpty {
                 Section(header: Text("Completed")) {
-                    subTaskList(completed)
+                    subTaskList(completedSubTasks)
+                    taskList(completedTasks)
                 }
             }
         } else {

@@ -10,6 +10,7 @@ import WidgetKit
 import Combine
 
 class TaskManager: ObservableObject {
+    static let shared: TaskManager = TaskManager()
     @Published private(set) var container = PersistenceController.shared.persistentContainer
     
     @Published var incompleteTasks: [Task] = []
@@ -127,5 +128,14 @@ class TaskManager: ObservableObject {
     
     func removeFromDaily(_ subTask: SubTask) {
         SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, dailyTask: Date.distantPast)
+    }
+    
+    func addToDaily(_ task: Task) {
+        let today: Date = Date()
+        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, dailyTask: today)
+    }
+    
+    func removeFromDaily(_ task: Task) {
+        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, dailyTask: Date.distantPast)
     }
 }

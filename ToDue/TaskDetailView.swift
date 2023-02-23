@@ -74,28 +74,8 @@ struct TaskDetailView: View {
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
         }
-        .listStyle(.sidebar)
     }
     
-//    private func editSubTaskButton(_ subTask: SubTask) -> some View {
-//        Button {
-//            currentSubTask = subTask
-//            showAddSubtaskSheet.toggle()
-//        } label: {
-//            Label("Edit", systemImage: "pencil")
-//        }
-//    }
-//
-//    private func deleteSubTaskButton(_ subTask: SubTask) -> some View {
-//        Button(action: {
-//            currentSubTask = subTask
-//            showingAlert = true
-//        }, label: {
-//            Label("Delete", systemImage: "trash")
-//        })
-//        .tint(.red)
-//    }
-//
     var addSubTaskButton: some View {
         HStack {
             Spacer()

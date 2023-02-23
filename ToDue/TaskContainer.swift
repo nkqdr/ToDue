@@ -14,6 +14,7 @@ struct TaskContainer: View {
     var showBackground: Bool = false
     
     var body: some View {
+        let taskIsInDaily: Bool = task.dailyTask?.isSameDayAs(Date()) ?? false
         return ZStack(alignment: .topTrailing) {
             RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
                 .fill(containerBackgroundColor)
@@ -63,6 +64,15 @@ struct TaskContainer: View {
             }, label: {
                 Label(task.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
+            Button {
+                if taskIsInDaily {
+                    taskManager.removeFromDaily(task)
+                } else {
+                    taskManager.addToDaily(task)
+                }
+            } label: {
+                Label(taskIsInDaily ? "Remove from daily" : "Add to daily", systemImage: taskIsInDaily ? "minus.circle" : "link.badge.plus")
+            }
             VersionAwareDestructiveButton()
         }
         .padding(.bottom, 5)
