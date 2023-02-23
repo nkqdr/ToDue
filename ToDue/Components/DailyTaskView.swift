@@ -96,6 +96,13 @@ struct DailyTaskView: View {
                 Haptics.shared.play(.medium)
                 dailyManager.toggleCompleted(subTask)
             }
+            .contextMenu {
+                Button {
+                    taskManager.removeFromDaily(subTask)
+                } label: {
+                    Label("Remove from today", systemImage: "minus.circle")
+                }
+            }
             .versionAwareSubtaskCompleteSwipeAction(subTask) {
                 taskManager.toggleCompleted(subTask)
             }
@@ -113,6 +120,13 @@ struct DailyTaskView: View {
                 SubtaskContainer(title: task.taskTitle ?? "", isCompleted: task.isCompleted, progress: taskManager.progress(for: task)) {
                     Haptics.shared.play(.medium)
                     dailyManager.toggleCompleted(task)
+                }
+                .contextMenu {
+                    Button {
+                        taskManager.removeFromDaily(task)
+                    } label: {
+                        Label("Remove from today", systemImage: "minus.circle")
+                    }
                 }
                 .versionAwareTaskCompleteSwipeAction(task) {
                     taskManager.toggleCompleted(task)

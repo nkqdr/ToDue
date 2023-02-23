@@ -19,7 +19,7 @@ struct SubtaskContainer: View {
                 .font(.headline)
                 .fontWeight(.bold)
                 .strikethrough(isCompleted, color: Color("Text"))
-                .padding(.vertical, 10)
+                .padding(.vertical, 15)
             Spacer()
             ProgressCircle(isCompleted: isCompleted, progress: progress, onTap: onToggleComplete)
         }

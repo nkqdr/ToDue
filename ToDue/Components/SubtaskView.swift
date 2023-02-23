@@ -32,15 +32,6 @@ struct SubtaskView: View {
                 editFunc(subTask)
             }
         }
-        .versionAwareAddToDailySwipeAction(isInDaily: subtaskIsInDaily) {
-            withAnimation {
-                if subtaskIsInDaily {
-                    taskManager.removeFromDaily(subTask)
-                } else {
-                    taskManager.addToDaily(subTask)
-                }
-            }
-        }
         .contextMenu {
             if let edit = onEdit {
                 Button {
