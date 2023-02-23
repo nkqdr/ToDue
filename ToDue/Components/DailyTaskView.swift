@@ -92,7 +92,7 @@ struct DailyTaskView: View {
     
     func subTaskList(_ subTasks: [SubTask]) -> some View {
         ForEach(subTasks) { subTask in
-            SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted) {
+            SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted, topSubTitle: subTask.task?.taskTitle) {
                 Haptics.shared.play(.medium)
                 dailyManager.toggleCompleted(subTask)
             }

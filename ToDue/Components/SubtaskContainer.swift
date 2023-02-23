@@ -11,15 +11,23 @@ struct SubtaskContainer: View {
     var title: String
     var isCompleted: Bool
     var progress: Double = 0
+    var topSubTitle: String? = nil
     var onToggleComplete: () -> Void
     
     var body: some View {
         HStack {
-            Text(title)
-                .font(.headline)
-                .fontWeight(.bold)
-                .strikethrough(isCompleted, color: Color("Text"))
-                .padding(.vertical, 15)
+            VStack(alignment: .leading) {
+                if let st = topSubTitle {
+                    Text(st)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Text(title)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .strikethrough(isCompleted, color: Color("Text"))
+            }
+            .padding(.vertical, 15)
             Spacer()
             ProgressCircle(isCompleted: isCompleted, progress: progress, onTap: onToggleComplete)
         }
