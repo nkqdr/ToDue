@@ -65,13 +65,15 @@ struct TaskContainer: View {
                 Label(task.isCompleted ? "Mark as incomplete" : "Mark as complete", systemImage: task.isCompleted ? "checkmark.circle" : "checkmark.circle.fill")
             })
             Button {
-                if taskIsInDaily {
-                    taskManager.removeFromDaily(task)
-                } else {
-                    taskManager.addToDaily(task)
+                withAnimation {
+                    if taskIsInDaily {
+                        taskManager.removeFromDaily(task)
+                    } else {
+                        taskManager.addToDaily(task)
+                    }
                 }
             } label: {
-                Label(taskIsInDaily ? "Remove from daily" : "Add to daily", systemImage: taskIsInDaily ? "minus.circle" : "link.badge.plus")
+                Label(taskIsInDaily ? "Remove from today" : "Add to today", systemImage: taskIsInDaily ? "minus.circle" : "link.badge.plus")
             }
             VersionAwareDestructiveButton()
         }

@@ -11,7 +11,7 @@ struct DailyTaskView: View {
     @ObservedObject private var dailyManager = DailyTaskManager()
     @ObservedObject private var taskManager = TaskManager.shared
     private var taskDueDate: Date = Date()
-    private var taskTitle: LocalizedStringKey = "Daily Task"
+    private var taskTitle: LocalizedStringKey = "Today"
     
     private var showDailyTask: Bool {
         !(dailyManager.subTasks.isEmpty && dailyManager.tasks.isEmpty)
@@ -99,6 +99,9 @@ struct DailyTaskView: View {
             .versionAwareSubtaskCompleteSwipeAction(subTask) {
                 taskManager.toggleCompleted(subTask)
             }
+            .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false) {
+                taskManager.removeFromDaily(subTask)
+            }
         }
     }
     
@@ -114,6 +117,9 @@ struct DailyTaskView: View {
                 .versionAwareTaskCompleteSwipeAction(task) {
                     taskManager.toggleCompleted(task)
                 }
+                .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false) {
+                    taskManager.removeFromDaily(task)
+                }
             })
         }
     }
@@ -122,7 +128,7 @@ struct DailyTaskView: View {
     var subTaskList: some View {
         let subTaskArray = dailyManager.subTasks
         let taskArray = dailyManager.tasks
-        if !subTaskArray.isEmpty {
+        if !subTaskArray.isEmpty || !taskArray.isEmpty {
             let incompleteSubTasks = subTaskArray.filter { !$0.isCompleted }
             let incompleteTasks = taskArray.filter({ !$0.isCompleted })
             if !incompleteSubTasks.isEmpty || !incompleteTasks.isEmpty {
@@ -152,6 +158,16 @@ struct DailyTaskView: View {
         static let topTaskMinHeight: CGFloat = 140
         static let containerCornerRadius: CGFloat = 12
         static let progressBarPadding: CGFloat = 20
+    }
+}
+
+fileprivate extension View {
+    func versionAwareAddToDailySwipeAction(labelText: LocalizedStringKey, labelImage: String, onAdd: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.versionAwareSwipeAction(labelText: labelText, labelImage: labelImage, tint: .red, leading: false, perform: onAdd)
+        } else {
+            return self
+        }
     }
 }
 

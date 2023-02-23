@@ -232,6 +232,20 @@ extension View {
             return self
         }
     }
+    
+    func versionAwareAddToDailySwipeAction(isInDaily: Bool, leading: Bool = true, onAdd: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.versionAwareSwipeAction(
+                labelText: isInDaily ? "Remove from today" : "Add to today",
+                labelImage: isInDaily ? "minus.circle" : "link.badge.plus",
+                tint: .green,
+                leading: leading,
+                perform: onAdd
+            )
+        } else {
+            return self
+        }
+    }
 }
 
 struct RoundedCorner: Shape {

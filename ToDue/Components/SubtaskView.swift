@@ -32,11 +32,13 @@ struct SubtaskView: View {
                 editFunc(subTask)
             }
         }
-        .versionAwareAddToDailySwipeAction(labelText: subtaskIsInDaily ? "Remove from daily" : "Add to daily", labelImage: subtaskIsInDaily ? "minus.circle" : "link.badge.plus") {
-            if subtaskIsInDaily {
-                taskManager.removeFromDaily(subTask)
-            } else {
-                taskManager.addToDaily(subTask)
+        .versionAwareAddToDailySwipeAction(isInDaily: subtaskIsInDaily) {
+            withAnimation {
+                if subtaskIsInDaily {
+                    taskManager.removeFromDaily(subTask)
+                } else {
+                    taskManager.addToDaily(subTask)
+                }
             }
         }
         .contextMenu {
@@ -54,7 +56,7 @@ struct SubtaskView: View {
                     taskManager.addToDaily(subTask)
                 }
             } label: {
-                Label(subtaskIsInDaily ? "Remove from daily" : "Add to daily", systemImage: subtaskIsInDaily ? "minus.circle" : "link.badge.plus")
+                Label(subtaskIsInDaily ? "Remove from today" : "Add to today", systemImage: subtaskIsInDaily ? "minus.circle" : "link.badge.plus")
             }
             VersionAwareDestructiveButton()
         }
@@ -92,14 +94,6 @@ struct SubtaskView: View {
 }
 
 fileprivate extension View {
-    func versionAwareAddToDailySwipeAction(labelText: LocalizedStringKey, labelImage: String, onAdd: @escaping () -> Void) -> some View {
-        if #available(iOS 15.0, *) {
-            return self.versionAwareSwipeAction(labelText: labelText, labelImage: labelImage, tint: .green, leading: true, perform: onAdd)
-        } else {
-            return self
-        }
-    }
-    
     func versionAwareSubtaskEditSwipeAction(labelText: LocalizedStringKey, labelImage: String, enabled: Bool = true, onEdit: @escaping () -> Void) -> some View {
         if #available(iOS 15.0, *) {
             return self.versionAwareSwipeAction(labelText: labelText, labelImage: labelImage, tint: .indigo, leading: true, perform: onEdit)
