@@ -74,6 +74,7 @@ struct TaskDetailView: View {
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
         }
+        .listStyle(.sidebar)
     }
     
 //    private func editSubTaskButton(_ subTask: SubTask) -> some View {

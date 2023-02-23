@@ -61,6 +61,10 @@
 		60DD742727D2B1C300DD19AD /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */; };
 		60DD742927D2B2AB00DD19AD /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742827D2B2AB00DD19AD /* PersistenceController.swift */; };
 		60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD742D27D2D22E00DD19AD /* TaskContainer.swift */; };
+		60E0EEC529A78F320083ACDC /* DailyTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0EEC429A78F320083ACDC /* DailyTaskView.swift */; };
+		60E0EEC729A791960083ACDC /* ProgressCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0EEC629A791960083ACDC /* ProgressCircle.swift */; };
+		60E0EEC929A795520083ACDC /* DailyTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0EEC829A795520083ACDC /* DailyTaskManager.swift */; };
+		60E0EECB29A7A1370083ACDC /* SubtaskContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0EECA29A7A1370083ACDC /* SubtaskContainer.swift */; };
 		60E62CA828BF3889002F727C /* TaskEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62CA728BF3889002F727C /* TaskEditor.swift */; };
 		60E62CAA28BF409A002F727C /* SubtaskEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E62CA928BF409A002F727C /* SubtaskEditor.swift */; };
 		60E68A3D28B68C4600CD7709 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E68A3C28B68C4600CD7709 /* Utils.swift */; };
@@ -146,6 +150,10 @@
 		60DD742627D2B1C300DD19AD /* TaskModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TaskModel.xcdatamodel; sourceTree = "<group>"; };
 		60DD742827D2B2AB00DD19AD /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		60DD742D27D2D22E00DD19AD /* TaskContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskContainer.swift; sourceTree = "<group>"; };
+		60E0EEC429A78F320083ACDC /* DailyTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTaskView.swift; sourceTree = "<group>"; };
+		60E0EEC629A791960083ACDC /* ProgressCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCircle.swift; sourceTree = "<group>"; };
+		60E0EEC829A795520083ACDC /* DailyTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTaskManager.swift; sourceTree = "<group>"; };
+		60E0EECA29A7A1370083ACDC /* SubtaskContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtaskContainer.swift; sourceTree = "<group>"; };
 		60E62CA728BF3889002F727C /* TaskEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditor.swift; sourceTree = "<group>"; };
 		60E62CA928BF409A002F727C /* SubtaskEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtaskEditor.swift; sourceTree = "<group>"; };
 		60E68A3C28B68C4600CD7709 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -201,6 +209,9 @@
 				605D561F28B944920004EBB7 /* ObservableScrollView.swift */,
 				6054104D28D26A40005506A8 /* SubtaskView.swift */,
 				60960B3328DDC8FD000E1705 /* TaskCategoryView.swift */,
+				60E0EEC429A78F320083ACDC /* DailyTaskView.swift */,
+				60E0EEC629A791960083ACDC /* ProgressCircle.swift */,
+				60E0EECA29A7A1370083ACDC /* SubtaskContainer.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -247,6 +258,7 @@
 				60C5E52D28C883EC006CE857 /* SettingsManager.swift */,
 				60410E2D28D31B37008BBAA6 /* TaskCategoryManager.swift */,
 				60410E2F28D31C1F008BBAA6 /* TaskCategoryEditor.swift */,
+				60E0EEC829A795520083ACDC /* DailyTaskManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -466,6 +478,8 @@
 				6021A1DE28A7B1B20004C7E8 /* AddSubtaskView.swift in Sources */,
 				6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */,
 				60A6AAC328B243CC00B5C278 /* MappingModelV1toV2.xcmappingmodel in Sources */,
+				60E0EEC729A791960083ACDC /* ProgressCircle.swift in Sources */,
+				60E0EECB29A7A1370083ACDC /* SubtaskContainer.swift in Sources */,
 				6054104E28D26A40005506A8 /* SubtaskView.swift in Sources */,
 				60960B3228DDA152000E1705 /* ShapeExtension.swift in Sources */,
 				60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */,
@@ -480,6 +494,7 @@
 				60EE4B8C28C78865008E5F7D /* SubtaskStorage.swift in Sources */,
 				608F053728ABAE1800ACD45B /* TaskManager.swift in Sources */,
 				600A00C627D37CE200488289 /* AddTaskView.swift in Sources */,
+				60E0EEC529A78F320083ACDC /* DailyTaskView.swift in Sources */,
 				60A4CFBD28F9AF3C007F392D /* RichFetchRequest.swift in Sources */,
 				60FBBB5628B8B24600CBDC68 /* SettingsView.swift in Sources */,
 				600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */,
@@ -492,6 +507,7 @@
 				60FBBB5328B89E6E00CBDC68 /* FAQView.swift in Sources */,
 				60AD28F728B76A25002640C4 /* ContactEmail.swift in Sources */,
 				60AD290028B77159002640C4 /* MailView.swift in Sources */,
+				60E0EEC929A795520083ACDC /* DailyTaskManager.swift in Sources */,
 				60B5719628C7303700CDC7C0 /* UIDeviceExtension.swift in Sources */,
 				60960B3428DDC8FD000E1705 /* TaskCategoryView.swift in Sources */,
 				60809E9327D394A30027AE84 /* ToDoWidget.intentdefinition in Sources */,
@@ -556,7 +572,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDue.ToDoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -585,7 +601,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDue.ToDoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

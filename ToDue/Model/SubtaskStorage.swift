@@ -45,10 +45,11 @@ class SubtaskStorage: NSObject, ObservableObject {
         try? PersistenceController.shared.persistentContainer.viewContext.save()
     }
     
-    func update(_ subTask: SubTask, title: String?, isCompleted: Bool?) {
+    func update(_ subTask: SubTask, title: String?, isCompleted: Bool?, dailyTask: Date? = nil) {
         PersistenceController.shared.persistentContainer.viewContext.performAndWait {
             subTask.title = title ?? subTask.title
             subTask.isCompleted = isCompleted ?? subTask.isCompleted
+            subTask.dailyTask = dailyTask ?? subTask.dailyTask
             try? PersistenceController.shared.persistentContainer.viewContext.save()
         }
     }

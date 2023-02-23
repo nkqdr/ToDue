@@ -37,14 +37,6 @@ struct TaskContainer: View {
                             .font(.subheadline)
                             .lineLimit(1)
                     }
-//                    if let category = task.category {
-//                        Text(category.categoryTitle ?? "")
-//                            .font(.footnote)
-//                            .padding(.vertical, 5)
-//                            .padding(.horizontal, 10)
-//                            .foregroundColor(.secondary)
-//                            .background(.thinMaterial, in: Capsule())
-//                    }
                     Spacer()
                     if taskManager.progress(for: task) == 1 && !task.isCompleted {
                         Text("Complete this task by tapping the circle!")
@@ -107,44 +99,18 @@ struct TaskContainer: View {
     
     @ViewBuilder
     var progressCircle: some View {
-        if task.isCompleted {
-            Image(systemName: "checkmark.circle.fill")
-                .font(.largeTitle)
-                .frame(width: DrawingConstants.progressCircleSize, height: DrawingConstants.progressCircleSize)
-                .foregroundColor(Color("Text"))
-                .padding(.trailing)
-                .onTapGesture {
-                    Haptics.shared.play(.medium)
-                    taskManager.toggleCompleted(task)
-                }
-        } else {
-            let progress = taskManager.progress(for: task)
-            ZStack {
-                // This circle is needed so that the TapGesture is also recognized within the stroked circle.
-                Circle()
-                    .foregroundColor(containerBackgroundColor)
-                Circle()
-                    .strokeBorder(lineWidth: DrawingConstants.progressCircleStrokeWidth)
-                ProgressPie(progress: progress)
-            }
-            .animation(.easeInOut, value: progress)
-            .foregroundColor(Color("Text"))
-            .frame(width: DrawingConstants.progressCircleSize, height: DrawingConstants.progressCircleSize)
-            .padding(.trailing)
-            .onTapGesture {
-                Haptics.shared.play(.medium)
-                taskManager.toggleCompleted(task)
-            }
+        ProgressCircle(isCompleted: task.isCompleted, progress: taskManager.progress(for: task)) {
+            Haptics.shared.play(.medium)
+            taskManager.toggleCompleted(task)
         }
+        .padding(.trailing)
     }
     
     private struct DrawingConstants {
-        static let progressCircleSize: CGFloat = 30
         static let topTaskBackgroundColor: Color = Color("Accent1")
         static let defaultTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
         static let completeTaskBackgroundColor: Color = Color.green.opacity(0.5)
         static let topTaskMinHeight: CGFloat = 140
         static let containerCornerRadius: CGFloat = 12
-        static let progressCircleStrokeWidth: CGFloat = 2
     }
 }

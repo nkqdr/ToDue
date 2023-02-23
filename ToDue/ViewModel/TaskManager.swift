@@ -119,4 +119,13 @@ class TaskManager: ObservableObject {
         }
         WidgetCenter.shared.reloadAllTimelines()
     }
+    
+    func addToDaily(_ subTask: SubTask) {
+        let today: Date = Date()
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, dailyTask: today)
+    }
+    
+    func removeFromDaily(_ subTask: SubTask) {
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, dailyTask: Date.distantPast)
+    }
 }

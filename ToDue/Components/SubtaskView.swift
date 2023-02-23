@@ -11,41 +11,47 @@ struct SubtaskView: View {
     @EnvironmentObject private var taskManager: TaskManager
     @State private var showingAlert: Bool = false
     var subTask: SubTask
-    var onEdit: (SubTask) -> Void
+    var disableDelete: Bool = false
+    var onEdit: ((SubTask) -> Void)?
     
     var body: some View {
-        HStack {
-            Text(subTask.title ?? "")
-                .font(.headline)
-                .fontWeight(.bold)
-                .strikethrough(subTask.isCompleted, color: Color("Text"))
-                .padding(.vertical, 10)
-            Spacer()
-            Image(systemName: subTask.isCompleted ? "checkmark.circle.fill" : "circle")
-                .font(.title)
-                .frame(width: DrawingConstants.completeIndicatorSize, height: DrawingConstants.completeIndicatorSize)
-                .onTapGesture {
-                    Haptics.shared.play(.medium)
-                    taskManager.toggleCompleted(subTask)
-                }
+        let subtaskIsInDaily: Bool = subTask.dailyTask?.isSameDayAs(Date()) ?? false
+        
+        SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted) {
+            Haptics.shared.play(.medium)
+            taskManager.toggleCompleted(subTask)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .versionAwareDeleteSwipeAction(showContextMenuInstead: false) {
             showingAlert = true
         }
-        .versionAwareSubtaskCompleteSwipeAction(
-            labelText: subTask.isCompleted ? "Mark as incomplete" : "Mark as complete",
-            labelImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill") {
+        .versionAwareSubtaskCompleteSwipeAction(labelText: subTask.isCompleted ? "Mark as incomplete" : "Mark as complete",
+                                 labelImage: subTask.isCompleted ? "gobackward.minus" : "checkmark.circle.fill") {
                 taskManager.toggleCompleted(subTask)
         }
-        .versionAwareSubtaskEditSwipeAction(labelText: "Edit", labelImage: "pencil") {
-            onEdit(subTask)
+        .versionAwareSubtaskEditSwipeAction(labelText: "Edit", labelImage: "pencil", enabled: onEdit != nil) {
+            if let editFunc = onEdit {
+                editFunc(subTask)
+            }
+        }
+        .versionAwareAddToDailySwipeAction(labelText: subtaskIsInDaily ? "Remove from daily" : "Add to daily", labelImage: subtaskIsInDaily ? "minus.circle" : "link.badge.plus") {
+            if subtaskIsInDaily {
+                taskManager.removeFromDaily(subTask)
+            } else {
+                taskManager.addToDaily(subTask)
+            }
         }
         .contextMenu {
+            if let edit = onEdit {
+                Button {
+                    edit(subTask)
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+            }
             Button {
-                onEdit(subTask)
+                taskManager.addToDaily(subTask)
             } label: {
-                Label("Edit", systemImage: "pencil")
+                Label("Add to daily", systemImage: "link.badge.plus")
             }
             VersionAwareDestructiveButton()
         }
@@ -60,7 +66,9 @@ struct SubtaskView: View {
     
     @ViewBuilder
     private func VersionAwareDestructiveButton() -> some View {
-        if #available(iOS 15.0, *) {
+        if disableDelete {
+            EmptyView()
+        } else if #available(iOS 15.0, *) {
             Button(role: .destructive, action: {
                 showingAlert = true
             }, label: {
@@ -76,37 +84,45 @@ struct SubtaskView: View {
     }
     
     private struct DrawingConstants {
-        static let completeIndicatorSize: CGFloat = 50
         static let subTaskListRowInsets: EdgeInsets = EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
     }
 }
 
 fileprivate extension View {
-    func versionAwareSubtaskCompleteSwipeAction(labelText: LocalizedStringKey, labelImage: String, onComplete: @escaping () -> Void) -> some View {
+    func versionAwareSwipeAction(labelText: LocalizedStringKey, labelImage: String, tint: Color?, leading: Bool = false, perform: @escaping () -> Void) -> some View {
         if #available(iOS 15.0, *) {
-            return self.swipeActions(edge: .leading) {
+            return self.swipeActions(edge: leading ? .leading : .trailing) {
                 Button {
-                    onComplete()
+                    perform()
                 } label: {
                     Label(labelText, systemImage: labelImage)
                 }
-                .tint(.mint)
+                .tint(tint ?? .accentColor)
             }
         } else {
             return self
         }
     }
     
-    func versionAwareSubtaskEditSwipeAction(labelText: LocalizedStringKey, labelImage: String, onEdit: @escaping () -> Void) -> some View {
+    func versionAwareAddToDailySwipeAction(labelText: LocalizedStringKey, labelImage: String, onAdd: @escaping () -> Void) -> some View {
         if #available(iOS 15.0, *) {
-            return self.swipeActions(edge: .leading) {
-                Button {
-                    onEdit()
-                } label: {
-                    Label(labelText, systemImage: labelImage)
-                }
-                .tint(.indigo)
-            }
+            return self.versionAwareSwipeAction(labelText: labelText, labelImage: labelImage, tint: .green, leading: true, perform: onAdd)
+        } else {
+            return self
+        }
+    }
+    
+    func versionAwareSubtaskCompleteSwipeAction(labelText: LocalizedStringKey, labelImage: String, onComplete: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.versionAwareSwipeAction(labelText: labelText, labelImage: labelImage, tint: .mint, leading: true, perform: onComplete)
+        } else {
+            return self
+        }
+    }
+    
+    func versionAwareSubtaskEditSwipeAction(labelText: LocalizedStringKey, labelImage: String, enabled: Bool = true, onEdit: @escaping () -> Void) -> some View {
+        if #available(iOS 15.0, *) {
+            return self.versionAwareSwipeAction(labelText: labelText, labelImage: labelImage, tint: .indigo, leading: true, perform: onEdit)
         } else {
             return self
         }
