@@ -72,6 +72,7 @@ class TaskStorage: NSObject, ObservableObject {
     }
     
     func delete(_ task: Task) {
+        Utils.cancelNotification(for: task)
         PersistenceController.shared.persistentContainer.viewContext.delete(task)
         do {
             try PersistenceController.shared.persistentContainer.viewContext.save()
