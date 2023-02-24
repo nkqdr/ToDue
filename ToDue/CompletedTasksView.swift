@@ -80,6 +80,6 @@ struct CompletedTasksView: View {
 struct CompletedTasksView_Previews: PreviewProvider {
     static var previews: some View {
         CompletedTasksView()
-            .environmentObject(TaskManager())
+            .environmentObject(TaskManager.shared)
     }
 }

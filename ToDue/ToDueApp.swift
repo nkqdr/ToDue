@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct ToDueApp: App {
-    @StateObject var taskManager = TaskManager()
+    @StateObject var taskManager = TaskManager.shared
     
     private func checkNotificationPermissions() {
         let current = UNUserNotificationCenter.current()

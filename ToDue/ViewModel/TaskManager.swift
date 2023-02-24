@@ -37,7 +37,7 @@ class TaskManager: ObservableObject {
     private var taskCancellable: AnyCancellable?
     private var subTaskCancellable: AnyCancellable?
     
-    init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher(),
+    private init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher(),
          subTaskPublisher: AnyPublisher<[SubTask], Never> = SubtaskStorage.shared.subTasks.eraseToAnyPublisher()) {
         taskCancellable = taskPublisher.sink { tasks in
             print("Updating tasks...")

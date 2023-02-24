@@ -91,6 +91,6 @@ extension View {
 struct AddSubtaskView_Previews: PreviewProvider {
     static var previews: some View {
         AddSubtaskView(isPresented: .constant(true), subtaskEditor: SubtaskEditor(on: Task()))
-            .environmentObject(TaskManager())
+            .environmentObject(TaskManager.shared)
     }
 }

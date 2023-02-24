@@ -94,6 +94,6 @@ struct AddTaskView: View {
 struct AddTaskView_Previews: PreviewProvider {
     static var previews: some View {
         AddTaskView(isPresented: .constant(true), taskEditor: TaskEditor())
-            .environmentObject(TaskManager())
+            .environmentObject(TaskManager.shared)
     }
 }

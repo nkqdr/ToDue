@@ -9,7 +9,8 @@ import SwiftUI
 
 struct DailyTaskView: View {
     @ObservedObject private var dailyManager = DailyTaskManager()
-    @ObservedObject private var taskManager = TaskManager.shared
+    @EnvironmentObject var taskManager: TaskManager
+    
     private var taskDueDate: Date = Date()
     private var taskTitle: LocalizedStringKey = "Today"
     
