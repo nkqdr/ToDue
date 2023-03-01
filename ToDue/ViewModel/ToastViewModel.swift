@@ -7,6 +7,7 @@
 
 import Foundation
 import AlertToast
+import SwiftUI
 
 class ToastViewModel: ObservableObject {
     public static let shared = ToastViewModel()
@@ -34,7 +35,8 @@ class ToastViewModel: ObservableObject {
             displayMode: .hud,
             type: .complete(.green),
             title: title,
-            subTitle: message
+            subTitle: message,
+            style: .style(backgroundColor: Color("AccentLight"), titleColor: Color("Text"), subTitleColor: .secondary)
         )
     }
 }

@@ -107,7 +107,7 @@ class TaskManager: ObservableObject {
         }
         if let task = editor.task {
             SubtaskStorage.shared.add(to: task, title: editor.subtaskTitle)
-            ToastViewModel.shared.showSuccess(message: "Added '\(editor.subtaskTitle)'")
+            ToastViewModel.shared.showSuccess(title: "Created",message: "Added '\(editor.subtaskTitle)'")
             
         } else {
             SubtaskStorage.shared.add(on: Date(), title: editor.subtaskTitle)
@@ -123,7 +123,7 @@ class TaskManager: ObservableObject {
         } else {
             let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate, category: editor.category)
             Utils.scheduleNewNotification(for: task)
-            ToastViewModel.shared.showSuccess(message: "Added '\(editor.taskTitle)'")
+            ToastViewModel.shared.showSuccess(title: "Created", message: "Added '\(editor.taskTitle)'")
         }
         WidgetCenter.shared.reloadAllTimelines()
     }
@@ -131,22 +131,22 @@ class TaskManager: ObservableObject {
     func addToDaily(_ subTask: SubTask) {
         let today: Date = Date()
         SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, dailyTask: today)
-        ToastViewModel.shared.showSuccess(message: "Added to today's tasks!")
+        ToastViewModel.shared.showSuccess(title: "Added", message: "Added to today's tasks!")
     }
     
     func removeFromDaily(_ subTask: SubTask) {
         SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, dailyTask: Date.distantPast)
-        ToastViewModel.shared.showSuccess(message: "Removed from today's tasks.")
+        ToastViewModel.shared.showSuccess(title: "Removed", message: "Removed from today's tasks.")
     }
     
     func addToDaily(_ task: Task) {
         let today: Date = Date()
         TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, dailyTask: today)
-        ToastViewModel.shared.showSuccess(message: "Added to today's tasks!")
+        ToastViewModel.shared.showSuccess(title: "Added", message: "Added to today's tasks!")
     }
     
     func removeFromDaily(_ task: Task) {
         TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, dailyTask: Date.distantPast)
-        ToastViewModel.shared.showSuccess(message: "Removed from today's tasks.")
+        ToastViewModel.shared.showSuccess(title: "Removed", message: "Removed from today's tasks.")
     }
 }
