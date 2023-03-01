@@ -19,37 +19,39 @@ struct TaskCategoriesView: View {
     }
     
     var body: some View {
-        List {
-            Section {
-                ForEach($manager.categories) { $category in
-                    TaskCategoryView(category: category, onEdit: launchEditCategory)
+        ZStack {
+            List {
+                Section {
+                    ForEach($manager.categories) { $category in
+                        TaskCategoryView(category: category, onEdit: launchEditCategory)
+                    }
                 }
             }
-            Section {
+            .groupListStyleIfNecessary()
+            .sheet(isPresented: $showAddCategory) {
+                AddTaskCategoryView(isOpen: $showAddCategory, categoryEditor: TaskCategoryEditor(currentCategory))
+            }
+            .onChange(of: showAddCategory) { newValue in
+                if !newValue {
+                    currentCategory = nil
+                }
+            }
+            .background(Color("Background").ignoresSafeArea())
+            .hideScrollContentBackgroundIfNecessary()
+            .navigationTitle("Task categories")
+            
+            // Floating Action Button
+            VStack {
+                Spacer()
                 HStack {
                     Spacer()
-                    Button("Add category") {
+                    FloatingActionButton(content: "Add category", systemImage: "plus") {
                         currentCategory = nil
                         showAddCategory.toggle()
                     }
-                    .buttonStyle(.borderless)
-                    Spacer()
                 }
-                .themedListRowBackground()
             }
         }
-        .groupListStyleIfNecessary()
-        .sheet(isPresented: $showAddCategory) {
-            AddTaskCategoryView(isOpen: $showAddCategory, categoryEditor: TaskCategoryEditor(currentCategory))
-        }
-        .onChange(of: showAddCategory) { newValue in
-            if !newValue {
-                currentCategory = nil
-            }
-        }
-        .background(Color("Background").ignoresSafeArea())
-        .hideScrollContentBackgroundIfNecessary()
-        .navigationTitle("Task categories")
     }
 }
 
