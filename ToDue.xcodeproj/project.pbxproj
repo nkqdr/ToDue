@@ -15,6 +15,8 @@
 		6021A1DE28A7B1B20004C7E8 /* AddSubtaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6021A1DD28A7B1B20004C7E8 /* AddSubtaskView.swift */; };
 		6023C99D28AFF0A100C94DB2 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6023C99C28AFF0A100C94DB2 /* CloudKit.framework */; };
 		6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6035BEA927E1E50D0048E6D4 /* Haptics.swift */; };
+		60399B4029AFC9C5007BF90D /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 60399B3F29AFC9C5007BF90D /* AlertToast */; };
+		60399B4229AFCA51007BF90D /* ToastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60399B4129AFCA51007BF90D /* ToastViewModel.swift */; };
 		60410E2A28D3153A008BBAA6 /* TaskCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60410E2928D3153A008BBAA6 /* TaskCategoriesView.swift */; };
 		60410E2C28D31A30008BBAA6 /* TaskCategoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60410E2B28D31A30008BBAA6 /* TaskCategoryStorage.swift */; };
 		60410E2E28D31B37008BBAA6 /* TaskCategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60410E2D28D31B37008BBAA6 /* TaskCategoryManager.swift */; };
@@ -109,6 +111,7 @@
 		6023C99C28AFF0A100C94DB2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		6023C99E28AFF0F600C94DB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6035BEA927E1E50D0048E6D4 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		60399B4129AFCA51007BF90D /* ToastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModel.swift; sourceTree = "<group>"; };
 		60410E2928D3153A008BBAA6 /* TaskCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoriesView.swift; sourceTree = "<group>"; };
 		60410E2B28D31A30008BBAA6 /* TaskCategoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryStorage.swift; sourceTree = "<group>"; };
 		60410E2D28D31B37008BBAA6 /* TaskCategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryManager.swift; sourceTree = "<group>"; };
@@ -183,6 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6023C99D28AFF0A100C94DB2 /* CloudKit.framework in Frameworks */,
+				60399B4029AFC9C5007BF90D /* AlertToast in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +266,7 @@
 				60410E2D28D31B37008BBAA6 /* TaskCategoryManager.swift */,
 				60410E2F28D31C1F008BBAA6 /* TaskCategoryEditor.swift */,
 				60E0EEC829A795520083ACDC /* DailyTaskManager.swift */,
+				60399B4129AFCA51007BF90D /* ToastViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -387,6 +392,9 @@
 				60809E9527D394A30027AE84 /* PBXTargetDependency */,
 			);
 			name = ToDue;
+			packageProductDependencies = (
+				60399B3F29AFC9C5007BF90D /* AlertToast */,
+			);
 			productName = ToDue;
 			productReference = 60DD741427D2B16A00DD19AD /* ToDue.app */;
 			productType = "com.apple.product-type.application";
@@ -419,6 +427,9 @@
 				de,
 			);
 			mainGroup = 60DD740B27D2B16A00DD19AD;
+			packageReferences = (
+				60399B3E29AFC9C5007BF90D /* XCRemoteSwiftPackageReference "AlertToast" */,
+			);
 			productRefGroup = 60DD741527D2B16A00DD19AD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -489,6 +500,7 @@
 				60DD742E27D2D22E00DD19AD /* TaskContainer.swift in Sources */,
 				60410E2C28D31A30008BBAA6 /* TaskCategoryStorage.swift in Sources */,
 				608F770627D4A77A007BCC06 /* DateExtension.swift in Sources */,
+				60399B4229AFCA51007BF90D /* ToastViewModel.swift in Sources */,
 				60E62CA828BF3889002F727C /* TaskEditor.swift in Sources */,
 				60410E2E28D31B37008BBAA6 /* TaskCategoryManager.swift in Sources */,
 				604E262028EF10A700A15046 /* AddTaskCategoryView.swift in Sources */,
@@ -840,6 +852,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		60399B3E29AFC9C5007BF90D /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		60399B3F29AFC9C5007BF90D /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 60399B3E29AFC9C5007BF90D /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		60DD742527D2B1C300DD19AD /* DataModel.xcdatamodeld */ = {

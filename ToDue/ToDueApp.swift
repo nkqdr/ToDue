@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct ToDueApp: App {
     @StateObject var taskManager = TaskManager.shared
+    @ObservedObject var toastManager = ToastViewModel.shared
     
     private func checkNotificationPermissions() {
         let current = UNUserNotificationCenter.current()
@@ -56,7 +57,11 @@ struct ToDueApp: App {
                         Text("More")
                     }
             }
+            .toast(isPresenting: $toastManager.show) {
+                toastManager.alertToast
+            }
             .environmentObject(taskManager)
+            .environmentObject(toastManager)
         }
     }
 }
