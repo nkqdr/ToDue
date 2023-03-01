@@ -15,7 +15,13 @@ struct TaskDetailView: View {
     @State private var currentSubTask: SubTask?
     var task: Task
     
-    var body: some View {
+    var floatingAddSubtaskButton: some View {
+        FloatingActionButton(content: "Add subtask", systemImage: "plus") {
+            showAddSubtaskSheet.toggle()
+        }
+    }
+    
+    var mainListView: some View {
         List {
             Group {
                 VStack(alignment: .leading) {
@@ -38,7 +44,6 @@ struct TaskDetailView: View {
                 .listRowBackground(Color("Background"))
                 .listRowInsets(EdgeInsets())
                 subTaskList
-                addSubTaskButton
             }
             .themedListRowBackground()
         }
@@ -73,6 +78,19 @@ struct TaskDetailView: View {
         }
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
+        }
+    }
+    
+    var body: some View {
+        ZStack {
+            mainListView
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    floatingAddSubtaskButton
+                }
+            }
         }
     }
     
