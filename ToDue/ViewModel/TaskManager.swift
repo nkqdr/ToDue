@@ -103,8 +103,12 @@ class TaskManager: ObservableObject {
     func saveSubtask(_ editor: SubtaskEditor) {
         if let st = editor.subtask {
             SubtaskStorage.shared.update(st, title: editor.subtaskTitle, isCompleted: st.isCompleted)
+            return
+        }
+        if let task = editor.task {
+            SubtaskStorage.shared.add(to: task, title: editor.subtaskTitle)
         } else {
-            SubtaskStorage.shared.add(to: editor.task, title: editor.subtaskTitle)
+            SubtaskStorage.shared.add(on: Date(), title: editor.subtaskTitle)
         }
     }
     

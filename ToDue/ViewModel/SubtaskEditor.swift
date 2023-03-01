@@ -10,7 +10,7 @@ import Foundation
 /// This class is used as a controller for editing and creating subtasks
 class SubtaskEditor: ObservableObject {
     private(set) var subtask: SubTask?
-    private(set) var task: Task
+    private(set) var task: Task?
     
     @Published var subtaskTitle: String
     @Published var saveButtonDisabled: Bool = true
@@ -19,6 +19,11 @@ class SubtaskEditor: ObservableObject {
         self.subtask = subtask
         self.subtaskTitle = subtask?.title ?? ""
         self.task = task
+    }
+    
+    init(_ subtask: SubTask?) {
+        self.subtask = subtask
+        self.subtaskTitle = subtask?.title ?? ""
     }
     
     init(on task: Task) {

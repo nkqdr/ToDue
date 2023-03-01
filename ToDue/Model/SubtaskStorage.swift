@@ -34,6 +34,17 @@ class SubtaskStorage: NSObject, ObservableObject {
         }
     }
     
+    func add(on date: Date, title: String) {
+        let subTask = SubTask(context: PersistenceController.shared.persistentContainer.viewContext)
+        subTask.title = title
+        subTask.id = UUID()
+        subTask.isCompleted = false
+        subTask.createdAt = Date()
+        subTask.dailyTask = date
+        
+        try? PersistenceController.shared.persistentContainer.viewContext.save()
+    }
+    
     func add(to task: Task, title: String) {
         let subTask = SubTask(context: PersistenceController.shared.persistentContainer.viewContext)
         subTask.title = title

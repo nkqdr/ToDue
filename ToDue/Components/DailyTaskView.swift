@@ -10,6 +10,9 @@ import SwiftUI
 struct DailyTaskView: View {
     @ObservedObject private var dailyManager = DailyTaskManager()
     @EnvironmentObject var taskManager: TaskManager
+    @State private var currentSubTask: SubTask?
+    @State var showAddSubtaskSheet: Bool = false
+    @State private var showingAlert: Bool = false
     
     private var taskDueDate: Date = Date()
     private var taskTitle: LocalizedStringKey = "Today"
@@ -51,24 +54,55 @@ struct DailyTaskView: View {
     }
     
     var detailView: some View {
-        List {
-            Group {
-                VStack(alignment: .leading) {
-                    dueDate
-                    ProgressBar(progress: dailyManager.progress)
-                        .padding(.bottom, DrawingConstants.progressBarPadding)
+        ZStack {
+            List {
+                Group {
+                    VStack(alignment: .leading) {
+                        dueDate
+                        ProgressBar(progress: dailyManager.progress)
+                            .padding(.bottom, DrawingConstants.progressBarPadding)
+                    }
+                    .listRowBackground(Color("Background"))
+                    .listRowInsets(EdgeInsets())
+                    subTaskList
                 }
-                .listRowBackground(Color("Background"))
-                .listRowInsets(EdgeInsets())
-                subTaskList
+                .themedListRowBackground()
             }
-            .themedListRowBackground()
+            .groupListStyleIfNecessary()
+            .background(Color("Background").ignoresSafeArea())
+            .hideScrollContentBackgroundIfNecessary()
+            .navigationTitle(taskTitle)
+            .navigationBarTitleDisplayMode(.large)
+            .versionAwareConfirmationDialog(
+                $showingAlert,
+                title: "Are you sure you want to delete this?",
+                message: currentSubTask?.wrappedTitle ?? "",
+                onDelete: {
+                    taskManager.deleteTask(currentSubTask!)
+                    currentSubTask = nil
+                },
+                onCancel: {
+                    showingAlert = false
+                    currentSubTask = nil
+                }
+            )
+            .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
+                currentSubTask = nil
+            }) {
+                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(currentSubTask))
+                    .versionAwarePresentationDetents()
+            }
+            
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    FloatingActionButton(content: "Add subtask", systemImage: "plus") {
+                        showAddSubtaskSheet.toggle()
+                    }
+                }
+            }
         }
-        .groupListStyleIfNecessary()
-        .background(Color("Background").ignoresSafeArea())
-        .hideScrollContentBackgroundIfNecessary()
-        .navigationTitle(taskTitle)
-        .navigationBarTitleDisplayMode(.large)
     }
     
     var body: some View {
@@ -98,17 +132,31 @@ struct DailyTaskView: View {
                 dailyManager.toggleCompleted(subTask)
             }
             .contextMenu {
-                Button {
-                    taskManager.removeFromDaily(subTask)
-                } label: {
-                    Label("Remove from today", systemImage: "minus.circle")
+                if subTask.task != nil {
+                    Button {
+                        taskManager.removeFromDaily(subTask)
+                    } label: {
+                        Label("Remove from today", systemImage: "minus.circle")
+                    }
+                } else {
+                    Button {
+                        currentSubTask = subTask
+                        showingAlert.toggle()
+                    } label: {
+                        Label("Delete this task", systemImage: "trash")
+                    }
                 }
             }
             .versionAwareSubtaskCompleteSwipeAction(subTask) {
                 taskManager.toggleCompleted(subTask)
             }
-            .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false) {
-                taskManager.removeFromDaily(subTask)
+            .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false, deleteCompletely: subTask.task == nil) {
+                if subTask.task == nil {
+                    currentSubTask = subTask
+                    showingAlert.toggle()
+                } else {
+                    taskManager.removeFromDaily(subTask)
+                }
             }
         }
     }
@@ -173,16 +221,6 @@ struct DailyTaskView: View {
         static let topTaskMinHeight: CGFloat = 140
         static let containerCornerRadius: CGFloat = 12
         static let progressBarPadding: CGFloat = 20
-    }
-}
-
-fileprivate extension View {
-    func versionAwareAddToDailySwipeAction(labelText: LocalizedStringKey, labelImage: String, onAdd: @escaping () -> Void) -> some View {
-        if #available(iOS 15.0, *) {
-            return self.versionAwareSwipeAction(labelText: labelText, labelImage: labelImage, tint: .red, leading: false, perform: onAdd)
-        } else {
-            return self
-        }
     }
 }
 
