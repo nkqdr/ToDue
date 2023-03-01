@@ -11,19 +11,31 @@ struct CompletedTasksView: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var searchValue = ""
     @State var displayedTasks: [Task]?
-//    @State private var showDeadlineTasks: Bool = true
-//    
-//    private func filterTasksByDeadline(newValue: Bool) {
-//        if newValue {
-//            displayedTasks = taskManager.completeTasks.filter {$0.wrappedDate != Date.distantFuture}
-//        } else {
-//            displayedTasks = taskManager.completeTasks.filter {$0.wrappedDate == Date.distantFuture}
-//        }
-//    }
+    
+    @ViewBuilder
+    private func taskSection(_ title: LocalizedStringKey, tasks: [Task]) -> some View {
+        if !tasks.isEmpty {
+            Section(header: Text(title)) {
+                ForEach (tasks) { task in
+                    ZStack {
+                        TaskContainer(task: task, cornerRadius: 0)
+                        NavigationLink(destination: TaskDetailView(task: task)) {
+                            EmptyView()
+                        }.opacity(0)
+                    }
+                }
+                .animation(.spring(), value: taskManager.completeTasks)
+            }
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+        }
+    }
     
     var body: some View {
+        let deadlineTasksToShow: [Task] = displayedTasks?.filter({ $0.date != Date.distantFuture }) ?? taskManager.completeTasks.filter({ $0.date != Date.distantFuture })
+        let taskWithoutDeadlineToShow: [Task] = displayedTasks?.filter({ $0.date == Date.distantFuture }) ?? taskManager.completeTasks.filter({ $0.date == Date.distantFuture })
+        
         NavigationView {
-            ScrollView(showsIndicators: false) {
+            List {
                 HStack {
                     Text("Total: \(taskManager.completeTasks.count)", comment: "Label that displays how many tasks have been completed in total.")
                         .font(.title3)
@@ -31,27 +43,16 @@ struct CompletedTasksView: View {
                     Spacer()
                 }
                 .foregroundColor(.green.opacity(0.8))
-                .padding(.horizontal)
-//                Picker("Task type", selection: $showDeadlineTasks) {
-//                    Text("Deadline").tag(true)
-//                    Text("No Deadline").tag(false)
-//                }
-//                .pickerStyle(.segmented)
-//                .padding(.horizontal)
-//                .onChange(of: showDeadlineTasks, perform: filterTasksByDeadline)
-                ForEach (displayedTasks ?? taskManager.completeTasks.map { $0 }) { task in
-                    NavigationLink(destination: {
-                        TaskDetailView(task: task)
-                    }, label: {
-                        TaskContainer(task: task)
-                    })
-                }
-                .animation(.spring(), value: taskManager.completeTasks)
-                .padding(.horizontal)
+                .listRowBackground(Color("Background"))
+                .listRowInsets(EdgeInsets())
+                taskSection("Deadline", tasks: deadlineTasksToShow)
+                taskSection("No Deadline", tasks: taskWithoutDeadlineToShow)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .listStyle(.sidebar)
+            .groupListStyleIfNecessary()
             .background(Color("Background").ignoresSafeArea())
             .navigationTitle("Completed")
+            .hideScrollContentBackgroundIfNecessary()
             .versionAwareSearchable(text: $searchValue)
             .onChange(of: searchValue) { newValue in
                 DispatchQueue.global(qos: .userInitiated).async {

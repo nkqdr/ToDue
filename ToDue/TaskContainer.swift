@@ -12,11 +12,12 @@ struct TaskContainer: View {
     @State private var showingAlert: Bool = false
     var task: Task
     var showBackground: Bool = false
+    var cornerRadius: Double = DrawingConstants.containerCornerRadius
     
     var body: some View {
         let taskIsInDaily: Bool = task.dailyTask?.isSameDayAs(Date()) ?? false
         return ZStack(alignment: .topTrailing) {
-            RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
+            RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(containerBackgroundColor)
             HStack {
                 VStack(alignment: .leading) {
@@ -77,7 +78,6 @@ struct TaskContainer: View {
             }
             VersionAwareDestructiveButton()
         }
-        .padding(.bottom, 5)
     }
     
     @ViewBuilder
@@ -121,7 +121,7 @@ struct TaskContainer: View {
     private struct DrawingConstants {
         static let topTaskBackgroundColor: Color = Color("Accent1")
         static let defaultTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
-        static let completeTaskBackgroundColor: Color = Color.green.opacity(0.5)
+        static let completeTaskBackgroundColor: Color = Color("CompleteTask")
         static let topTaskMinHeight: CGFloat = 140
         static let containerCornerRadius: CGFloat = 12
     }

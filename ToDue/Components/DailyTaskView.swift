@@ -65,6 +65,8 @@ struct DailyTaskView: View {
                     .listRowBackground(Color("Background"))
                     .listRowInsets(EdgeInsets())
                     subTaskList
+                    Spacer()
+                        .listRowBackground(Color.clear)
                 }
                 .themedListRowBackground()
             }
@@ -217,7 +219,7 @@ struct DailyTaskView: View {
     private struct DrawingConstants {
         static let topTaskBackgroundColor: Color = Color("Accent1")
         static let defaultTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
-        static let completeTaskBackgroundColor: Color = Color.green.opacity(0.5)
+        static let completeTaskBackgroundColor: Color = Color("CompleteTask")
         static let topTaskMinHeight: CGFloat = 140
         static let containerCornerRadius: CGFloat = 12
         static let progressBarPadding: CGFloat = 20

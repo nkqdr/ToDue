@@ -44,6 +44,8 @@ struct TaskDetailView: View {
                 .listRowBackground(Color("Background"))
                 .listRowInsets(EdgeInsets())
                 subTaskList
+                Spacer()
+                    .listRowBackground(Color.clear)
             }
             .themedListRowBackground()
         }
