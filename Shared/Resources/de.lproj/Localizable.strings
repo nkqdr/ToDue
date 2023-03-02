@@ -247,3 +247,17 @@
 /* DatePicker description for scheduling */
 "schedule_task_date" = "Geplantes Datum";
 
+/* Toast notification string */
+"Added" = "Hinzugefügt";
+
+/* Toast notification string */
+"Removed" = "Entfernt";
+
+/* Toast notification string */
+"Created" = "Erstellt";
+
+/* Toast notification string */
+"Added to today's tasks!" = "Zu heutigen Aufgaben hinzugefügt!";
+
+/* Toast notification string */
+"Removed from today's tasks." = "Von heutigen Aufgaben entfernt.";

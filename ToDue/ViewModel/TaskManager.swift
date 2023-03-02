@@ -108,7 +108,7 @@ class TaskManager: ObservableObject {
         }
         if let task = editor.task {
             SubtaskStorage.shared.add(to: task, title: editor.subtaskTitle, scheduledDate: scheduledDate)
-            ToastViewModel.shared.showSuccess(title: "Created",message: "Added '\(editor.subtaskTitle)'")
+            ToastViewModel.shared.showSuccess(title: "Created", message: "\(editor.subtaskTitle)")
             
         } else {
             SubtaskStorage.shared.add(on: Date(), title: editor.subtaskTitle)
@@ -125,7 +125,7 @@ class TaskManager: ObservableObject {
         } else {
             let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate, category: editor.category, scheduledDate: scheduledDate)
             Utils.scheduleNewNotification(for: task)
-            ToastViewModel.shared.showSuccess(title: "Created", message: "Added '\(editor.taskTitle)'")
+            ToastViewModel.shared.showSuccess(title: "Created", message: "\(editor.taskTitle)")
         }
         WidgetCenter.shared.reloadAllTimelines()
     }
