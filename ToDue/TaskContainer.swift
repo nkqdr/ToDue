@@ -68,9 +68,9 @@ struct TaskContainer: View {
             Button {
                 withAnimation {
                     if taskIsInDaily {
-                        taskManager.removeFromDaily(task)
+                        taskManager.unscheduleForToday(task)
                     } else {
-                        taskManager.addToDaily(task)
+                        taskManager.scheduleForToday(task)
                     }
                 }
             } label: {

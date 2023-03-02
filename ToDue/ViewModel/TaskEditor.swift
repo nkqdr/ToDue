@@ -14,15 +14,19 @@ class TaskEditor: ObservableObject {
     @Published var taskTitle: String
     @Published var taskDescription: String
     @Published var taskDueDate: Date
+    @Published var scheduledDate: Date
     @Published var saveButtonDisabled: Bool = true
     @Published var hasDeadline: Bool
     @Published var category: TaskCategory?
+    @Published var isScheduled: Bool
     
     init(task: Task?) {
         self.task = task
         self.taskTitle = task?.taskTitle ?? ""
         self.taskDescription = task?.taskDescription ?? ""
         self.category = task?.category
+        self.scheduledDate = task?.scheduledDate ?? Date()
+        self.isScheduled = task?.scheduledDate != nil
         if let task = task, let date = task.date {
             self.taskDueDate = date == Date.distantFuture ? Date() : date
             self.hasDeadline = date != Date.distantFuture
@@ -37,6 +41,8 @@ class TaskEditor: ObservableObject {
         self.taskDescription = ""
         self.taskDueDate = Date()
         self.hasDeadline = true
+        self.scheduledDate = Date()
+        self.isScheduled = false
     }
     
     // MARK: - Intents

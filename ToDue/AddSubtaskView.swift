@@ -17,8 +17,17 @@ struct AddSubtaskView: View {
         let disableSaveButton = editMode ? subtaskEditor.subtaskTitle == "" : subtaskEditor.saveButtonDisabled
         NavigationView {
             Form {
-                Section(header: Text("Information")) {
-                    VersionAwareTitleTextField
+                Group {
+                    Section(header: Text("Information")) {
+                        VersionAwareTitleTextField
+                    }
+                    Section(header: Text("task_form_scheduling"), footer: Text("task_form_scheduling_footer")) {
+                        Toggle("schedule_task_toggle", isOn: $subtaskEditor.isScheduled)
+                        if subtaskEditor.isScheduled {
+                            DatePicker("schedule_task_date", selection: $subtaskEditor.scheduledDate, in: Date.rangeFromToday, displayedComponents: .date)
+                        }
+                    }
+                    .disabled(subtaskEditor.disableScheduling)
                 }
                 .listRowBackground(Color("Accent2").opacity(0.3))
             }

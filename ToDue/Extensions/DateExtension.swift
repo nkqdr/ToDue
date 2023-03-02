@@ -24,6 +24,12 @@ extension Date {
     public func isSameDayAs(_ otherDate: Date) -> Bool {
         return isSameXAs(otherDate, comps: [.year, .month, .day])
     }
+    
+    public static var rangeFromToday: PartialRangeFrom<Date> {
+        let calendar = Calendar.current
+        let startComponents = calendar.dateComponents([.year, .month, .day], from: Date())
+        return calendar.date(from: startComponents)!...
+    }
 }
 
 extension Date: RawRepresentable {

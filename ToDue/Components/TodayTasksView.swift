@@ -91,7 +91,7 @@ struct TodayTasksView: View {
             .sheet(isPresented: $showAddSubtaskSheet, onDismiss: {
                 currentSubTask = nil
             }) {
-                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(currentSubTask))
+                AddSubtaskView(isPresented: $showAddSubtaskSheet, subtaskEditor: SubtaskEditor(currentSubTask, scheduled: Date()))
                     .versionAwarePresentationDetents()
             }
             
@@ -131,12 +131,12 @@ struct TodayTasksView: View {
         ForEach(subTasks) { subTask in
             SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted, topSubTitle: subTask.task?.taskTitle) {
                 Haptics.shared.play(.medium)
-                dailyManager.toggleCompleted(subTask)
+                taskManager.toggleCompleted(subTask)
             }
             .contextMenu {
                 if subTask.task != nil {
                     Button {
-                        taskManager.removeFromDaily(subTask)
+                        taskManager.unscheduleForToday(subTask)
                     } label: {
                         Label("Remove from today", systemImage: "minus.circle")
                     }
@@ -157,7 +157,7 @@ struct TodayTasksView: View {
                     currentSubTask = subTask
                     showingAlert.toggle()
                 } else {
-                    taskManager.removeFromDaily(subTask)
+                    taskManager.unscheduleForToday(subTask)
                 }
             }
         }
@@ -170,11 +170,11 @@ struct TodayTasksView: View {
             }, label: {
                 SubtaskContainer(title: task.taskTitle ?? "", isCompleted: task.isCompleted, progress: taskManager.progress(for: task)) {
                     Haptics.shared.play(.medium)
-                    dailyManager.toggleCompleted(task)
+                    taskManager.toggleCompleted(task)
                 }
                 .contextMenu {
                     Button {
-                        taskManager.removeFromDaily(task)
+                        taskManager.unscheduleForToday(task)
                     } label: {
                         Label("Remove from today", systemImage: "minus.circle")
                     }
@@ -183,7 +183,7 @@ struct TodayTasksView: View {
                     taskManager.toggleCompleted(task)
                 }
                 .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false) {
-                    taskManager.removeFromDaily(task)
+                    taskManager.unscheduleForToday(task)
                 }
             })
         }

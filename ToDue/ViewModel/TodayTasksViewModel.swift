@@ -10,7 +10,6 @@ import Combine
 import WidgetKit
 
 class TodayTasksViewModel: ObservableObject {
-    
     @Published var tasks: [Task] = [] {
         didSet {
             setProgress()
@@ -46,23 +45,5 @@ class TodayTasksViewModel: ObservableObject {
             let complete: Int = tasks.filter { $0.isCompleted }.count + subTasks.filter({ $0.isCompleted }).count
             progress = Double(complete) / Double(total)
         }
-    }
-    
-    // MARK: - Intents
-    
-    func toggleCompleted(_ task: Task) {
-        if task.isCompleted {
-            // Task will now be incomplete
-            Utils.scheduleNewNotification(for: task)
-        } else {
-            // Task will now be complete
-            Utils.cancelNotification(for: task)
-        }
-        TaskStorage.shared.toggleCompleted(for: task)
-        WidgetCenter.shared.reloadAllTimelines()
-    }
-    
-    func toggleCompleted(_ subTask: SubTask) {
-        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: !subTask.isCompleted)
     }
 }

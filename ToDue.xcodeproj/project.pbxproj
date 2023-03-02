@@ -14,6 +14,8 @@
 		6015556228032BE50049D84A /* TaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6015556128032BE50049D84A /* TaskExtension.swift */; };
 		6021A1DE28A7B1B20004C7E8 /* AddSubtaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6021A1DD28A7B1B20004C7E8 /* AddSubtaskView.swift */; };
 		6023C99D28AFF0A100C94DB2 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6023C99C28AFF0A100C94DB2 /* CloudKit.framework */; };
+		60326AD229B084D600D57C21 /* TextArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60326AD129B084D600D57C21 /* TextArea.swift */; };
+		60326AD429B0851200D57C21 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60326AD329B0851200D57C21 /* StringExtension.swift */; };
 		6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6035BEA927E1E50D0048E6D4 /* Haptics.swift */; };
 		60399B4029AFC9C5007BF90D /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 60399B3F29AFC9C5007BF90D /* AlertToast */; };
 		60399B4229AFCA51007BF90D /* ToastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60399B4129AFCA51007BF90D /* ToastViewModel.swift */; };
@@ -110,6 +112,8 @@
 		6021A1DD28A7B1B20004C7E8 /* AddSubtaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubtaskView.swift; sourceTree = "<group>"; };
 		6023C99C28AFF0A100C94DB2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		6023C99E28AFF0F600C94DB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		60326AD129B084D600D57C21 /* TextArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextArea.swift; sourceTree = "<group>"; };
+		60326AD329B0851200D57C21 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		6035BEA927E1E50D0048E6D4 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		60399B4129AFCA51007BF90D /* ToastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModel.swift; sourceTree = "<group>"; };
 		60410E2928D3153A008BBAA6 /* TaskCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoriesView.swift; sourceTree = "<group>"; };
@@ -219,6 +223,7 @@
 				60E0EEC629A791960083ACDC /* ProgressCircle.swift */,
 				60E0EECA29A7A1370083ACDC /* SubtaskContainer.swift */,
 				607E540929AF868C00C07D38 /* FloatingActionButton.swift */,
+				60326AD129B084D600D57C21 /* TextArea.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -231,6 +236,7 @@
 				6015556128032BE50049D84A /* TaskExtension.swift */,
 				60B5719528C7303700CDC7C0 /* UIDeviceExtension.swift */,
 				60960B3128DDA152000E1705 /* ShapeExtension.swift */,
+				60326AD329B0851200D57C21 /* StringExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -512,8 +518,10 @@
 				600A00C627D37CE200488289 /* AddTaskView.swift in Sources */,
 				60E0EEC529A78F320083ACDC /* TodayTasksView.swift in Sources */,
 				60A4CFBD28F9AF3C007F392D /* RichFetchRequest.swift in Sources */,
+				60326AD429B0851200D57C21 /* StringExtension.swift in Sources */,
 				60FBBB5628B8B24600CBDC68 /* SettingsView.swift in Sources */,
 				600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */,
+				60326AD229B084D600D57C21 /* TextArea.swift in Sources */,
 				60B4D06827D3CA1900A1BDBE /* MorePageView.swift in Sources */,
 				60DD741A27D2B16A00DD19AD /* IncompleteTaskView.swift in Sources */,
 				60410E2A28D3153A008BBAA6 /* TaskCategoriesView.swift in Sources */,

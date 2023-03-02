@@ -46,27 +46,28 @@ class TaskStorage: NSObject, ObservableObject {
         }
     }
     
-    func add(title: String, description: String, date: Date, category: TaskCategory?) -> Task {
+    func add(title: String, description: String, date: Date, category: TaskCategory?, scheduledDate: Date? = nil) -> Task {
         let task = Task(context: PersistenceController.shared.persistentContainer.viewContext)
         task.date = date
         task.taskDescription = description
         task.taskTitle = title
         task.isCompleted = false
         task.category = category
+        task.scheduledDate = scheduledDate
         task.id = UUID()
         task.subTasks = []
         try? PersistenceController.shared.persistentContainer.viewContext.save()
         return task
     }
     
-    func update(_ task: Task, title: String?, description: String?, date: Date?, isCompleted: Bool?, category: TaskCategory?, scheduledDate: Date? = nil) {
+    func update(_ task: Task, title: String?, description: String?, date: Date?, isCompleted: Bool?, category: TaskCategory?, scheduledDate: Date?) {
         PersistenceController.shared.persistentContainer.viewContext.performAndWait {
             task.isCompleted = isCompleted ?? task.isCompleted
             task.taskDescription = description ?? task.taskDescription!
             task.taskTitle = title ?? task.taskTitle!
             task.category = category
             task.date = date ?? task.date!
-            task.scheduledDate = scheduledDate ?? task.scheduledDate
+            task.scheduledDate = scheduledDate
             try? PersistenceController.shared.persistentContainer.viewContext.save()
         }
     }

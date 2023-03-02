@@ -14,21 +14,31 @@ class SubtaskEditor: ObservableObject {
     
     @Published var subtaskTitle: String
     @Published var saveButtonDisabled: Bool = true
+    @Published var isScheduled: Bool
+    @Published var scheduledDate: Date
+    @Published var disableScheduling: Bool = false
     
     init(_ subtask: SubTask?, on task: Task) {
         self.subtask = subtask
         self.subtaskTitle = subtask?.title ?? ""
+        self.isScheduled = subtask?.scheduledDate != nil
+        self.scheduledDate = subtask?.scheduledDate ?? Date()
         self.task = task
     }
     
-    init(_ subtask: SubTask?) {
+    init(_ subtask: SubTask?, scheduled: Date) {
         self.subtask = subtask
         self.subtaskTitle = subtask?.title ?? ""
+        self.isScheduled = true
+        self.scheduledDate = scheduled
+        self.disableScheduling = true
     }
     
     init(on task: Task) {
         self.subtaskTitle = ""
         self.task = task
+        self.isScheduled = false
+        self.scheduledDate = Date()
     }
     
     // MARK: - Intents

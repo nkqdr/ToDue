@@ -42,9 +42,9 @@ struct SubtaskView: View {
             }
             Button {
                 if subtaskIsInDaily {
-                    taskManager.removeFromDaily(subTask)
+                    taskManager.unscheduleForToday(subTask)
                 } else {
-                    taskManager.addToDaily(subTask)
+                    taskManager.scheduleForToday(subTask)
                 }
             } label: {
                 Label(subtaskIsInDaily ? "Remove from today" : "Add to today", systemImage: subtaskIsInDaily ? "minus.circle" : "link.badge.plus")

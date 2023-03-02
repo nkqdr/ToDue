@@ -41,14 +41,16 @@ struct AddTaskView: View {
                         }
                         VersionAwarePicker
                     }
-                    Section(header: Text("Additional Notes: (Optional)")) {
-///                       Possibly replace this in the future?
-//                        TextField("Test", text: $taskEditor.taskDescription,  axis: .vertical)
-//                            .lineLimit(5...10)
-//                            .disableAutocorrection(true)
-                        TextEditor(text: $taskEditor.taskDescription)
+                    Section(header: Text("task_form_optional_information")) {
+                        TextArea("Notes", text: $taskEditor.taskDescription)
                             .frame(minHeight: 100)
                             .disableAutocorrection(true)
+                    }
+                    Section(header: Text("task_form_scheduling"), footer: Text("task_form_scheduling_footer")) {
+                        Toggle("schedule_task_toggle", isOn: $taskEditor.isScheduled)
+                        if taskEditor.isScheduled {
+                            DatePicker("schedule_task_date", selection: $taskEditor.scheduledDate, in: Date.rangeFromToday, displayedComponents: .date)
+                        }
                     }
                 }
                 .themedListRowBackground()

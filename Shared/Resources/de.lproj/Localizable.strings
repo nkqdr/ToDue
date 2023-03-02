@@ -11,9 +11,6 @@
 "Add to today" = "Zu heutigen Aufgaben hinzufügen";
 
 /* No comment provided by engineer. */
-"Additional Notes: (Optional)" = "Zusätzliche Notizen";
-
-/* No comment provided by engineer. */
 "Always have your next task on your home screen." = "Haben Sie Ihre nächste Aufgabe immer auf Ihrem Startbildschirm.";
 
 /* No comment provided by engineer. */
@@ -50,9 +47,6 @@
 "Create a task" = "Aufgabe erstellen";
 
 /* No comment provided by engineer. */
-"Today" = "Heute";
-
-/* No comment provided by engineer. */
 "Deadline" = "Mit Deadline";
 
 /* No comment provided by engineer. */
@@ -60,6 +54,9 @@
 
 /* No comment provided by engineer. */
 "Delete" = "Löschen";
+
+/* No comment provided by engineer. */
+"Delete this task" = "Diese Aufgabe löschen";
 
 /* No comment provided by engineer. */
 "Due date:" = "Deadline:";
@@ -145,10 +142,7 @@
 /* No comment provided by engineer. */
 "New task" = "Neue Aufgabe";
 
-/* Localizable.strings
-  ToDue
-
-  Created by Niklas Kuder on 21.08.22. */
+/* No comment provided by engineer. */
 "Next Due Date in" = "Nächste Aufgabe fällig in";
 
 /* No comment provided by engineer. */
@@ -217,6 +211,9 @@
 /* (No Comment) */
 "Task_almost_due" = "Aufgabe ist bald fällig!";
 
+/* Section header in task form */
+"task_form_optional_information" = "Zusätzliche Informationen (Optional)";
+
 /* No comment provided by engineer. */
 "Tasks: %lld" = "Aufgaben: %lld";
 
@@ -229,9 +226,24 @@
 /* No comment provided by engineer. */
 "Title" = "Titel";
 
+/* No comment provided by engineer. */
+"Today" = "Heute";
+
 /* Label that displays how many tasks have been completed in total. */
 "Total: %lld" = "Insgesamt: %lld";
 
 /* No comment provided by engineer. */
 "Use default color" = "Standardfarbe verwenden";
+
+/* Section header in task form */
+"task_form_scheduling" = "Zeitplanung";
+
+/* Section footer in task form */
+"task_form_scheduling_footer" = 'Alle Aufgaben, die für ein bestimmtes Datum geplant sind, werden an diesem Tag in der "Heute" Sektion aufgelistet.';
+
+/* Toggle description for scheduling */
+"schedule_task_toggle" = "Diese Aufgabe planen";
+
+/* DatePicker description for scheduling */
+"schedule_task_date" = "Geplantes Datum";
 
