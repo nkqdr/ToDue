@@ -116,7 +116,7 @@ struct IncompleteTaskView: View {
     var mainScrollView: some View {
         ObservableScrollView(scrollOffset: $scrollOffset, showsIndicators: false) { proxy in
             largePageTitle
-            DailyTaskView()
+            TodayTasksView()
             if let category = taskManager.selectedCategory {
                 HStack {
                     Text("Filter: \(category.categoryTitle ?? "")")

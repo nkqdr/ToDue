@@ -1,5 +1,5 @@
 //
-//  DailyTaskView.swift
+//  TodayTasksView.swift
 //  ToDue
 //
 //  Created by Niklas Kuder on 23.02.23.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct DailyTaskView: View {
-    @ObservedObject private var dailyManager = DailyTaskManager()
+struct TodayTasksView: View {
+    @ObservedObject private var dailyManager = TodayTasksViewModel()
     @EnvironmentObject var taskManager: TaskManager
     @State private var currentSubTask: SubTask?
     @State var showAddSubtaskSheet: Bool = false
@@ -17,7 +17,7 @@ struct DailyTaskView: View {
     private var taskDueDate: Date = Date()
     private var taskTitle: LocalizedStringKey = "Today"
     
-    private var showDailyTask: Bool {
+    private var showTodaysTasks: Bool {
         !(dailyManager.subTasks.isEmpty && dailyManager.tasks.isEmpty)
     }
     
@@ -50,7 +50,7 @@ struct DailyTaskView: View {
         }
         .padding(.horizontal)
         .padding(.bottom, 20)
-        .animation(.spring(), value: showDailyTask)
+        .animation(.spring(), value: showTodaysTasks)
     }
     
     var detailView: some View {
@@ -108,7 +108,7 @@ struct DailyTaskView: View {
     }
     
     var body: some View {
-        if showDailyTask {
+        if showTodaysTasks {
             NavigationLink(destination: {
                 detailView
             }, label: {
@@ -223,11 +223,5 @@ struct DailyTaskView: View {
         static let topTaskMinHeight: CGFloat = 140
         static let containerCornerRadius: CGFloat = 12
         static let progressBarPadding: CGFloat = 20
-    }
-}
-
-struct DailyTaskView_Previews: PreviewProvider {
-    static var previews: some View {
-        DailyTaskView()
     }
 }

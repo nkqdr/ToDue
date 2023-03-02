@@ -40,7 +40,7 @@ class SubtaskStorage: NSObject, ObservableObject {
         subTask.id = UUID()
         subTask.isCompleted = false
         subTask.createdAt = Date()
-        subTask.dailyTask = date
+        subTask.scheduledDate = date
         
         try? PersistenceController.shared.persistentContainer.viewContext.save()
     }
@@ -56,11 +56,11 @@ class SubtaskStorage: NSObject, ObservableObject {
         try? PersistenceController.shared.persistentContainer.viewContext.save()
     }
     
-    func update(_ subTask: SubTask, title: String?, isCompleted: Bool?, dailyTask: Date? = nil) {
+    func update(_ subTask: SubTask, title: String?, isCompleted: Bool?, scheduledDate: Date? = nil) {
         PersistenceController.shared.persistentContainer.viewContext.performAndWait {
             subTask.title = title ?? subTask.title
             subTask.isCompleted = isCompleted ?? subTask.isCompleted
-            subTask.dailyTask = dailyTask ?? subTask.dailyTask
+            subTask.scheduledDate = scheduledDate ?? subTask.scheduledDate
             try? PersistenceController.shared.persistentContainer.viewContext.save()
         }
     }

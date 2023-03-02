@@ -15,7 +15,7 @@ struct TaskContainer: View {
     var cornerRadius: Double = DrawingConstants.containerCornerRadius
     
     var body: some View {
-        let taskIsInDaily: Bool = task.dailyTask?.isSameDayAs(Date()) ?? false
+        let taskIsInDaily: Bool = task.scheduledDate?.isSameDayAs(Date()) ?? false
         return ZStack(alignment: .topTrailing) {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(containerBackgroundColor)

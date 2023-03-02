@@ -130,23 +130,23 @@ class TaskManager: ObservableObject {
     
     func addToDaily(_ subTask: SubTask) {
         let today: Date = Date()
-        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, dailyTask: today)
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, scheduledDate: today)
         ToastViewModel.shared.showSuccess(title: "Added", message: "Added to today's tasks!")
     }
     
     func removeFromDaily(_ subTask: SubTask) {
-        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, dailyTask: Date.distantPast)
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, scheduledDate: Date.distantPast)
         ToastViewModel.shared.showSuccess(title: "Removed", message: "Removed from today's tasks.")
     }
     
     func addToDaily(_ task: Task) {
         let today: Date = Date()
-        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, dailyTask: today)
+        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, scheduledDate: today)
         ToastViewModel.shared.showSuccess(title: "Added", message: "Added to today's tasks!")
     }
     
     func removeFromDaily(_ task: Task) {
-        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, dailyTask: Date.distantPast)
+        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, scheduledDate: Date.distantPast)
         ToastViewModel.shared.showSuccess(title: "Removed", message: "Removed from today's tasks.")
     }
 }

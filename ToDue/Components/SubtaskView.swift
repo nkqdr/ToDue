@@ -15,7 +15,7 @@ struct SubtaskView: View {
     var onEdit: ((SubTask) -> Void)?
     
     var body: some View {
-        let subtaskIsInDaily: Bool = subTask.dailyTask?.isSameDayAs(Date()) ?? false
+        let subtaskIsInDaily: Bool = subTask.scheduledDate?.isSameDayAs(Date()) ?? false
         
         SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted) {
             Haptics.shared.play(.medium)

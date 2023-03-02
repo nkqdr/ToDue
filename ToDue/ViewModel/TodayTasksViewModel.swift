@@ -1,5 +1,5 @@
 //
-//  DailyTaskManager.swift
+//  TodayTasksViewModel.swift
 //  ToDue
 //
 //  Created by Niklas Kuder on 23.02.23.
@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import WidgetKit
 
-class DailyTaskManager: ObservableObject {
+class TodayTasksViewModel: ObservableObject {
     
     @Published var tasks: [Task] = [] {
         didSet {
@@ -31,10 +31,10 @@ class DailyTaskManager: ObservableObject {
         let today: Date = Date()
         
         taskCancellable = taskPublisher.sink { tasks in
-            self.tasks = tasks.filter({ $0.dailyTask?.isSameDayAs(today) ?? false })
+            self.tasks = tasks.filter({ $0.scheduledDate?.isSameDayAs(today) ?? false })
         }
         subTaskCancellable = subTaskPublisher.sink { subTasks in
-            self.subTasks = subTasks.filter({ $0.dailyTask?.isSameDayAs(today) ?? false })
+            self.subTasks = subTasks.filter({ $0.scheduledDate?.isSameDayAs(today) ?? false })
         }
     }
     
