@@ -108,11 +108,10 @@ class TaskManager: ObservableObject {
         }
         if let task = editor.task {
             SubtaskStorage.shared.add(to: task, title: editor.subtaskTitle, scheduledDate: scheduledDate)
-            ToastViewModel.shared.showSuccess(title: "Created", message: "\(editor.subtaskTitle)")
-            
         } else {
             SubtaskStorage.shared.add(on: Date(), title: editor.subtaskTitle)
         }
+        ToastViewModel.shared.showSuccess(title: "Created", message: "\(editor.subtaskTitle)")
     }
     
     func saveTask(_ editor: TaskEditor) {

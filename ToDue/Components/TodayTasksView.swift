@@ -37,7 +37,6 @@ struct TodayTasksView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.headline)
                         .foregroundColor(Color("Text"))
-                    Spacer()
                 }
                 .multilineTextAlignment(.leading)
                 .padding()
@@ -48,6 +47,7 @@ struct TodayTasksView: View {
                 .padding(.trailing)
             }
         }
+        .frame(maxHeight: 70)
         .padding(.horizontal)
         .padding(.bottom, 20)
         .animation(.spring(), value: showTodaysTasks)

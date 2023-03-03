@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct TextArea: View {
-    private let placeholder: String
+    private let placeholder: LocalizedStringKey
     @Binding var text: String
     
-    init(_ placeholder: String, text: Binding<String>) {
+    init(_ placeholder: LocalizedStringKey, text: Binding<String>) {
         self.placeholder = placeholder
         self._text = text
     }
