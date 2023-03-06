@@ -141,11 +141,9 @@ struct TodayTasksView: View {
                         Label("Remove from today", systemImage: "minus.circle")
                     }
                 } else {
-                    Button {
+                    VersionAwareDestructiveButton {
                         currentSubTask = subTask
                         showingAlert.toggle()
-                    } label: {
-                        Label("Delete this task", systemImage: "trash")
                     }
                 }
             }

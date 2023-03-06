@@ -76,24 +76,9 @@ struct TaskContainer: View {
             } label: {
                 Label(taskIsInDaily ? "Remove from today" : "Add to today", systemImage: taskIsInDaily ? "minus.circle" : "link.badge.plus")
             }
-            VersionAwareDestructiveButton()
-        }
-    }
-    
-    @ViewBuilder
-    private func VersionAwareDestructiveButton() -> some View {
-        if #available(iOS 15.0, *) {
-            Button(role: .destructive, action: {
+            VersionAwareDestructiveButton {
                 showingAlert = true
-            }, label: {
-                Label("Delete", systemImage: "trash")
-            })
-        } else {
-            Button(action: {
-                showingAlert = true
-            }, label: {
-                Label("Delete", systemImage: "trash")
-            })
+            }
         }
     }
     

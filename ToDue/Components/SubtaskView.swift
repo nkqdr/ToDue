@@ -16,8 +16,9 @@ struct SubtaskView: View {
     
     var body: some View {
         let subtaskIsInDaily: Bool = subTask.scheduledDate?.isSameDayAs(Date()) ?? false
+        let scheduledDateString: String? = subTask.scheduledDate != nil ? Utils.dateFormatter.string(from: subTask.scheduledDate!) : nil
         
-        SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted) {
+        SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted, topSubTitle: scheduledDateString) {
             Haptics.shared.play(.medium)
             taskManager.toggleCompleted(subTask)
         }
