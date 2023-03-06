@@ -10,6 +10,7 @@ import WidgetKit
 import Combine
 
 class TaskManager: ObservableObject {
+    static let shared: TaskManager = TaskManager()
     @Published private(set) var container = PersistenceController.shared.persistentContainer
     
     @Published var incompleteTasks: [Task] = []
@@ -36,7 +37,7 @@ class TaskManager: ObservableObject {
     private var taskCancellable: AnyCancellable?
     private var subTaskCancellable: AnyCancellable?
     
-    init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher(),
+    private init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher(),
          subTaskPublisher: AnyPublisher<[SubTask], Never> = SubtaskStorage.shared.subTasks.eraseToAnyPublisher()) {
         taskCancellable = taskPublisher.sink { tasks in
             print("Updating tasks...")
@@ -87,7 +88,7 @@ class TaskManager: ObservableObject {
     }
     
     func toggleCompleted(_ subTask: SubTask) {
-        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: !subTask.isCompleted)
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: !subTask.isCompleted, scheduledDate: subTask.scheduledDate)
     }
     
     func deleteTask(_ task: Task) {
@@ -100,23 +101,53 @@ class TaskManager: ObservableObject {
     }
     
     func saveSubtask(_ editor: SubtaskEditor) {
+        let scheduledDate: Date? = editor.isScheduled ? editor.scheduledDate : nil
         if let st = editor.subtask {
-            SubtaskStorage.shared.update(st, title: editor.subtaskTitle, isCompleted: st.isCompleted)
-        } else {
-            SubtaskStorage.shared.add(to: editor.task, title: editor.subtaskTitle)
+            SubtaskStorage.shared.update(st, title: editor.subtaskTitle, isCompleted: st.isCompleted, scheduledDate: scheduledDate)
+            return
         }
+        if let task = editor.task {
+            SubtaskStorage.shared.add(to: task, title: editor.subtaskTitle, scheduledDate: scheduledDate)
+        } else {
+            SubtaskStorage.shared.add(on: Date(), title: editor.subtaskTitle)
+        }
+        ToastViewModel.shared.showSuccess(title: "Created", message: "\(editor.subtaskTitle)")
     }
     
     func saveTask(_ editor: TaskEditor) {
         let newDate = editor.hasDeadline ? editor.taskDueDate.removeTimeStamp! : Date.distantFuture
         let newDescription = editor.taskDescription
         let newTitle = editor.taskTitle
+        let scheduledDate: Date? = editor.isScheduled ? editor.scheduledDate : nil
         if let newTask = editor.task {
-            TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted, category: editor.category)
+            TaskStorage.shared.update(newTask, title: newTitle, description: newDescription, date: newDate, isCompleted: newTask.isCompleted, category: editor.category, scheduledDate: scheduledDate)
         } else {
-            let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate, category: editor.category)
+            let task = TaskStorage.shared.add(title: newTitle, description: newDescription, date: newDate, category: editor.category, scheduledDate: scheduledDate)
             Utils.scheduleNewNotification(for: task)
+            ToastViewModel.shared.showSuccess(title: "Created", message: "\(editor.taskTitle)")
         }
         WidgetCenter.shared.reloadAllTimelines()
+    }
+    
+    func scheduleForToday(_ subTask: SubTask) {
+        let today: Date = Date()
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, scheduledDate: today)
+        ToastViewModel.shared.showSuccess(title: "Added", message: "Added to today's tasks!")
+    }
+    
+    func unscheduleForToday(_ subTask: SubTask) {
+        SubtaskStorage.shared.update(subTask, title: subTask.title, isCompleted: subTask.isCompleted, scheduledDate: nil)
+        ToastViewModel.shared.showSuccess(title: "Removed", message: "Removed from today's tasks.")
+    }
+    
+    func scheduleForToday(_ task: Task) {
+        let today: Date = Date()
+        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, scheduledDate: today)
+        ToastViewModel.shared.showSuccess(title: "Added", message: "Added to today's tasks!")
+    }
+    
+    func unscheduleForToday(_ task: Task) {
+        TaskStorage.shared.update(task, title: task.taskTitle, description: task.taskDescription, date: task.date, isCompleted: task.isCompleted, category: task.category, scheduledDate: nil)
+        ToastViewModel.shared.showSuccess(title: "Removed", message: "Removed from today's tasks.")
     }
 }

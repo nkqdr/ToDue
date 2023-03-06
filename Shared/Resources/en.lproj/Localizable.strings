@@ -1,17 +1,42 @@
-/* 
-  Localizable.strings
-  ToDue
-
-  Created by Niklas Kuder on 21.08.22.
-  
-*/
-
-"Next Due Date in" = "Next deadline in";
-"Overview" = "Overview";
+/* (No Comment) */
 "Completed" = "Completed";
-"Sub-Tasks" = "Subtasks";
-"Settings" = "Settings";
+
+/* (No Comment) */
 "Create a task" = "Create a task";
+
+/* (No Comment) */
 "FAQ" = "FAQ";
-"Task_almost_due" = "Task is almost due!";
+
+/* (No Comment) */
+"Next Due Date in" = "Next deadline in";
+
+/* (No Comment) */
+"Overview" = "Overview";
+
+/* (No Comment) */
 "reminder_settings_footer" = "To allow or prohibit notifications entirely, please go to your settings app.";
+
+/* (No Comment) */
+"Settings" = "Settings";
+
+/* (No Comment) */
+"Sub-Tasks" = "Subtasks";
+
+/* (No Comment) */
+"Task_almost_due" = "Task is almost due!";
+
+/* Section header in task form */
+"task_form_optional_information" = "Additional Information (Optional)";
+
+/* Section header in task form */
+"task_form_scheduling" = "Scheduling";
+
+/* Section footer in task form */
+"task_form_scheduling_footer" = "All tasks scheduled for a specific date are listed in the 'Today' section on that day.";
+
+/* Toggle description for scheduling */
+"schedule_task_toggle" = "Schedule this task";
+
+/* DatePicker description for scheduling */
+"schedule_task_date" = "Schedule Date";
+

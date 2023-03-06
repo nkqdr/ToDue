@@ -18,13 +18,16 @@ struct IncompleteTaskView: View {
         let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
         NavigationView {
             Group {
-                mainScrollView
+                if taskManager.incompleteTasks.isEmpty {
+                    emptyListVStack
+                } else {
+                    mainScrollView
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
-                        Text("Filter by category")
                         Picker("Filter", selection: $taskManager.selectedCategory) {
                             Text("None").tag(TaskCategory?.none)
                             ForEach($categoryManager.categories) { $category in
@@ -32,7 +35,7 @@ struct IncompleteTaskView: View {
                             }
                         }
                     } label: {
-                        Image(systemName: "tray.full")
+                        Image(systemName: taskManager.selectedCategory == nil ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                     }
                 }
                 ToolbarItem(placement: .principal) {
@@ -72,28 +75,39 @@ struct IncompleteTaskView: View {
         .currentDeviceNavigationViewStyle()
     }
     
-    @ViewBuilder
-    var maybeAddTaskButton: some View {
-        if taskManager.incompleteTasks.isEmpty {
-            GeometryReader { proxy in
-                VStack(alignment: .center) {
-                    Spacer(minLength: UIScreen.main.bounds.size.height / 3)
-                    Button("Create a task") {
-                        showAddingPage.toggle()
-                    }
-                    .versionAwareBorderedButtonStyle()
-                    if let _ = taskManager.selectedCategory {
-                        Button("Remove filter") {
-                            withAnimation(.easeInOut) {
-                                taskManager.selectedCategory = nil
-                            }
-                        }
-                        .versionAwareBorderedButtonStyle()
-                        .padding()
-                    }
+    var emptyListVStack: some View {
+        VStack {
+            largePageTitle
+            TodayTasksView()
+            if let category = taskManager.selectedCategory {
+                HStack {
+                    Text("Filter: \(category.categoryTitle ?? "")")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity)
+                .padding()
             }
+            Spacer()
+            emptyTaskListButtons
+            Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    var emptyTaskListButtons: some View {
+        Button("Create a task") {
+            showAddingPage.toggle()
+        }
+        .versionAwareBorderedButtonStyle()
+        if let _ = taskManager.selectedCategory {
+            Button("Remove filter") {
+                withAnimation(.easeInOut) {
+                    taskManager.selectedCategory = nil
+                }
+            }
+            .versionAwareBorderedButtonStyle()
+            .padding()
         }
     }
     
@@ -116,6 +130,7 @@ struct IncompleteTaskView: View {
     var mainScrollView: some View {
         ObservableScrollView(scrollOffset: $scrollOffset, showsIndicators: false) { proxy in
             largePageTitle
+            TodayTasksView()
             if let category = taskManager.selectedCategory {
                 HStack {
                     Text("Filter: \(category.categoryTitle ?? "")")
@@ -125,7 +140,6 @@ struct IncompleteTaskView: View {
                 }
                 .padding()
             }
-            maybeAddTaskButton
             ForEach (taskManager.incompleteTasks) { task in
                 let isFirst: Bool = taskManager.incompleteTasks.first == task
                 NavigationLink(destination: {

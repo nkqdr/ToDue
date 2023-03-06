@@ -13,7 +13,23 @@ extension Date {
         return nil
        }
        return date
-   }
+    }
+    
+    private func isSameXAs(_ otherDate: Date, comps: Set<Calendar.Component>) -> Bool {
+        let myComps: DateComponents = Calendar.current.dateComponents(comps, from: self)
+        let otherComps: DateComponents = Calendar.current.dateComponents(comps, from: otherDate)
+        return Calendar.current.date(from: myComps) == Calendar.current.date(from: otherComps)
+    }
+    
+    public func isSameDayAs(_ otherDate: Date) -> Bool {
+        return isSameXAs(otherDate, comps: [.year, .month, .day])
+    }
+    
+    public static var rangeFromToday: PartialRangeFrom<Date> {
+        let calendar = Calendar.current
+        let startComponents = calendar.dateComponents([.year, .month, .day], from: Date())
+        return calendar.date(from: startComponents)!...
+    }
 }
 
 extension Date: RawRepresentable {

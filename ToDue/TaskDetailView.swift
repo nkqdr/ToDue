@@ -15,7 +15,13 @@ struct TaskDetailView: View {
     @State private var currentSubTask: SubTask?
     var task: Task
     
-    var body: some View {
+    var floatingAddSubtaskButton: some View {
+        FloatingActionButton(content: "Add subtask", systemImage: "plus") {
+            showAddSubtaskSheet.toggle()
+        }
+    }
+    
+    var mainListView: some View {
         List {
             Group {
                 VStack(alignment: .leading) {
@@ -38,7 +44,8 @@ struct TaskDetailView: View {
                 .listRowBackground(Color("Background"))
                 .listRowInsets(EdgeInsets())
                 subTaskList
-                addSubTaskButton
+                Spacer()
+                    .listRowBackground(Color.clear)
             }
             .themedListRowBackground()
         }
@@ -76,25 +83,19 @@ struct TaskDetailView: View {
         }
     }
     
-//    private func editSubTaskButton(_ subTask: SubTask) -> some View {
-//        Button {
-//            currentSubTask = subTask
-//            showAddSubtaskSheet.toggle()
-//        } label: {
-//            Label("Edit", systemImage: "pencil")
-//        }
-//    }
-//
-//    private func deleteSubTaskButton(_ subTask: SubTask) -> some View {
-//        Button(action: {
-//            currentSubTask = subTask
-//            showingAlert = true
-//        }, label: {
-//            Label("Delete", systemImage: "trash")
-//        })
-//        .tint(.red)
-//    }
-//
+    var body: some View {
+        ZStack {
+            mainListView
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    floatingAddSubtaskButton
+                }
+            }
+        }
+    }
+    
     var addSubTaskButton: some View {
         HStack {
             Spacer()
