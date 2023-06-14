@@ -127,40 +127,50 @@ struct TodayTasksView: View {
             .foregroundColor(.secondary)
     }
     
+    @ViewBuilder
     func subTaskList(_ subTasks: [SubTask]) -> some View {
         ForEach(subTasks) { subTask in
             SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted, topSubTitle: subTask.task?.taskTitle) {
                 Haptics.shared.play(.medium)
-                taskManager.toggleCompleted(subTask)
-            }
-            .contextMenu {
-                if subTask.task != nil {
-                    Button {
-                        taskManager.unscheduleForToday(subTask)
-                    } label: {
-                        Label("Remove from today", systemImage: "minus.circle")
-                    }
-                } else {
-                    VersionAwareDestructiveButton {
-                        currentSubTask = subTask
-                        showingAlert.toggle()
-                    }
+                withAnimation {
+                    taskManager.toggleCompleted(subTask)
                 }
             }
-            .versionAwareSubtaskCompleteSwipeAction(subTask) {
-                taskManager.toggleCompleted(subTask)
-            }
-            .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false, deleteCompletely: subTask.task == nil) {
-                if subTask.task == nil {
-                    currentSubTask = subTask
-                    showingAlert.toggle()
-                } else {
-                    taskManager.unscheduleForToday(subTask)
-                }
-            }
+//            .contextMenu {
+//                if subTask.task != nil {
+//                    Button {
+//                        withAnimation {
+//                            taskManager.unscheduleForToday(subTask)
+//                        }
+//                    } label: {
+//                        Label("Remove from today", systemImage: "minus.circle")
+//                    }
+//                } else {
+//                    VersionAwareDestructiveButton {
+//                        currentSubTask = subTask
+//                        showingAlert.toggle()
+//                    }
+//                }
+//            }
+//            .versionAwareSubtaskCompleteSwipeAction(subTask) {
+//                withAnimation {
+//                    taskManager.toggleCompleted(subTask)
+//                }
+//            }
+//            .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false, deleteCompletely: subTask.task == nil) {
+//                if subTask.task == nil {
+//                    currentSubTask = subTask
+//                    showingAlert.toggle()
+//                } else {
+//                    withAnimation {
+//                        taskManager.unscheduleForToday(subTask)
+//                    }
+//                }
+//            }
         }
     }
     
+    @ViewBuilder
     func taskList(_ tasks: [Task]) -> some View {
         ForEach(tasks) { task in
             NavigationLink(destination: {
@@ -168,20 +178,28 @@ struct TodayTasksView: View {
             }, label: {
                 SubtaskContainer(title: task.taskTitle ?? "", isCompleted: task.isCompleted, progress: taskManager.progress(for: task)) {
                     Haptics.shared.play(.medium)
-                    taskManager.toggleCompleted(task)
+                    withAnimation {
+                        taskManager.toggleCompleted(task)
+                    }
                 }
                 .contextMenu {
                     Button {
-                        taskManager.unscheduleForToday(task)
+                        withAnimation {
+                            taskManager.unscheduleForToday(task)
+                        }
                     } label: {
                         Label("Remove from today", systemImage: "minus.circle")
                     }
                 }
                 .versionAwareTaskCompleteSwipeAction(task) {
-                    taskManager.toggleCompleted(task)
+                    withAnimation {
+                        taskManager.toggleCompleted(task)
+                    }
                 }
                 .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false) {
-                    taskManager.unscheduleForToday(task)
+                    withAnimation {
+                        taskManager.unscheduleForToday(task)
+                    }
                 }
             })
         }
@@ -191,26 +209,19 @@ struct TodayTasksView: View {
     var subTaskList: some View {
         let subTaskArray = dailyManager.subTasks
         let taskArray = dailyManager.tasks
-        if !subTaskArray.isEmpty || !taskArray.isEmpty {
-            let incompleteSubTasks = subTaskArray.filter { !$0.isCompleted }
-            let incompleteTasks = taskArray.filter({ !$0.isCompleted })
-            if !incompleteSubTasks.isEmpty || !incompleteTasks.isEmpty {
-                Section(header: Text("Open")) {
-                    subTaskList(incompleteSubTasks)
-                    taskList(incompleteTasks)
-                }
-            }
-            let completedSubTasks = subTaskArray.filter { $0.isCompleted }
-            let completedTasks = taskArray.filter({ $0.isCompleted })
-            if !completedSubTasks.isEmpty || !completedTasks.isEmpty {
-                Section(header: Text("Completed")) {
-                    subTaskList(completedSubTasks)
-                    taskList(completedTasks)
-                }
-            }
-        } else {
-            // Empty section here for some extra padding
-            Section {}
+        
+        let incompleteSubTasks = subTaskArray.filter { !$0.isCompleted }
+        let incompleteTasks = taskArray.filter({ !$0.isCompleted })
+        let completedSubTasks = subTaskArray.filter { $0.isCompleted }
+        let completedTasks = taskArray.filter({ $0.isCompleted })
+        
+        Section(header: Text(!incompleteSubTasks.isEmpty || !incompleteTasks.isEmpty ? "Open" : "")) {
+            subTaskList(incompleteSubTasks)
+            taskList(incompleteTasks)
+        }
+        Section(header: Text(!completedSubTasks.isEmpty || !completedTasks.isEmpty ? "Completed" : "")) {
+            subTaskList(completedSubTasks)
+            taskList(completedTasks)
         }
     }
     

@@ -10,7 +10,7 @@ import SwiftUI
 
 extension SubTask {
     public var wrappedTitle: String {
-        title ?? "SubTask"
+        title ?? ""
     }
     
     public var wrappedCreatedAt: Date {

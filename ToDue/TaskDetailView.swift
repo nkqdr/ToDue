@@ -44,8 +44,7 @@ struct TaskDetailView: View {
                 .listRowBackground(Color("Background"))
                 .listRowInsets(EdgeInsets())
                 subTaskList
-                Spacer()
-                    .listRowBackground(Color.clear)
+                
             }
             .themedListRowBackground()
         }
@@ -96,17 +95,6 @@ struct TaskDetailView: View {
         }
     }
     
-    var addSubTaskButton: some View {
-        HStack {
-            Spacer()
-            Button("Add subtask") {
-                showAddSubtaskSheet.toggle()
-            }
-            .buttonStyle(.borderless)
-            Spacer()
-        }
-    }
-    
     @ViewBuilder
     var dueDate: some View {
         if let date = task.date, date < Date.distantFuture {
@@ -115,7 +103,6 @@ struct TaskDetailView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.headline)
                 .foregroundColor(.secondary)
-                
         }
     }
     
@@ -149,26 +136,17 @@ struct TaskDetailView: View {
     @ViewBuilder
     var subTaskList: some View {
         let subTaskArray = task.subTaskArray
-        if !subTaskArray.isEmpty {
-            let incomplete = subTaskArray.filter { !$0.isCompleted }
-            if !incomplete.isEmpty {
-                Section(header: Text("Sub-Tasks")) {
-                    ForEach(incomplete) { subTask in
-                        SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
-                    }
-                }
+        let incomplete = subTaskArray.filter { !$0.isCompleted }
+        let completed = subTaskArray.filter { $0.isCompleted }
+        Section(header: Text(incomplete.isEmpty ? "" : "Sub-Tasks")) {
+            ForEach(incomplete) { subTask in
+                SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
             }
-            let completed = subTaskArray.filter { $0.isCompleted }
-            if !completed.isEmpty {
-                Section(header: Text("Completed")) {
-                    ForEach(completed) { subTask in
-                        SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
-                    }
-                }
+        }
+        Section(header: Text(completed.isEmpty ? "" : "Completed")) {
+            ForEach(completed) { subTask in
+                SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
             }
-        } else {
-            // Empty section here for some extra padding
-            Section {}
         }
     }
     
