@@ -13,7 +13,13 @@ struct TaskDetailView: View {
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
+    @StateObject private var singleTaskManager: SingleTaskManager
     var task: Task
+    
+    init(task: Task) {
+        self.task = task
+        self._singleTaskManager = StateObject(wrappedValue: SingleTaskManager(task: task))
+    }
     
     var floatingAddSubtaskButton: some View {
         FloatingActionButton(content: "Add subtask", systemImage: "plus") {
@@ -55,7 +61,7 @@ struct TaskDetailView: View {
             $showingAlert,
             title: "Are you sure you want to delete this?",
             message: currentSubTask?.wrappedTitle ?? "",
-            onDelete: { taskManager.deleteTask(currentSubTask!) },
+            onDelete: { singleTaskManager.delete(currentSubTask!) },
             onCancel: {
             showingAlert = false
             currentSubTask = nil
@@ -80,6 +86,7 @@ struct TaskDetailView: View {
         .sheet(isPresented: $showEditTaskSheet) {
             AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
         }
+        .environmentObject(singleTaskManager)
     }
     
     var body: some View {
@@ -135,7 +142,7 @@ struct TaskDetailView: View {
     
     @ViewBuilder
     var subTaskList: some View {
-        let subTaskArray = task.subTaskArray
+        let subTaskArray = singleTaskManager.subTasks
         let incomplete = subTaskArray.filter { !$0.isCompleted }
         let completed = subTaskArray.filter { $0.isCompleted }
         Section(header: Text(incomplete.isEmpty ? "" : "Sub-Tasks")) {

@@ -21,6 +21,8 @@ class TodayTasksViewModel: ObservableObject {
         }
     }
     @Published var progress: Double = 0
+    var taskTitle: String = "Today"
+    var taskDueDate: Date = Date()
     
     private var taskCancellable: AnyCancellable?
     private var subTaskCancellable: AnyCancellable?

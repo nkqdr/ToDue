@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SubtaskView: View {
-    @EnvironmentObject private var taskManager: TaskManager
+    @EnvironmentObject private var taskManager: SingleTaskManager
     @State private var showingAlert: Bool = false
     var subTask: SubTask
     var disableDelete: Bool = false
@@ -62,7 +62,7 @@ struct SubtaskView: View {
             $showingAlert,
             title: "Are you sure you want to delete this?",
             message: subTask.wrappedTitle,
-            onDelete: { taskManager.deleteTask(subTask) },
+            onDelete: { taskManager.delete(subTask) },
             onCancel: { showingAlert = false })
         .listRowInsets(DrawingConstants.subTaskListRowInsets)
     }

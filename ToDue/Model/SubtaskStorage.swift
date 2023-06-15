@@ -15,6 +15,26 @@ class SubtaskStorage: NSObject, ObservableObject {
     
     static let shared: SubtaskStorage = SubtaskStorage()
     
+    public init(task: Task) {
+        let request = SubTask.fetchRequest()
+        request.predicate = NSPredicate(format: "task == %@", task)
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)]
+        subTaskFetchController = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        super.init()
+        subTaskFetchController.delegate = self
+        do {
+            try subTaskFetchController.performFetch()
+            subTasks.value = subTaskFetchController.fetchedObjects ?? []
+        } catch {
+            NSLog("Error: could not fetch objects")
+        }
+    }
+    
     private override init() {
         let request = SubTask.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)]

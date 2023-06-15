@@ -10,24 +10,23 @@ import SwiftUI
 struct TodayTasksView: View {
     @ObservedObject private var dailyManager = TodayTasksViewModel()
     @EnvironmentObject var taskManager: TaskManager
-    @State private var currentSubTask: SubTask?
-    @State var showAddSubtaskSheet: Bool = false
-    @State private var showingAlert: Bool = false
-    
-    private var taskDueDate: Date = Date()
-    private var taskTitle: LocalizedStringKey = "Today"
     
     private var showTodaysTasks: Bool {
         !(dailyManager.subTasks.isEmpty && dailyManager.tasks.isEmpty)
     }
     
+    var taskTitle: LocalizedStringKey {
+        LocalizedStringKey(dailyManager.taskTitle)
+    }
+    
+    @ViewBuilder
     var listContainer: some View {
         ZStack(alignment: .topTrailing) {
             RoundedRectangle(cornerRadius: DrawingConstants.containerCornerRadius)
                 .fill(dailyManager.progress < 1 ? DrawingConstants.defaultTaskBackgroundColor : .green.opacity(0.5))
             HStack {
                 VStack(alignment: .leading) {
-                    Text(Utils.dateFormatter.string(from: taskDueDate))
+                    Text(Utils.dateFormatter.string(from: dailyManager.taskDueDate))
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.subheadline)
@@ -53,7 +52,51 @@ struct TodayTasksView: View {
         .animation(.spring(), value: showTodaysTasks)
     }
     
-    var detailView: some View {
+    var body: some View {
+        if showTodaysTasks {
+            NavigationLink(destination: {
+                TodaysTasksDetailView(dailyManager: dailyManager)
+            }, label: {
+                listContainer
+            })
+        } else {
+            EmptyView()
+        }
+    }
+    
+    private struct DrawingConstants {
+        static let topTaskBackgroundColor: Color = Color("Accent1")
+        static let defaultTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
+        static let completeTaskBackgroundColor: Color = Color("CompleteTask")
+        static let topTaskMinHeight: CGFloat = 140
+        static let containerCornerRadius: CGFloat = 12
+    }
+}
+
+fileprivate struct TodaysTasksDetailView: View {
+    @EnvironmentObject var taskManager: TaskManager
+    @State private var currentSubTask: SubTask?
+    @State var showAddSubtaskSheet: Bool = false
+    @State private var showingAlert: Bool = false
+    var dailyManager: TodayTasksViewModel
+    
+    init(dailyManager: TodayTasksViewModel) {
+        self.dailyManager = dailyManager
+    }
+    
+    var taskTitle: LocalizedStringKey {
+        LocalizedStringKey(dailyManager.taskTitle)
+    }
+    
+    var dueDate: some View {
+        Text("Due: \(Utils.dateFormatter.string(from: dailyManager.taskDueDate))", comment: "Label in detail view that displays when this task is due.")
+            .fontWeight(.semibold)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .font(.headline)
+            .foregroundColor(.secondary)
+    }
+    
+    var body: some View {
         ZStack {
             List {
                 Group {
@@ -80,7 +123,7 @@ struct TodayTasksView: View {
                 title: "Are you sure you want to delete this?",
                 message: currentSubTask?.wrappedTitle ?? "",
                 onDelete: {
-                    taskManager.deleteTask(currentSubTask!)
+                    taskManager.delete(currentSubTask!)
                     currentSubTask = nil
                 },
                 onCancel: {
@@ -107,26 +150,6 @@ struct TodayTasksView: View {
         }
     }
     
-    var body: some View {
-        if showTodaysTasks {
-            NavigationLink(destination: {
-                detailView
-            }, label: {
-                listContainer
-            })
-        } else {
-            EmptyView()
-        }
-    }
-    
-    var dueDate: some View {
-        Text("Due: \(Utils.dateFormatter.string(from: taskDueDate))", comment: "Label in detail view that displays when this task is due.")
-            .fontWeight(.semibold)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .font(.headline)
-            .foregroundColor(.secondary)
-    }
-    
     @ViewBuilder
     func subTaskList(_ subTasks: [SubTask]) -> some View {
         ForEach(subTasks) { subTask in
@@ -136,37 +159,37 @@ struct TodayTasksView: View {
                     taskManager.toggleCompleted(subTask)
                 }
             }
-//            .contextMenu {
-//                if subTask.task != nil {
-//                    Button {
-//                        withAnimation {
-//                            taskManager.unscheduleForToday(subTask)
-//                        }
-//                    } label: {
-//                        Label("Remove from today", systemImage: "minus.circle")
-//                    }
-//                } else {
-//                    VersionAwareDestructiveButton {
-//                        currentSubTask = subTask
-//                        showingAlert.toggle()
-//                    }
-//                }
-//            }
-//            .versionAwareSubtaskCompleteSwipeAction(subTask) {
-//                withAnimation {
-//                    taskManager.toggleCompleted(subTask)
-//                }
-//            }
-//            .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false, deleteCompletely: subTask.task == nil) {
-//                if subTask.task == nil {
-//                    currentSubTask = subTask
-//                    showingAlert.toggle()
-//                } else {
-//                    withAnimation {
-//                        taskManager.unscheduleForToday(subTask)
-//                    }
-//                }
-//            }
+            .contextMenu {
+                if subTask.task != nil {
+                    Button {
+                        withAnimation {
+                            taskManager.unscheduleForToday(subTask)
+                        }
+                    } label: {
+                        Label("Remove from today", systemImage: "minus.circle")
+                    }
+                } else {
+                    VersionAwareDestructiveButton {
+                        currentSubTask = subTask
+                        showingAlert.toggle()
+                    }
+                }
+            }
+            .versionAwareSubtaskCompleteSwipeAction(subTask) {
+                withAnimation {
+                    taskManager.toggleCompleted(subTask)
+                }
+            }
+            .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false, deleteCompletely: subTask.task == nil) {
+                if subTask.task == nil {
+                    currentSubTask = subTask
+                    showingAlert.toggle()
+                } else {
+                    withAnimation {
+                        taskManager.unscheduleForToday(subTask)
+                    }
+                }
+            }
         }
     }
     
@@ -226,11 +249,6 @@ struct TodayTasksView: View {
     }
     
     private struct DrawingConstants {
-        static let topTaskBackgroundColor: Color = Color("Accent1")
-        static let defaultTaskBackgroundColor: Color = Color("Accent2").opacity(0.3)
-        static let completeTaskBackgroundColor: Color = Color("CompleteTask")
-        static let topTaskMinHeight: CGFloat = 140
-        static let containerCornerRadius: CGFloat = 12
         static let progressBarPadding: CGFloat = 20
     }
 }
