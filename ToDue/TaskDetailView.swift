@@ -148,6 +148,8 @@ struct TaskDetailView: View {
                 SubtaskView(subTask: subTask, onEdit: launchEditSubtask)
             }
         }
+        Spacer(minLength: 20)
+            .listRowBackground(Color("Background"))
     }
     
     private struct DrawingConstants {
