@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import WidgetKit
 
-class TodayTasksViewModel: ObservableObject {
+class TodayTasksViewModel: ObservableObject, TaskModifier, SubtaskModifier {
     @Published var tasks: [Task] = [] {
         didSet {
             setProgress()
@@ -24,12 +24,17 @@ class TodayTasksViewModel: ObservableObject {
     var taskTitle: String = "Today"
     var taskDueDate: Date = Date()
     
+    private(set) var taskStorage: TaskStorage = TaskStorage.shared
+    private(set) var subTaskStorage: SubtaskStorage = SubtaskStorage.shared
+    
     private var taskCancellable: AnyCancellable?
     private var subTaskCancellable: AnyCancellable?
     
-    init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher(),
-         subTaskPublisher: AnyPublisher<[SubTask], Never> = SubtaskStorage.shared.subTasks.eraseToAnyPublisher()) {
+    init() {
         let today: Date = Date()
+        
+        let taskPublisher = taskStorage.tasks.eraseToAnyPublisher()
+        let subTaskPublisher = subTaskStorage.subTasks.eraseToAnyPublisher()
         
         taskCancellable = taskPublisher.sink { tasks in
             self.tasks = tasks.filter({ $0.scheduledDate?.isSameDayAs(today) ?? false })

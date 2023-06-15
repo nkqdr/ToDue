@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct TodayTasksView: View {
-    @ObservedObject private var dailyManager = TodayTasksViewModel()
-    @EnvironmentObject var taskManager: TaskManager
+    @StateObject private var dailyManager = TodayTasksViewModel()
     
     private var showTodaysTasks: Bool {
         !(dailyManager.subTasks.isEmpty && dailyManager.tasks.isEmpty)
@@ -72,11 +71,10 @@ struct TodayTasksView: View {
 }
 
 fileprivate struct TodaysTasksDetailView: View {
-    @EnvironmentObject var taskManager: TaskManager
     @State private var currentSubTask: SubTask?
-    @State var showAddSubtaskSheet: Bool = false
+    @State private var showAddSubtaskSheet: Bool = false
     @State private var showingAlert: Bool = false
-    var dailyManager: TodayTasksViewModel
+    @ObservedObject var dailyManager: TodayTasksViewModel
     
     init(dailyManager: TodayTasksViewModel) {
         self.dailyManager = dailyManager
@@ -121,7 +119,7 @@ fileprivate struct TodaysTasksDetailView: View {
                 title: "Are you sure you want to delete this?",
                 message: currentSubTask?.wrappedTitle ?? "",
                 onDelete: {
-                    taskManager.delete(currentSubTask!)
+                    dailyManager.delete(currentSubTask!)
                     currentSubTask = nil
                 },
                 onCancel: {
@@ -154,14 +152,14 @@ fileprivate struct TodaysTasksDetailView: View {
             SubtaskContainer(title: subTask.title ?? "", isCompleted: subTask.isCompleted, topSubTitle: subTask.task?.taskTitle) {
                 Haptics.shared.play(.medium)
                 withAnimation {
-                    taskManager.toggleCompleted(subTask)
+                    dailyManager.toggleCompleted(subTask)
                 }
             }
             .contextMenu {
                 if subTask.task != nil {
                     Button {
                         withAnimation {
-                            taskManager.unscheduleForToday(subTask)
+                            dailyManager.unscheduleForToday(subTask)
                         }
                     } label: {
                         Label("Remove from today", systemImage: "minus.circle")
@@ -175,7 +173,7 @@ fileprivate struct TodaysTasksDetailView: View {
             }
             .versionAwareSubtaskCompleteSwipeAction(subTask) {
                 withAnimation {
-                    taskManager.toggleCompleted(subTask)
+                    dailyManager.toggleCompleted(subTask)
                 }
             }
             .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false, deleteCompletely: subTask.task == nil) {
@@ -184,7 +182,7 @@ fileprivate struct TodaysTasksDetailView: View {
                     showingAlert.toggle()
                 } else {
                     withAnimation {
-                        taskManager.unscheduleForToday(subTask)
+                        dailyManager.unscheduleForToday(subTask)
                     }
                 }
             }
@@ -200,13 +198,13 @@ fileprivate struct TodaysTasksDetailView: View {
                 SubtaskContainer(title: task.taskTitle ?? "", isCompleted: task.isCompleted, progress: SingleTaskManager(task: task).progress) {
                     Haptics.shared.play(.medium)
                     withAnimation {
-                        taskManager.toggleCompleted(task)
+                        dailyManager.toggleCompleted(task)
                     }
                 }
                 .contextMenu {
                     Button {
                         withAnimation {
-                            taskManager.unscheduleForToday(task)
+                            dailyManager.unscheduleForToday(task)
                         }
                     } label: {
                         Label("Remove from today", systemImage: "minus.circle")
@@ -214,12 +212,12 @@ fileprivate struct TodaysTasksDetailView: View {
                 }
                 .versionAwareTaskCompleteSwipeAction(task) {
                     withAnimation {
-                        taskManager.toggleCompleted(task)
+                        dailyManager.toggleCompleted(task)
                     }
                 }
                 .versionAwareAddToDailySwipeAction(isInDaily: true, leading: false) {
                     withAnimation {
-                        taskManager.unscheduleForToday(task)
+                        dailyManager.unscheduleForToday(task)
                     }
                 }
             })
