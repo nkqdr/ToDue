@@ -11,7 +11,6 @@ struct ProgressCircle: View {
     var isCompleted: Bool
     var progress: Double
     var backgroundColor: Color = .clear
-    var onTap: () -> Void
     
     var body: some View {
         if isCompleted {
@@ -19,12 +18,8 @@ struct ProgressCircle: View {
                 .font(.title)
                 .frame(width: DrawingConstants.progressCircleSize, height: DrawingConstants.progressCircleSize)
                 .foregroundColor(Color("Text"))
-                .onTapGesture(perform: onTap)
         } else {
             ZStack {
-                // This circle is needed so that the TapGesture is also recognized within the stroked circle.
-                Circle()
-                    .foregroundColor(backgroundColor)
                 Circle()
                     .strokeBorder(lineWidth: DrawingConstants.progressCircleStrokeWidth)
                 ProgressPie(progress: progress)
@@ -32,7 +27,6 @@ struct ProgressCircle: View {
             .animation(.easeInOut, value: progress)
             .foregroundColor(Color("Text"))
             .frame(width: DrawingConstants.progressCircleSize, height: DrawingConstants.progressCircleSize)
-            .onTapGesture(perform: onTap)
         }
     }
     
@@ -44,8 +38,6 @@ struct ProgressCircle: View {
 
 struct ProgressCircle_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressCircle(isCompleted: true, progress: 0.5) {
-            print("Tapped!")
-        }
+        ProgressCircle(isCompleted: true, progress: 0.5)
     }
 }

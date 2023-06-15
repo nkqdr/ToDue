@@ -40,10 +40,8 @@ struct TodayTasksView: View {
                 .multilineTextAlignment(.leading)
                 .padding()
                 Spacer()
-                ProgressCircle(isCompleted: dailyManager.progress == 1, progress: dailyManager.progress) {
-                    
-                }
-                .padding(.trailing)
+                ProgressCircle(isCompleted: dailyManager.progress == 1, progress: dailyManager.progress)
+                    .padding(.trailing)
             }
         }
         .frame(maxHeight: 70)

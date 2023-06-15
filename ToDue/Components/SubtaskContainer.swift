@@ -29,7 +29,10 @@ struct SubtaskContainer: View {
             }
             .padding(.vertical, 15)
             Spacer()
-            ProgressCircle(isCompleted: isCompleted, progress: progress, onTap: onToggleComplete)
+            ProgressCircle(isCompleted: isCompleted, progress: progress)
+                .onTapGesture {
+                    onToggleComplete()
+                }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .listRowInsets(DrawingConstants.subTaskListRowInsets)

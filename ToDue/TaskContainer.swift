@@ -57,7 +57,7 @@ struct TaskContainer: View {
             $showingAlert,
             title: "Are you sure you want to delete this?",
             message: task.taskTitle ?? "",
-            onDelete: { taskManager.deleteTask(task) },
+            onDelete: { taskManager.delete(task) },
             onCancel: { showingAlert = false })
         .contextMenu {
             Button(action: {
@@ -96,11 +96,12 @@ struct TaskContainer: View {
     
     @ViewBuilder
     var progressCircle: some View {
-        ProgressCircle(isCompleted: task.isCompleted, progress: taskManager.progress(for: task)) {
-            Haptics.shared.play(.medium)
-            taskManager.toggleCompleted(task)
-        }
-        .padding(.trailing)
+        ProgressCircle(isCompleted: task.isCompleted, progress: taskManager.progress(for: task))
+            .padding(.trailing)
+            .onTapGesture {
+                Haptics.shared.play(.medium)
+                taskManager.toggleCompleted(task)
+            }
     }
     
     private struct DrawingConstants {

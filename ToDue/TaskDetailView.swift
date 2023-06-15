@@ -84,9 +84,8 @@ struct TaskDetailView: View {
                 .versionAwarePresentationDetents()
         }
         .sheet(isPresented: $showEditTaskSheet) {
-            AddTaskView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
+            TaskFormView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
         }
-        .environmentObject(singleTaskManager)
     }
     
     var body: some View {
@@ -100,6 +99,7 @@ struct TaskDetailView: View {
                 }
             }
         }
+        .environmentObject(singleTaskManager)
     }
     
     @ViewBuilder

@@ -58,7 +58,7 @@ struct IncompleteTaskView: View {
             }
             .background(Color("Background").ignoresSafeArea())
             .sheet(isPresented: $showAddingPage) {
-                AddTaskView(isPresented: $showAddingPage, taskEditor: TaskEditor())
+                TaskFormView(isPresented: $showAddingPage, taskEditor: TaskEditor())
             }
             if let task = taskManager.incompleteTasks.first {
                 TaskDetailView(task: task)

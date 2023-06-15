@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C327D36EBB00488289 /* CompletedTasksView.swift */; };
-		600A00C627D37CE200488289 /* AddTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C527D37CE100488289 /* AddTaskView.swift */; };
+		600A00C627D37CE200488289 /* TaskFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C527D37CE100488289 /* TaskFormView.swift */; };
 		6012162228B689630078A71B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216828B282BB0002E080 /* Localizable.strings */; };
 		6012162328B689660078A71B /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216E28B28C090002E080 /* Localizable.stringsdict */; };
 		6015556228032BE50049D84A /* TaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6015556128032BE50049D84A /* TaskExtension.swift */; };
@@ -45,6 +45,7 @@
 		608F770627D4A77A007BCC06 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770527D4A77A007BCC06 /* DateExtension.swift */; };
 		6091231F2A3AFF7500C83DE9 /* SingleTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6091231E2A3AFF7500C83DE9 /* SingleTaskManager.swift */; };
 		609123212A3B08A500C83DE9 /* SubtaskModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609123202A3B08A500C83DE9 /* SubtaskModifier.swift */; };
+		609123242A3B0F3A00C83DE9 /* TaskModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609123232A3B0F3A00C83DE9 /* TaskModifier.swift */; };
 		60960B3228DDA152000E1705 /* ShapeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60960B3128DDA152000E1705 /* ShapeExtension.swift */; };
 		60960B3428DDC8FD000E1705 /* TaskCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60960B3328DDC8FD000E1705 /* TaskCategoryView.swift */; };
 		60A4CFBD28F9AF3C007F392D /* RichFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A4CFBC28F9AF3C007F392D /* RichFetchRequest.swift */; };
@@ -110,7 +111,7 @@
 
 /* Begin PBXFileReference section */
 		600A00C327D36EBB00488289 /* CompletedTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTasksView.swift; sourceTree = "<group>"; };
-		600A00C527D37CE100488289 /* AddTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTaskView.swift; sourceTree = "<group>"; };
+		600A00C527D37CE100488289 /* TaskFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFormView.swift; sourceTree = "<group>"; };
 		6015556128032BE50049D84A /* TaskExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExtension.swift; sourceTree = "<group>"; };
 		6021A1DD28A7B1B20004C7E8 /* AddSubtaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubtaskView.swift; sourceTree = "<group>"; };
 		6023C99C28AFF0A100C94DB2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -144,6 +145,7 @@
 		608F770527D4A77A007BCC06 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		6091231E2A3AFF7500C83DE9 /* SingleTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTaskManager.swift; sourceTree = "<group>"; };
 		609123202A3B08A500C83DE9 /* SubtaskModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtaskModifier.swift; sourceTree = "<group>"; };
+		609123232A3B0F3A00C83DE9 /* TaskModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskModifier.swift; sourceTree = "<group>"; };
 		60960B3128DDA152000E1705 /* ShapeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeExtension.swift; sourceTree = "<group>"; };
 		60960B3328DDC8FD000E1705 /* TaskCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCategoryView.swift; sourceTree = "<group>"; };
 		60A4CFBC28F9AF3C007F392D /* RichFetchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichFetchRequest.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 		608F053528ABADFE00ACD45B /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				609123222A3B0F2000C83DE9 /* Protocols */,
 				608F053628ABAE1800ACD45B /* TaskManager.swift */,
 				60E62CA728BF3889002F727C /* TaskEditor.swift */,
 				60E62CA928BF409A002F727C /* SubtaskEditor.swift */,
@@ -281,9 +284,17 @@
 				60E0EEC829A795520083ACDC /* TodayTasksViewModel.swift */,
 				60399B4129AFCA51007BF90D /* ToastViewModel.swift */,
 				6091231E2A3AFF7500C83DE9 /* SingleTaskManager.swift */,
-				609123202A3B08A500C83DE9 /* SubtaskModifier.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		609123222A3B0F2000C83DE9 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				609123202A3B08A500C83DE9 /* SubtaskModifier.swift */,
+				609123232A3B0F3A00C83DE9 /* TaskModifier.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		60DD740B27D2B16A00DD19AD = {
@@ -317,7 +328,7 @@
 				60809E9B27D395730027AE84 /* ToDue.entitlements */,
 				60DD741727D2B16A00DD19AD /* ToDueApp.swift */,
 				60DD741927D2B16A00DD19AD /* IncompleteTaskView.swift */,
-				600A00C527D37CE100488289 /* AddTaskView.swift */,
+				600A00C527D37CE100488289 /* TaskFormView.swift */,
 				6021A1DD28A7B1B20004C7E8 /* AddSubtaskView.swift */,
 				600A00C327D36EBB00488289 /* CompletedTasksView.swift */,
 				60C4B02328ACE8930056F044 /* TaskDetailView.swift */,
@@ -506,6 +517,7 @@
 				6091231F2A3AFF7500C83DE9 /* SingleTaskManager.swift in Sources */,
 				60813FCF29B63C1E00110269 /* VersionAwareDestructiveButton.swift in Sources */,
 				60C4CBF028C113DF00F0B1BF /* TaskStorage.swift in Sources */,
+				609123242A3B0F3A00C83DE9 /* TaskModifier.swift in Sources */,
 				6021A1DE28A7B1B20004C7E8 /* AddSubtaskView.swift in Sources */,
 				6035BEAA27E1E50D0048E6D4 /* Haptics.swift in Sources */,
 				60A6AAC328B243CC00B5C278 /* MappingModelV1toV2.xcmappingmodel in Sources */,
@@ -527,7 +539,7 @@
 				6015556228032BE50049D84A /* TaskExtension.swift in Sources */,
 				60EE4B8C28C78865008E5F7D /* SubtaskStorage.swift in Sources */,
 				608F053728ABAE1800ACD45B /* TaskManager.swift in Sources */,
-				600A00C627D37CE200488289 /* AddTaskView.swift in Sources */,
+				600A00C627D37CE200488289 /* TaskFormView.swift in Sources */,
 				60E0EEC529A78F320083ACDC /* TodayTasksView.swift in Sources */,
 				60A4CFBD28F9AF3C007F392D /* RichFetchRequest.swift in Sources */,
 				60326AD429B0851200D57C21 /* StringExtension.swift in Sources */,
@@ -608,7 +620,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDue.ToDoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -637,7 +649,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDue.ToDoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -792,7 +804,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -829,7 +841,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDue;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

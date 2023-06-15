@@ -52,7 +52,7 @@ struct AddSubtaskView: View {
     }
     
     private func handleSave() {
-        taskManager.saveSubtask(subtaskEditor)
+        taskManager.save(subtaskEditor)
         isPresented = false
     }
 }

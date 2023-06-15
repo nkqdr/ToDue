@@ -100,7 +100,6 @@ class SubtaskStorage: NSObject, ObservableObject {
 extension SubtaskStorage: NSFetchedResultsControllerDelegate {
     public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         guard let subTasks = controller.fetchedObjects as? [SubTask] else { return }
-        print("Context has changed, reloading subtasks")
         self.subTasks.value = subTasks
     }
 }

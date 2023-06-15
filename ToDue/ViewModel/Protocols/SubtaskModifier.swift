@@ -31,7 +31,7 @@ extension SubtaskModifier {
         ToastViewModel.shared.showSuccess(title: "Removed", message: "Removed from today's tasks.")
     }
     
-    func saveSubtask(_ editor: SubtaskEditor) {
+    func save(_ editor: SubtaskEditor) {
         let scheduledDate: Date? = editor.isScheduled ? editor.scheduledDate : nil
         if let st = editor.subtask {
             subTaskStorage.update(st, title: editor.subtaskTitle, isCompleted: st.isCompleted, scheduledDate: scheduledDate)

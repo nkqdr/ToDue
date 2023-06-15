@@ -1,5 +1,5 @@
 //
-//  AddTaskView.swift
+//  TaskFormView.swift
 //  ToDue
 //
 //  Created by Niklas Kuder on 05.03.22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddTaskView: View {
+struct TaskFormView: View {
     @EnvironmentObject var taskManager: TaskManager
     @ObservedObject private var categoryManager = TaskCategoryManager.shared
     @Binding var isPresented: Bool
@@ -88,14 +88,14 @@ struct AddTaskView: View {
     }
     
     private func handleSave() {
-        taskManager.saveTask(taskEditor)
+        taskManager.save(taskEditor)
         isPresented = false
     }
 }
 
-struct AddTaskView_Previews: PreviewProvider {
+struct TaskFormView_Previews: PreviewProvider {
     static var previews: some View {
-        AddTaskView(isPresented: .constant(true), taskEditor: TaskEditor())
+        TaskFormView(isPresented: .constant(true), taskEditor: TaskEditor())
             .environmentObject(TaskManager.shared)
     }
 }
