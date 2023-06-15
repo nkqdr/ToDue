@@ -32,33 +32,17 @@ class TaskManager: ObservableObject, SubtaskModifier, TaskModifier {
         }
     }
     
-    @Published var subTasks: [SubTask] = []
     var subTaskStorage = SubtaskStorage.shared
     var taskStorage = TaskStorage.shared
     
     private var taskCancellable: AnyCancellable?
-    private var subTaskCancellable: AnyCancellable?
     
     private init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher()) {
-        let subTaskPublisher = self.subTaskStorage.subTasks.eraseToAnyPublisher()
         taskCancellable = taskPublisher.sink { tasks in
             print("Updating tasks...")
             self.tasks = tasks
         }
-        subTaskCancellable = subTaskPublisher.sink { subTasks in
-            print("Updating subtasks...")
-            self.subTasks = subTasks
-        }
         WidgetCenter.shared.reloadAllTimelines()
-    }
-    
-    func progress(for task: Task) -> Double {
-        if task.subTaskArray.isEmpty {
-            return task.isCompleted ? 1 : -1
-        }
-        let total: Int = task.subTaskArray.count
-        let complete: Int = task.subTaskArray.filter {$0.isCompleted}.count
-        return Double(complete) / Double(total)
     }
     
     func filterTasks(_ tasks: [Task], by searchValue: String) -> [Task]? {

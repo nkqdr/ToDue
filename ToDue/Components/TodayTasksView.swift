@@ -197,7 +197,7 @@ fileprivate struct TodaysTasksDetailView: View {
             NavigationLink(destination: {
                 TaskDetailView(task: task)
             }, label: {
-                SubtaskContainer(title: task.taskTitle ?? "", isCompleted: task.isCompleted, progress: taskManager.progress(for: task)) {
+                SubtaskContainer(title: task.taskTitle ?? "", isCompleted: task.isCompleted, progress: SingleTaskManager(task: task).progress) {
                     Haptics.shared.play(.medium)
                     withAnimation {
                         taskManager.toggleCompleted(task)

@@ -43,7 +43,7 @@ struct TaskDetailView: View {
                     }
                     taskDesc
                     if !task.subTaskArray.isEmpty {
-                        ProgressBar(progress: taskManager.progress(for: task))
+                        ProgressBar(progress: singleTaskManager.progress)
                             .padding(.bottom, DrawingConstants.progressBarPadding)
                     }
                 }

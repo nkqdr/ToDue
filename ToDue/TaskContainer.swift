@@ -10,9 +10,17 @@ import SwiftUI
 struct TaskContainer: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var showingAlert: Bool = false
+    @StateObject private var singleTaskManager: SingleTaskManager
     var task: Task
     var showBackground: Bool = false
     var cornerRadius: Double = DrawingConstants.containerCornerRadius
+    
+    init(task: Task, showBackground: Bool = false, cornerRadius: Double = DrawingConstants.containerCornerRadius) {
+        self.task = task
+        self._singleTaskManager = StateObject(wrappedValue: SingleTaskManager(task: task))
+        self.showBackground = showBackground
+        self.cornerRadius = cornerRadius
+    }
     
     var body: some View {
         let taskIsInDaily: Bool = task.scheduledDate?.isSameDayAs(Date()) ?? false
@@ -40,7 +48,7 @@ struct TaskContainer: View {
                             .lineLimit(1)
                     }
                     Spacer()
-                    if taskManager.progress(for: task) == 1 && !task.isCompleted {
+                    if singleTaskManager.progress == 1 && !task.isCompleted {
                         Text("Complete this task by tapping the circle!")
                             .font(.footnote)
                             .foregroundColor(.secondary)
@@ -85,7 +93,7 @@ struct TaskContainer: View {
     var containerBackgroundColor: Color {
         if let category = task.category, !category.useDefaultColor, let color = category.wrappedColor {
             return color
-        } else if taskManager.progress(for: task) == 1 {
+        } else if singleTaskManager.progress == 1 {
             return DrawingConstants.completeTaskBackgroundColor
         } else if showBackground && !task.isCompleted {
             return DrawingConstants.topTaskBackgroundColor
@@ -96,7 +104,7 @@ struct TaskContainer: View {
     
     @ViewBuilder
     var progressCircle: some View {
-        ProgressCircle(isCompleted: task.isCompleted, progress: taskManager.progress(for: task))
+        ProgressCircle(isCompleted: task.isCompleted, progress: singleTaskManager.progress)
             .padding(.trailing)
             .onTapGesture {
                 Haptics.shared.play(.medium)
