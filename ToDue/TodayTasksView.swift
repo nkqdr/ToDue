@@ -28,7 +28,7 @@ struct TodayTasksView: View {
                     Text(Utils.dateFormatter.string(from: dailyManager.taskDueDate))
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.subheadline)
+                        .font(.caption)
                         .foregroundColor(.secondary)
                     Text(taskTitle)
                         .fontWeight(.bold)

@@ -77,6 +77,7 @@ struct CompletedByCategoryChart: View {
                 .foregroundStyle(categoryColor)
         }
         .chartXAxis(.hidden)
+        .frame(minHeight: CGFloat(viewModel.completedTasksData.count) * 40)
     }
 }
 

@@ -31,7 +31,7 @@ struct TaskContainer: View {
             Text(")")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .font(.subheadline.weight(.semibold))
+        .font(.caption.weight(.semibold))
         .foregroundColor(.secondary)
     }
     
@@ -41,7 +41,7 @@ struct TaskContainer: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(containerBackgroundColor)
             HStack {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 2) {
                     if let date = task.date, date < Date.distantFuture {
                         taskDateText
                     }
