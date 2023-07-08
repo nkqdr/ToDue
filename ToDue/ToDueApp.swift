@@ -42,11 +42,13 @@ struct ToDueApp: App {
                         }
                         Text("Overview")
                     }
-                CompletedTasksView()
-                    .tabItem {
-                        Image(systemName: "rectangle.fill.badge.checkmark")
-                        Text("Completed")
-                    }
+                if #available(iOS 16.0, *) {
+                    StatisticsView()
+                        .tabItem {
+                            Image(systemName: "chart.bar.xaxis")
+                            Text("Statistics")
+                        }
+                }
                 MorePageView()
                     .tabItem {
                         if #available(iOS 15.0, *) {

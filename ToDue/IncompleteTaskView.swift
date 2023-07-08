@@ -127,6 +127,7 @@ struct IncompleteTaskView: View {
         .opacity(1 - titleOpacity)
     }
     
+    @ViewBuilder
     var mainScrollView: some View {
         ObservableScrollView(scrollOffset: $scrollOffset, showsIndicators: false) { proxy in
             largePageTitle

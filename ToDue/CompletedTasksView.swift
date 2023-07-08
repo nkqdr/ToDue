@@ -34,47 +34,33 @@ struct CompletedTasksView: View {
         let deadlineTasksToShow: [Task] = displayedTasks?.filter({ $0.date != Date.distantFuture }) ?? taskManager.completeTasks.filter({ $0.date != Date.distantFuture })
         let taskWithoutDeadlineToShow: [Task] = displayedTasks?.filter({ $0.date == Date.distantFuture }) ?? taskManager.completeTasks.filter({ $0.date == Date.distantFuture })
         
-        NavigationView {
-            List {
-                HStack {
-                    Text("Total: \(taskManager.completeTasks.count)", comment: "Label that displays how many tasks have been completed in total.")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                    Spacer()
-                }
-                .foregroundColor(.green.opacity(0.8))
-                .listRowBackground(Color("Background"))
-                .listRowInsets(EdgeInsets())
-                taskSection("Deadline", tasks: deadlineTasksToShow)
-                taskSection("No Deadline", tasks: taskWithoutDeadlineToShow)
+        List {
+            HStack {
+                Text("Total: \(taskManager.completeTasks.count)", comment: "Label that displays how many tasks have been completed in total.")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                Spacer()
             }
-            .listStyle(.sidebar)
-            .groupListStyleIfNecessary()
-            .background(Color("Background").ignoresSafeArea())
-            .navigationTitle("Completed")
-            .hideScrollContentBackgroundIfNecessary()
-            .versionAwareSearchable(text: $searchValue)
-            .onChange(of: searchValue) { newValue in
-                DispatchQueue.global(qos: .userInitiated).async {
-                    let newTasks = taskManager.filterTasks(taskManager.completeTasks.map { $0 }, by: searchValue)
-                    DispatchQueue.main.async {
-                        displayedTasks = newTasks
-                    }
-                }
-            }
-            if let task = taskManager.completeTasks.first {
-                TaskDetailView(task: task)
-            } else {
-                ZStack {
-                    Color("Background")
-                        .ignoresSafeArea()
-                    Text("Open the sidebar to create a new task!")
-                        .font(.headline)
-                        .foregroundColor(Color("Text"))
+            .foregroundColor(.green.opacity(0.8))
+            .listRowBackground(Color("Background"))
+            .listRowInsets(EdgeInsets())
+            taskSection("Deadline", tasks: deadlineTasksToShow)
+            taskSection("No Deadline", tasks: taskWithoutDeadlineToShow)
+        }
+        .listStyle(.sidebar)
+        .groupListStyleIfNecessary()
+        .background(Color("Background").ignoresSafeArea())
+        .navigationTitle("Archive")
+        .hideScrollContentBackgroundIfNecessary()
+        .versionAwareSearchable(text: $searchValue)
+        .onChange(of: searchValue) { newValue in
+            DispatchQueue.global(qos: .userInitiated).async {
+                let newTasks = taskManager.filterTasks(taskManager.completeTasks.map { $0 }, by: searchValue)
+                DispatchQueue.main.async {
+                    displayedTasks = newTasks
                 }
             }
         }
-        .currentDeviceNavigationViewStyle()
     }
 }
 

@@ -49,6 +49,10 @@ struct MorePageView: View {
                 Label("Settings", systemImage: "gear")
                     .foregroundColor(Color("Text"))
             }
+            NavigationLink(destination: CompletedTasksView()) {
+                Label("Archive", systemImage: "archivebox")
+                    .foregroundColor(Color("Text"))
+            }
         }
         .background(Color.clear)
     }

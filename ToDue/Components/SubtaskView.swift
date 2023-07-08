@@ -108,11 +108,3 @@ fileprivate extension View {
         }
     }
 }
-
-struct SubtaskView_Previews: PreviewProvider {
-    static var previews: some View {
-        SubtaskView(subTask: SubTask()) { subTask in
-            print(subTask)
-        }
-    }
-}

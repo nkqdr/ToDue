@@ -35,7 +35,13 @@
 "Complete this task by tapping the circle!" = "Auf den Kreis tippen um die Aufgabe abzuschließen!";
 
 /* (No Comment) */
+"Archive" = "Archiv";
+
+/* (No Comment) */
 "Completed" = "Abgeschlossen";
+
+/* (No Comment) */
+"Statistics" = "Statistiken";
 
 /* No comment provided by engineer. */
 "Configuration" = "Konfiguration";
