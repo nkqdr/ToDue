@@ -51,6 +51,32 @@ struct ThisMonthCompletedTaskChart: View {
                 }
         }
         .chartYAxis(.hidden)
+        .chartXAxis {
+            AxisMarks(values: .stride(by: .day)) { value in
+                AxisGridLine()
+                AxisValueLabel(format: .dateTime.day().month())
+            }
+        }
+    }
+}
+
+@available(iOS 16.0, *)
+struct CompletedByCategoryChart: View {
+    @StateObject private var viewModel = CompletedTasksByCategoryViewModel()
+    
+    var body: some View {
+        Chart(viewModel.completedTasksData) { dp in
+            let categoryColor = dp.category.useDefaultColor ? Color.blue : dp.category.wrappedColor ?? Color.blue
+            BarMark(x: .value("Completed tasks", dp.value), y: .value("Category", dp.category.categoryTitle ?? "No name"))
+                .cornerRadius(8)
+                .annotation(position: .trailing) { _ in
+                    Text("\(dp.value)")
+                    .foregroundColor(.secondary)
+                    .font(.footnote)
+                }
+                .foregroundStyle(categoryColor)
+        }
+        .chartXAxis(.hidden)
     }
 }
 
@@ -71,7 +97,7 @@ struct StatisticsView: View {
                     .groupBoxStyle(CustomGroupBox())
                     
                     GroupBox("Completed tasks per category") {
-                        
+                        CompletedByCategoryChart()
                     }
                     .groupBoxStyle(CustomGroupBox())
                 }

@@ -10,6 +10,38 @@ import Combine
 import CoreData
 import SwiftUI
 
+class TaskCategoryFetchController: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+    var categories = CurrentValueSubject<[TaskCategory], Never>([])
+    private let categoryFetchController: NSFetchedResultsController<TaskCategory>
+    
+    public init(sortDescriptors: [NSSortDescriptor]? = [NSSortDescriptor(keyPath: \TaskCategory.categoryTitle, ascending: true)], predicate: NSPredicate? = nil) {
+        let request = TaskCategory.fetchRequest()
+        request.sortDescriptors = sortDescriptors
+        request.predicate = predicate
+        categoryFetchController = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        super.init()
+        categoryFetchController.delegate = self
+        do {
+            try categoryFetchController.performFetch()
+            categories.value = categoryFetchController.fetchedObjects ?? []
+        } catch {
+            NSLog("Error: could not fetch objects")
+        }
+    }
+    
+    
+    public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard let categories = controller.fetchedObjects as? [TaskCategory] else { return }
+        print("Context has changed, reloading categories")
+        self.categories.value = categories
+    }
+}
+
 class TaskCategoryStorage: NSObject, ObservableObject {
     var categories = CurrentValueSubject<[TaskCategory], Never>([])
     private let categoryFetchController: NSFetchedResultsController<TaskCategory>

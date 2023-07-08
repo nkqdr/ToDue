@@ -14,6 +14,12 @@ struct TimeValueDataPoint: Identifiable {
     var value: Int
 }
 
+struct ValueCategoryDataPoint: Identifiable {
+    var id: UUID = UUID()
+    var category: TaskCategory
+    var value: Int
+}
+
 class UpcomingTasksViewModel: ObservableObject {
     @Published var upcomingTasks: [Task] = [] {
         didSet {
@@ -82,6 +88,47 @@ class ThisMonthCompletedTasksViewModel: ObservableObject {
                 value: completedTasks.filter {
                     Calendar.current.dateComponents([.day, .month, .year], from: $0.completedAt ?? Date()) == uniqueDay
                 }.count
+            )
+        }
+    }
+}
+
+class CompletedTasksByCategoryViewModel: ObservableObject {
+    @Published var completedTasks: [Task] = [] {
+        didSet {
+            completedTasksData = createData()
+        }
+    }
+    @Published var usedCategories: [TaskCategory] = [] {
+        didSet {
+            completedTasksData = createData()
+        }
+    }
+    @Published var completedTasksData: [ValueCategoryDataPoint] = []
+    
+    private var taskCancellable: AnyCancellable?
+    private var taskCategoryCancellable: AnyCancellable?
+    private let fetchController: TaskFetchController
+    private let categoryFetchController: TaskCategoryFetchController
+    
+    init() {
+        self.fetchController = TaskFetchController(predicate: NSPredicate(format: "isCompleted == YES"))
+        self.categoryFetchController = TaskCategoryFetchController(predicate: NSPredicate(format: "tasks.@count > 0"))
+        let publisher = fetchController.tasks.eraseToAnyPublisher()
+        let categoryPublisher = categoryFetchController.categories.eraseToAnyPublisher()
+        self.taskCancellable = publisher.sink { value in
+            self.completedTasks = value
+        }
+        self.taskCategoryCancellable = categoryPublisher.sink { value in
+            self.usedCategories = value
+        }
+    }
+    
+    private func createData() -> [ValueCategoryDataPoint] {
+        return self.usedCategories.map { category in
+            return ValueCategoryDataPoint(
+                category: category,
+                value: completedTasks.filter { $0.category == category }.count
             )
         }
     }

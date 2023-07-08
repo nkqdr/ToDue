@@ -21,6 +21,18 @@ struct TaskCategoriesView: View {
     var body: some View {
         ZStack {
             List {
+                if manager.categories.isEmpty {
+                    HStack {
+                        Spacer()
+                        Text("Add a category in order to better manage your deadlines!")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color("Background"))
+                    .padding(.top, 50)
+                }
                 Section {
                     ForEach($manager.categories) { $category in
                         TaskCategoryView(category: category, onEdit: launchEditCategory)
