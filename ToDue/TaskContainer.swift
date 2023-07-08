@@ -25,10 +25,14 @@ struct TaskContainer: View {
     @ViewBuilder
     private var taskDateText: some View {
         Group {
-            Text(Utils.dateFormatter.string(from: task.date ?? Date())) +
-            Text(" • (") +
-            Text(Utils.shortRemainingTimeLabel(task: task)) +
-            Text(")")
+            if (!task.isCompleted) {
+                Text(Utils.dateFormatter.string(from: task.date ?? Date())) +
+                Text(" • (") +
+                Text(Utils.shortRemainingTimeLabel(task: task)) +
+                Text(")")
+            } else {
+                Text(Utils.dateFormatter.string(from: task.date ?? Date()))
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .font(.caption.weight(.semibold))
