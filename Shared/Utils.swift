@@ -41,6 +41,22 @@ class Utils {
         }
     }
     
+    static func shortRemainingTimeLabel(task: Task?) -> LocalizedStringKey {
+        let remainingTime = _remainingTime(task)
+        if let months = remainingTime.month,
+            let days = remainingTime.day {
+            if months > 0 {
+                return "\(months) M, \(days) D"
+            } else if days >= 0 {
+                return "\(days) days_short"
+            } else {
+                return "Overdue"
+            }
+        } else {
+            return "-"
+        }
+    }
+    
     // MARK: - Notifications
     
     private static func getTaskNotificationContent(for task: Task) -> UNMutableNotificationContent {

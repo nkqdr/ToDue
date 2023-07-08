@@ -270,3 +270,9 @@
 
 /* Toast notification string */
 "Removed from today's tasks." = "Von heutigen Aufgaben entfernt.";
+
+/* Description of due date */
+"Overdue" = "Überfällig";
+
+/* Description of due date */
+"%lld M, %lld D" = "%lld M, %lld T";

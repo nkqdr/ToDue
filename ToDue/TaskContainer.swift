@@ -22,6 +22,19 @@ struct TaskContainer: View {
         self.cornerRadius = cornerRadius
     }
     
+    @ViewBuilder
+    private var taskDateText: some View {
+        Group {
+            Text(Utils.dateFormatter.string(from: task.date ?? Date())) +
+            Text(" • (") +
+            Text(Utils.shortRemainingTimeLabel(task: task)) +
+            Text(")")
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .font(.subheadline.weight(.semibold))
+        .foregroundColor(.secondary)
+    }
+    
     var body: some View {
         let taskIsInDaily: Bool = task.scheduledDate?.isSameDayAs(Date()) ?? false
         return ZStack(alignment: .topTrailing) {
@@ -30,11 +43,7 @@ struct TaskContainer: View {
             HStack {
                 VStack(alignment: .leading) {
                     if let date = task.date, date < Date.distantFuture {
-                        Text(Utils.dateFormatter.string(from: task.date ?? Date()))
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                        taskDateText
                     }
                     Text(task.taskTitle ?? "")
                         .fontWeight(.bold)

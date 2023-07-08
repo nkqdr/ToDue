@@ -27,7 +27,7 @@ class SingleTaskManager: ObservableObject, SubtaskModifier {
         self.subTaskStorage = storage
         
         let subTaskPublisher = storage.subTasks.eraseToAnyPublisher()
-        subTaskCancellable = subTaskPublisher.sink { subTasks in
+        self.subTaskCancellable = subTaskPublisher.sink { subTasks in
             print("Updating subtasks for single...")
             print(subTasks.count)
             self.subTasks = subTasks

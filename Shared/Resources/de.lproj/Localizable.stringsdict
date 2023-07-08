@@ -20,6 +20,24 @@
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@Days@</string>
 	</dict>
+	<key>%lld days_short</key>
+	<dict>
+		<key>Days</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%lld Tag</string>
+			<key>other</key>
+			<string>%lld Tage</string>
+			<key>zero</key>
+			<string>%lld Tage</string>
+		</dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@Days@</string>
+	</dict>
 	<key>%lld Months, %lld Days</key>
 	<dict>
 		<key>Days</key>

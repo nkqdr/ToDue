@@ -17,6 +17,16 @@ struct StatisticsView: View {
                        
                     }
                     .groupBoxStyle(CustomGroupBox())
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .contextMenu {
+                        Button(action: {
+                            
+                        }, label: {
+                            Label("Test", systemImage:"checkmark.circle")
+                        })
+                       
+                    }
+                    
                     GroupBox("Tasks completed this month") {
                        
                     }
@@ -46,8 +56,10 @@ fileprivate struct CustomGroupBox: GroupBoxStyle {
             configuration.content
         }
         .padding()
-        .background(RoundedRectangle(cornerRadius: 8, style: .continuous)
-        .fill(Color("Accent2").opacity(0.3)))
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color("Accent2").opacity(0.3))
+        )
     }
 }
 
