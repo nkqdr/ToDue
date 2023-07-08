@@ -131,6 +131,19 @@ struct TaskContainer: View {
     var innerTaskContainerPadding: CGFloat?
     var includeDescription: Bool = false
     
+    init(task: Task, backgroundColor: Color = Color("Accent1"), cornerRadius: CGFloat = 10, descriptionLineLimit: Int = 2, innerTaskContainerPadding: CGFloat? = nil, includeDescription: Bool = false) {
+        self.task = task
+        if let category = task.category, !category.useDefaultColor, let color = category.wrappedColor {
+            self.backgroundColor = color
+        } else {
+            self.backgroundColor = backgroundColor
+        }
+        self.cornerRadius = cornerRadius
+        self.descriptionLineLimit = descriptionLineLimit
+        self.innerTaskContainerPadding = innerTaskContainerPadding
+        self.includeDescription = includeDescription
+    }
+    
     private var horizontalPadding: CGFloat? {
         if let p = innerTaskContainerPadding {
             return p + 2

@@ -34,7 +34,7 @@ class UpcomingTasksViewModel: ObservableObject {
     init() {
         let todayDate = Date()
         let todayInOneYearDate = Calendar.current.date(byAdding: DateComponents(year: 1), to: todayDate) ?? Date()
-        self.fetchController = TaskFetchController(predicate: NSPredicate(format: "date >= %@ && date <= %@", todayDate as NSDate, todayInOneYearDate as NSDate))
+        self.fetchController = TaskFetchController(predicate: NSPredicate(format: "date >= %@ && date <= %@ && isCompleted == NO", todayDate as NSDate, todayInOneYearDate as NSDate))
         let publisher = fetchController.tasks.eraseToAnyPublisher()
         self.taskCancellable = publisher.sink { value in
             self.upcomingTasks = value
@@ -130,6 +130,6 @@ class CompletedTasksByCategoryViewModel: ObservableObject {
                 category: category,
                 value: completedTasks.filter { $0.category == category }.count
             )
-        }
+        }.filter { $0.value > 0 }
     }
 }

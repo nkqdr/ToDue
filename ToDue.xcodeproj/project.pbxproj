@@ -41,6 +41,7 @@
 		60809E9F27D3A1F30027AE84 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60DD741B27D2B16C00DD19AD /* Assets.xcassets */; };
 		60813FCF29B63C1E00110269 /* VersionAwareDestructiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60813FCE29B63C1E00110269 /* VersionAwareDestructiveButton.swift */; };
 		608BA9CA2A5961D700303A4E /* StatisticsViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608BA9C92A5961D700303A4E /* StatisticsViewModels.swift */; };
+		608BA9CB2A597A8B00303A4E /* TaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6015556128032BE50049D84A /* TaskExtension.swift */; };
 		608F053728ABAE1800ACD45B /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F053628ABAE1800ACD45B /* TaskManager.swift */; };
 		608F053928ABC92800ACD45B /* ProgressPie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F053828ABC92800ACD45B /* ProgressPie.swift */; };
 		608F770627D4A77A007BCC06 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770527D4A77A007BCC06 /* DateExtension.swift */; };
@@ -512,6 +513,7 @@
 				60809E9E27D399860027AE84 /* PersistenceController.swift in Sources */,
 				60809E8D27D394A10027AE84 /* ToDoWidget.swift in Sources */,
 				60E68A3E28B68CB400CD7709 /* Utils.swift in Sources */,
+				608BA9CB2A597A8B00303A4E /* TaskExtension.swift in Sources */,
 				60AD290128B77159002640C4 /* MailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

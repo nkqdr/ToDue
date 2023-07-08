@@ -6,9 +6,19 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 @main
 struct ToDueApp: App {
+    var body: some Scene {
+        return WindowGroup {
+            MainAppContent()
+        }
+    }
+}
+
+struct MainAppContent: View {
+    @Environment(\.scenePhase) var scenePhase
     @StateObject var taskManager = TaskManager.shared
     @ObservedObject var toastManager = ToastViewModel.shared
     
@@ -27,43 +37,46 @@ struct ToDueApp: App {
         })
     }
     
-    var body: some Scene {
+    var body: some View {
         UITableView.appearance().backgroundColor = .clear
         checkNotificationPermissions()
         
-        return WindowGroup {
-            TabView {
-                IncompleteTaskView()
-                    .tabItem {
-                        if #available(iOS 15.0, *) {
-                            Image(systemName: "checklist")
-                        } else {
-                            Image(systemName: "list.bullet")
-                        }
-                        Text("Overview")
+        return TabView {
+            IncompleteTaskView()
+                .tabItem {
+                    if #available(iOS 15.0, *) {
+                        Image(systemName: "checklist")
+                    } else {
+                        Image(systemName: "list.bullet")
                     }
-                if #available(iOS 16.0, *) {
-                    StatisticsView()
-                        .tabItem {
-                            Image(systemName: "chart.bar.xaxis")
-                            Text("Statistics")
-                        }
+                    Text("Overview")
                 }
-                MorePageView()
+            if #available(iOS 16.0, *) {
+                StatisticsView()
                     .tabItem {
-                        if #available(iOS 15.0, *) {
-                            Image(systemName: "ellipsis")
-                        } else {
-                            Image(systemName: "ellipsis.circle")
-                        }
-                        Text("More")
+                        Image(systemName: "chart.bar.xaxis")
+                        Text("Statistics")
                     }
             }
-            .toast(isPresenting: $toastManager.show) {
-                toastManager.alertToast
-            }
-            .environmentObject(taskManager)
-            .environmentObject(toastManager)
+            MorePageView()
+                .tabItem {
+                    if #available(iOS 15.0, *) {
+                        Image(systemName: "ellipsis")
+                    } else {
+                        Image(systemName: "ellipsis.circle")
+                    }
+                    Text("More")
+                }
         }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase != .active {
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+        }
+        .toast(isPresenting: $toastManager.show) {
+            toastManager.alertToast
+        }
+        .environmentObject(taskManager)
+        .environmentObject(toastManager)
     }
 }
