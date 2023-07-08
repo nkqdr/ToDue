@@ -6,31 +6,50 @@
 //
 
 import SwiftUI
+import Charts
 
-@available(iOS 15.0, *)
+@available(iOS 16.0, *)
+struct UpcomingTasksChart: View {
+    @StateObject private var viewModel = UpcomingTasksViewModel()
+    
+    var body: some View {
+        let barRadius: CGFloat = 24 / CGFloat(viewModel.upcomingTaskData.count)
+        
+        Chart(viewModel.upcomingTaskData) { dp in
+            BarMark(x: .value("Month", dp.date, unit: .month), y: .value("# of deadlines", dp.value))
+                .cornerRadius(barRadius)
+                .annotation(position: .top) { _ in
+                    Text("\(dp.value)")
+                    .foregroundColor(.secondary)
+                    .font(.footnote)
+                }
+        }
+        .chartYAxis(.hidden)
+        .chartXAxis {
+            AxisMarks(values: .stride(by: .month)) { value in
+                AxisGridLine()
+                AxisValueLabel(format: .dateTime.month(.abbreviated))
+            }
+        }
+    }
+}
+
+@available(iOS 16.0, *)
 struct StatisticsView: View {
     var body: some View {
         NavigationView {
             ScrollView {
                 Group {
-                    GroupBox("Upcoming tasks") {
-                       
+                    GroupBox("Upcoming deadlines") {
+                       UpcomingTasksChart()
                     }
                     .groupBoxStyle(CustomGroupBox())
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    .contextMenu {
-                        Button(action: {
-                            
-                        }, label: {
-                            Label("Test", systemImage:"checkmark.circle")
-                        })
-                       
-                    }
                     
                     GroupBox("Tasks completed this month") {
                        
                     }
                     .groupBoxStyle(CustomGroupBox())
+                    
                     GroupBox("Completed tasks per category") {
                         
                     }
@@ -63,7 +82,7 @@ fileprivate struct CustomGroupBox: GroupBoxStyle {
     }
 }
 
-@available(iOS 15.0, *)
+@available(iOS 16.0, *)
 struct StatisticsView_Previews: PreviewProvider {
     static var previews: some View {
         StatisticsView()

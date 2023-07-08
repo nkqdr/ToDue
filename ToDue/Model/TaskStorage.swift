@@ -9,6 +9,42 @@ import Foundation
 import Combine
 import CoreData
 
+class TaskFetchController: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+    var tasks = CurrentValueSubject<[Task], Never>([])
+    private let taskFetchController: RichFetchedResultsController<Task>
+    
+    public init(sortDescriptors: [NSSortDescriptor]? = [NSSortDescriptor(keyPath: \Task.date, ascending: true)], predicate: NSPredicate? = nil) {
+        let request = RichFetchRequest<Task>(entityName: "Task")
+        request.sortDescriptors = sortDescriptors
+        request.predicate = predicate
+        request.relationshipKeyPathsForRefreshing = [
+            #keyPath(Task.category.categoryColorRed),
+            #keyPath(Task.category.categoryColorGreen),
+            #keyPath(Task.category.categoryColorBlue)
+        ]
+        taskFetchController = RichFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        super.init()
+        taskFetchController.delegate = self
+        do {
+            try taskFetchController.performFetch()
+            tasks.value = taskFetchController.fetchedObjects as? [Task] ?? []
+        } catch {
+            NSLog("Error: could not fetch objects")
+        }
+    }
+    
+    public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard let tasks = controller.fetchedObjects as? [Task] else { return }
+        print("Context has changed, reloading tasks")
+        self.tasks.value = tasks
+    }
+}
+
 class TaskStorage: NSObject, ObservableObject {
     var tasks = CurrentValueSubject<[Task], Never>([])
     private let taskFetchController: RichFetchedResultsController<Task>
