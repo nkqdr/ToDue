@@ -77,6 +77,11 @@ class TaskStorage: NSObject, ObservableObject {
     
     func toggleCompleted(for task: Task) {
         PersistenceController.shared.persistentContainer.viewContext.performAndWait {
+            if task.completedAt == nil {
+                task.completedAt = Date()
+            } else {
+                task.completedAt = nil
+            }
             task.isCompleted = !task.isCompleted
             try? PersistenceController.shared.persistentContainer.viewContext.save()
         }
@@ -99,6 +104,9 @@ class TaskStorage: NSObject, ObservableObject {
     func update(_ task: Task, title: String?, description: String?, date: Date?, isCompleted: Bool?, category: TaskCategory?, scheduledDate: Date?) {
         PersistenceController.shared.persistentContainer.viewContext.performAndWait {
             task.isCompleted = isCompleted ?? task.isCompleted
+            if let isCompleted, isCompleted {
+                task.completedAt = Date()
+            }
             task.taskDescription = description ?? task.taskDescription!
             task.taskTitle = title ?? task.taskTitle!
             task.category = category

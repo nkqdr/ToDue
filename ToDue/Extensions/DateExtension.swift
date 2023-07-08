@@ -7,6 +7,30 @@
 
 import SwiftUI
 
+extension DateComponents {
+    public var wrappedMonth: Int {
+        get {
+            return self.month ?? Calendar.current.component(.month, from: Date())
+        }
+        set {
+            self.month = newValue
+        }
+    }
+    
+    public var wrappedYear: Int {
+        get {
+            return self.year ?? Calendar.current.component(.year, from: Date())
+        }
+        set {
+            self.year = newValue
+        }
+    }
+    
+    public var toDate: Date {
+        Calendar.current.date(from: self) ?? Date()
+    }
+}
+
 extension Date {
     public var removeTimeStamp : Date? {
        guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: self)) else {
@@ -29,6 +53,11 @@ extension Date {
         let calendar = Calendar.current
         let startComponents = calendar.dateComponents([.year, .month, .day], from: Date())
         return calendar.date(from: startComponents)!...
+    }
+    
+    public var startOfThisMonth: Date {
+        let myComps: DateComponents = Calendar.current.dateComponents([.year, .month], from: self)
+        return Calendar.current.date(from: DateComponents(year: myComps.wrappedYear, month: myComps.wrappedMonth, day: 1)) ?? Date()
     }
 }
 

@@ -35,6 +35,26 @@ struct UpcomingTasksChart: View {
 }
 
 @available(iOS 16.0, *)
+struct ThisMonthCompletedTaskChart: View {
+    @StateObject private var viewModel = ThisMonthCompletedTasksViewModel()
+    
+    var body: some View {
+        let barRadius: CGFloat = 24 / CGFloat(viewModel.completedTasksData.count)
+        
+        Chart(viewModel.completedTasksData) { dp in
+            BarMark(x: .value("Date", dp.date, unit: .day), y: .value("# of completed tasks", dp.value))
+                .cornerRadius(barRadius)
+                .annotation(position: .top) { _ in
+                    Text("\(dp.value)")
+                    .foregroundColor(.secondary)
+                    .font(.footnote)
+                }
+        }
+        .chartYAxis(.hidden)
+    }
+}
+
+@available(iOS 16.0, *)
 struct StatisticsView: View {
     var body: some View {
         NavigationView {
@@ -46,7 +66,7 @@ struct StatisticsView: View {
                     .groupBoxStyle(CustomGroupBox())
                     
                     GroupBox("Tasks completed this month") {
-                       
+                       ThisMonthCompletedTaskChart()
                     }
                     .groupBoxStyle(CustomGroupBox())
                     

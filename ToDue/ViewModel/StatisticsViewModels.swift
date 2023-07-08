@@ -17,7 +17,6 @@ struct TimeValueDataPoint: Identifiable {
 class UpcomingTasksViewModel: ObservableObject {
     @Published var upcomingTasks: [Task] = [] {
         didSet {
-            print(upcomingTasks.count)
             upcomingTaskData = createData()
         }
     }
@@ -39,14 +38,49 @@ class UpcomingTasksViewModel: ObservableObject {
     private func createData() -> [TimeValueDataPoint] {
         let allDates = upcomingTasks.map { Calendar.current.dateComponents([.month, .year], from: $0.wrappedDate) }
         let uniqueMonths = Set(allDates)
-        print(allDates.count)
-        print(uniqueMonths.count)
         
         return uniqueMonths.map { uniqueMonth in
             return TimeValueDataPoint(
                 date: Calendar.current.date(from: uniqueMonth) ?? Date(),
                 value: upcomingTasks.filter {
                     Calendar.current.dateComponents([.month, .year], from: $0.wrappedDate) == uniqueMonth
+                }.count
+            )
+        }
+    }
+}
+
+class ThisMonthCompletedTasksViewModel: ObservableObject {
+    @Published var completedTasks: [Task] = [] {
+        didSet {
+            completedTasksData = createData()
+        }
+    }
+    @Published var completedTasksData: [TimeValueDataPoint] = []
+    
+    private var taskCancellable: AnyCancellable?
+    private let fetchController: TaskFetchController
+    
+    init() {
+        let date: Date = Date()
+        let startOfMonth: Date = date.startOfThisMonth.removeTimeStamp!
+        let endOfMonth: Date = Calendar.current.date(byAdding: DateComponents(month: 1), to: startOfMonth) ?? date
+        self.fetchController = TaskFetchController(predicate: NSPredicate(format: "completedAt >= %@ && completedAt <= %@", startOfMonth as NSDate, endOfMonth as NSDate))
+        let publisher = fetchController.tasks.eraseToAnyPublisher()
+        self.taskCancellable = publisher.sink { value in
+            self.completedTasks = value
+        }
+    }
+    
+    private func createData() -> [TimeValueDataPoint] {
+        let allDates = completedTasks.map { Calendar.current.dateComponents([.day, .month, .year], from: $0.completedAt ?? Date()) }
+        let uniqueDays = Set(allDates)
+        
+        return uniqueDays.map { uniqueDay in
+            return TimeValueDataPoint(
+                date: Calendar.current.date(from: uniqueDay) ?? Date(),
+                value: completedTasks.filter {
+                    Calendar.current.dateComponents([.day, .month, .year], from: $0.completedAt ?? Date()) == uniqueDay
                 }.count
             )
         }
