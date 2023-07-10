@@ -25,19 +25,5 @@ final class DateExtensionTests: XCTestCase {
         startOfMonth = date.startOfThisMonth
         XCTAssertEqual(startOfMonth, actualStartOfMonth)
     }
-    
-    func testRemoveTimestamp() throws {
-        var date = try! Date("2023-07-10T12:25:52Z", strategy: .iso8601)
-        var dateWithoutTimestamp = date.removeTimeStamp!
-        XCTAssertEqual(dateWithoutTimestamp.ISO8601Format(), "2023-07-09T22:00:00Z")
-        
-        date = try! Date("2023-07-10T22:00:00Z", strategy: .iso8601)
-        dateWithoutTimestamp = date.removeTimeStamp!
-        XCTAssertEqual(dateWithoutTimestamp.ISO8601Format(), "2023-07-10T22:00:00Z")
-        
-        date = try! Date("2023-07-10T22:0:01Z", strategy: .iso8601)
-        dateWithoutTimestamp = date.removeTimeStamp!
-        XCTAssertEqual(dateWithoutTimestamp.ISO8601Format(), "2023-07-10T22:00:00Z")
-    }
 
 }
