@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C327D36EBB00488289 /* CompletedTasksView.swift */; };
 		600A00C627D37CE200488289 /* TaskFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C527D37CE100488289 /* TaskFormView.swift */; };
-		600E1D9D2A5C2D5A00FF764B /* ToDueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600E1D9C2A5C2D5A00FF764B /* ToDueTests.swift */; };
+		600E1D9D2A5C2D5A00FF764B /* DateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600E1D9C2A5C2D5A00FF764B /* DateExtensionTests.swift */; };
+		600E1DA32A5C2EC100FF764B /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770527D4A77A007BCC06 /* DateExtension.swift */; };
 		6012162228B689630078A71B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216828B282BB0002E080 /* Localizable.strings */; };
 		6012162328B689660078A71B /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216E28B28C090002E080 /* Localizable.stringsdict */; };
 		6015556228032BE50049D84A /* TaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6015556128032BE50049D84A /* TaskExtension.swift */; };
@@ -124,7 +125,7 @@
 		600A00C327D36EBB00488289 /* CompletedTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTasksView.swift; sourceTree = "<group>"; };
 		600A00C527D37CE100488289 /* TaskFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFormView.swift; sourceTree = "<group>"; };
 		600E1D9A2A5C2D5A00FF764B /* ToDueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		600E1D9C2A5C2D5A00FF764B /* ToDueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDueTests.swift; sourceTree = "<group>"; };
+		600E1D9C2A5C2D5A00FF764B /* DateExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensionTests.swift; sourceTree = "<group>"; };
 		6015556128032BE50049D84A /* TaskExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExtension.swift; sourceTree = "<group>"; };
 		6021A1DD28A7B1B20004C7E8 /* AddSubtaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubtaskView.swift; sourceTree = "<group>"; };
 		6023C99C28AFF0A100C94DB2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -230,7 +231,7 @@
 		600E1D9B2A5C2D5A00FF764B /* ToDueTests */ = {
 			isa = PBXGroup;
 			children = (
-				600E1D9C2A5C2D5A00FF764B /* ToDueTests.swift */,
+				600E1D9C2A5C2D5A00FF764B /* DateExtensionTests.swift */,
 			);
 			path = ToDueTests;
 			sourceTree = "<group>";
@@ -562,7 +563,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				600E1D9D2A5C2D5A00FF764B /* ToDueTests.swift in Sources */,
+				600E1D9D2A5C2D5A00FF764B /* DateExtensionTests.swift in Sources */,
+				600E1DA32A5C2EC100FF764B /* DateExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,7 +692,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5BW79HX26Y;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDueTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -710,7 +712,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5BW79HX26Y;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDueTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
