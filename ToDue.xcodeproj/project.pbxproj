@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		600A00C427D36EBB00488289 /* CompletedTasksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C327D36EBB00488289 /* CompletedTasksView.swift */; };
 		600A00C627D37CE200488289 /* TaskFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600A00C527D37CE100488289 /* TaskFormView.swift */; };
+		600E1D9D2A5C2D5A00FF764B /* DateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600E1D9C2A5C2D5A00FF764B /* DateExtensionTests.swift */; };
+		600E1DA32A5C2EC100FF764B /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608F770527D4A77A007BCC06 /* DateExtension.swift */; };
 		6012162228B689630078A71B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216828B282BB0002E080 /* Localizable.strings */; };
 		6012162328B689660078A71B /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216E28B28C090002E080 /* Localizable.stringsdict */; };
 		6015556228032BE50049D84A /* TaskExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6015556128032BE50049D84A /* TaskExtension.swift */; };
@@ -89,6 +91,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		600E1D9E2A5C2D5A00FF764B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 60DD740C27D2B16A00DD19AD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 60DD741327D2B16A00DD19AD;
+			remoteInfo = ToDue;
+		};
 		60809E9427D394A30027AE84 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 60DD740C27D2B16A00DD19AD /* Project object */;
@@ -115,6 +124,8 @@
 /* Begin PBXFileReference section */
 		600A00C327D36EBB00488289 /* CompletedTasksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTasksView.swift; sourceTree = "<group>"; };
 		600A00C527D37CE100488289 /* TaskFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFormView.swift; sourceTree = "<group>"; };
+		600E1D9A2A5C2D5A00FF764B /* ToDueTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDueTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		600E1D9C2A5C2D5A00FF764B /* DateExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensionTests.swift; sourceTree = "<group>"; };
 		6015556128032BE50049D84A /* TaskExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExtension.swift; sourceTree = "<group>"; };
 		6021A1DD28A7B1B20004C7E8 /* AddSubtaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSubtaskView.swift; sourceTree = "<group>"; };
 		6023C99C28AFF0A100C94DB2 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -189,6 +200,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		600E1D972A5C2D5A00FF764B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		60809E8227D394A10027AE84 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -210,6 +228,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		600E1D9B2A5C2D5A00FF764B /* ToDueTests */ = {
+			isa = PBXGroup;
+			children = (
+				600E1D9C2A5C2D5A00FF764B /* DateExtensionTests.swift */,
+			);
+			path = ToDueTests;
+			sourceTree = "<group>";
+		};
 		6012162128B689250078A71B /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -309,6 +335,7 @@
 				60809E9C27D395C00027AE84 /* ToDoWidgetExtension.entitlements */,
 				60DD741627D2B16A00DD19AD /* ToDue */,
 				60809E8B27D394A10027AE84 /* ToDoWidget */,
+				600E1D9B2A5C2D5A00FF764B /* ToDueTests */,
 				60809E8627D394A10027AE84 /* Frameworks */,
 				60DD741527D2B16A00DD19AD /* Products */,
 			);
@@ -319,6 +346,7 @@
 			children = (
 				60DD741427D2B16A00DD19AD /* ToDue.app */,
 				60809E8527D394A10027AE84 /* ToDoWidgetExtension.appex */,
+				600E1D9A2A5C2D5A00FF764B /* ToDueTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -393,6 +421,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		600E1D992A5C2D5A00FF764B /* ToDueTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 600E1DA22A5C2D5A00FF764B /* Build configuration list for PBXNativeTarget "ToDueTests" */;
+			buildPhases = (
+				600E1D962A5C2D5A00FF764B /* Sources */,
+				600E1D972A5C2D5A00FF764B /* Frameworks */,
+				600E1D982A5C2D5A00FF764B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				600E1D9F2A5C2D5A00FF764B /* PBXTargetDependency */,
+			);
+			name = ToDueTests;
+			productName = ToDueTests;
+			productReference = 600E1D9A2A5C2D5A00FF764B /* ToDueTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		60809E8427D394A10027AE84 /* ToDoWidgetExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 60809E9A27D394A30027AE84 /* Build configuration list for PBXNativeTarget "ToDoWidgetExtension" */;
@@ -439,9 +485,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1320;
+				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1400;
 				TargetAttributes = {
+					600E1D992A5C2D5A00FF764B = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 60DD741327D2B16A00DD19AD;
+					};
 					60809E8427D394A10027AE84 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -469,11 +519,19 @@
 			targets = (
 				60DD741327D2B16A00DD19AD /* ToDue */,
 				60809E8427D394A10027AE84 /* ToDoWidgetExtension */,
+				600E1D992A5C2D5A00FF764B /* ToDueTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		600E1D982A5C2D5A00FF764B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		60809E8327D394A10027AE84 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -501,6 +559,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		600E1D962A5C2D5A00FF764B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				600E1D9D2A5C2D5A00FF764B /* DateExtensionTests.swift in Sources */,
+				600E1DA32A5C2EC100FF764B /* DateExtension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		60809E8127D394A10027AE84 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -582,6 +649,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		600E1D9F2A5C2D5A00FF764B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 60DD741327D2B16A00DD19AD /* ToDue */;
+			targetProxy = 600E1D9E2A5C2D5A00FF764B /* PBXContainerItemProxy */;
+		};
 		60809E9527D394A30027AE84 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 60809E8427D394A10027AE84 /* ToDoWidgetExtension */;
@@ -611,6 +683,46 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		600E1DA02A5C2D5A00FF764B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5BW79HX26Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDueTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ToDue.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ToDue";
+			};
+			name = Debug;
+		};
+		600E1DA12A5C2D5A00FF764B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5BW79HX26Y;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.niklaskuder.ToDueTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ToDue.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ToDue";
+			};
+			name = Release;
+		};
 		60809E9827D394A30027AE84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -866,6 +978,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		600E1DA22A5C2D5A00FF764B /* Build configuration list for PBXNativeTarget "ToDueTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				600E1DA02A5C2D5A00FF764B /* Debug */,
+				600E1DA12A5C2D5A00FF764B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		60809E9A27D394A30027AE84 /* Build configuration list for PBXNativeTarget "ToDoWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
