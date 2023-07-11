@@ -118,11 +118,11 @@ struct TaskContainer: View {
     @ViewBuilder
     var progressCircle: some View {
         ProgressCircle(isCompleted: task.isCompleted, progress: singleTaskManager.progress)
-            .padding(.trailing)
             .onTapGesture {
                 Haptics.shared.play(.medium)
                 taskManager.toggleCompleted(task)
             }
+            .padding(.trailing)
     }
     
     private struct DrawingConstants {
