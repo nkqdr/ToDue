@@ -32,7 +32,7 @@ class TaskManager: ObservableObject, SubtaskModifier, TaskModifier {
         }
     }
     
-    var subTaskStorage = SubtaskStorage.shared
+    var subTaskStorage = SubtaskStorage.main
     var taskStorage = TaskStorage.main
     
     private var taskCancellable: AnyCancellable?
