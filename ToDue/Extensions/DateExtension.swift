@@ -25,25 +25,15 @@ extension DateComponents {
             self.year = newValue
         }
     }
-    
-    public var toDate: Date {
-        Calendar.current.date(from: self) ?? Date()
-    }
 }
 
 extension Date {
-    public var removeTimeStamp : Date? {
-        // Maybe a better solution? To be tested...
-        // return Calendar.current.startOfDay(for: self)
-        
-       guard let date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: self)) else {
-        return nil
-       }
-       return date
+    public var removeTimeStamp : Date {
+        return Calendar.current.startOfDay(for: self)
     }
     
     public func isSameDayAs(_ otherDate: Date) -> Bool {
-        return Calendar.current.compare(self, to: otherDate, toGranularity: .day) == .orderedSame
+        return Calendar.current.isDate(self, inSameDayAs: otherDate)
     }
     
     public static var rangeFromToday: PartialRangeFrom<Date> {
