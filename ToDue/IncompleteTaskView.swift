@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IncompleteTaskView: View {
     @StateObject private var categoryManager = TaskCategoryManager.shared
-    @StateObject private var viewModel = PendingTaskViewModel()
+    @StateObject private var viewModel = PendingTasksViewModel()
     @State private var showAddingPage = false
     @State private var scrollOffset: CGFloat = 0.0
     @State private var titleOpacity = 0.0
