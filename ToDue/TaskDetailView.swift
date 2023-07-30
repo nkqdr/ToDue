@@ -87,10 +87,18 @@ struct CreateReminderView: View {
     @Binding var isPresented: Bool
     var task: Task
     
+    private var dateRange: ClosedRange<Date> {
+        let calendar = Calendar.current
+    
+        let startComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
+        let endComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: task.wrappedDate)
+        return calendar.date(from: startComponents)!...calendar.date(from: endComponents)!
+    }
+    
     var body: some View {
         return NavigationView {
             List {
-                DatePicker("Reminder", selection: $selectedDateTime)
+                DatePicker("Reminder", selection: $selectedDateTime, in: dateRange)
                     .datePickerStyle(.graphical)
                     .listRowBackground(Color("Accent2").opacity(0.3))
                     .listRowInsets(EdgeInsets())
@@ -207,6 +215,7 @@ struct ReminderManagerSheet: View {
                     } label: {
                         Label("Add", systemImage: "plus")
                     }
+                    .disabled(task.wrappedDate < Date())
                 }
             }
         }
