@@ -38,8 +38,19 @@ struct UpcomingTasksChart: View {
 struct ThisMonthCompletedTaskChart: View {
     @StateObject private var viewModel = ThisMonthCompletedTasksViewModel()
     
+    var maxDayDiff: Int {
+        let first = viewModel.completedTasksData.first
+        let last = viewModel.completedTasksData.last
+        guard let first, let last else {
+            return 0
+        }
+        let dateDiff = Calendar.current.dateComponents([.day], from: first.date, to: last.date)
+        return dateDiff.day ?? 0
+    }
+    
     var body: some View {
         let barRadius: CGFloat = 24 / CGFloat(viewModel.completedTasksData.count)
+        let _ = print(viewModel.completedTasksData.count)
         
         Chart(viewModel.completedTasksData) { dp in
             BarMark(x: .value("Date", dp.date, unit: .day), y: .value("# of completed tasks", dp.value))
@@ -54,7 +65,11 @@ struct ThisMonthCompletedTaskChart: View {
         .chartXAxis {
             AxisMarks(values: .stride(by: .day)) { value in
                 AxisGridLine()
-                AxisValueLabel(format: .dateTime.day().month())
+                if maxDayDiff < 7 {
+                    AxisValueLabel(format: .dateTime.day().month())
+                } else {
+                    AxisValueLabel(format: .dateTime.day())
+                }
             }
         }
     }
