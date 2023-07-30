@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct IncompleteTaskView: View {
-    @EnvironmentObject var taskManager: TaskManager
     @StateObject private var categoryManager = TaskCategoryManager.shared
+    @StateObject private var viewModel = PendingTaskViewModel()
     @State private var showAddingPage = false
     @State private var scrollOffset: CGFloat = 0.0
     @State private var titleOpacity = 0.0
     
     var body: some View {
-        let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
+        let deadlineLabel = Utils.remainingTimeLabel(task: viewModel.displayedTasks.first)
         NavigationView {
             Group {
-                if taskManager.incompleteTasks.isEmpty {
+                if viewModel.displayedTasks.isEmpty {
                     emptyListVStack
                 } else {
                     mainScrollView
@@ -28,14 +28,14 @@ struct IncompleteTaskView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Menu {
-                        Picker("Filter", selection: $taskManager.selectedCategory) {
+                        Picker("Filter", selection: $viewModel.selectedCategory) {
                             Text("None").tag(TaskCategory?.none)
                             ForEach($categoryManager.categories) { $category in
                                 Text(category.categoryTitle ?? "").tag(category as TaskCategory?)
                             }
                         }
                     } label: {
-                        Image(systemName: taskManager.selectedCategory == nil ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                        Image(systemName: viewModel.selectedCategory == nil ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
                     }
                 }
                 ToolbarItem(placement: .principal) {
@@ -60,7 +60,7 @@ struct IncompleteTaskView: View {
             .sheet(isPresented: $showAddingPage) {
                 TaskFormView(isPresented: $showAddingPage, taskEditor: TaskEditor())
             }
-            if let task = taskManager.incompleteTasks.first {
+            if let task = viewModel.displayedTasks.first {
                 TaskDetailView(task: task)
             } else {
                 ZStack {
@@ -79,7 +79,7 @@ struct IncompleteTaskView: View {
         VStack {
             largePageTitle
             TodayTasksView()
-            if let category = taskManager.selectedCategory {
+            if let category = viewModel.selectedCategory {
                 HStack {
                     Text("Filter: \(category.categoryTitle ?? "")")
                         .font(.headline)
@@ -100,10 +100,10 @@ struct IncompleteTaskView: View {
             showAddingPage.toggle()
         }
         .versionAwareBorderedButtonStyle()
-        if let _ = taskManager.selectedCategory {
+        if let _ = viewModel.selectedCategory {
             Button("Remove filter") {
                 withAnimation(.easeInOut) {
-                    taskManager.selectedCategory = nil
+                    viewModel.selectedCategory = nil
                 }
             }
             .versionAwareBorderedButtonStyle()
@@ -112,7 +112,7 @@ struct IncompleteTaskView: View {
     }
     
     var largePageTitle: some View {
-        let deadlineLabel = Utils.remainingTimeLabel(task: taskManager.incompleteTasks.first)
+        let deadlineLabel = Utils.remainingTimeLabel(task: viewModel.displayedTasks.first)
         return Group {
             Text("Next Due Date in")
                 .font(.title2)
@@ -132,7 +132,7 @@ struct IncompleteTaskView: View {
         ObservableScrollView(scrollOffset: $scrollOffset, showsIndicators: false) { proxy in
             largePageTitle
             TodayTasksView()
-            if let category = taskManager.selectedCategory {
+            if let category = viewModel.selectedCategory {
                 HStack {
                     Text("Filter: \(category.categoryTitle ?? "")")
                         .font(.headline)
@@ -141,15 +141,15 @@ struct IncompleteTaskView: View {
                 }
                 .padding()
             }
-            ForEach (taskManager.incompleteTasks) { task in
-                let isFirst: Bool = taskManager.incompleteTasks.first == task
+            ForEach (viewModel.displayedTasks) { task in
+                let isFirst: Bool = viewModel.displayedTasks.first == task
                 NavigationLink(destination: {
                     TaskDetailView(task: task)
                 }, label: {
                     TaskContainer(task: task, showBackground: isFirst)
                 })
             }
-            .animation(.spring(), value: taskManager.incompleteTasks)
+            .animation(.spring(), value: viewModel.displayedTasks)
             .padding(.horizontal)
             .onChange(of: scrollOffset) { newValue in
                 withAnimation(.easeInOut(duration: DrawingConstants.titleFadeDuration)) {

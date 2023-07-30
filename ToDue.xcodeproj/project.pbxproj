@@ -85,6 +85,7 @@
 		60E68A3E28B68CB400CD7709 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E68A3C28B68C4600CD7709 /* Utils.swift */; };
 		60EE4B8C28C78865008E5F7D /* SubtaskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EE4B8B28C78865008E5F7D /* SubtaskStorage.swift */; };
 		60F369FA2A76B159001E6F3D /* DataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F369F92A76B159001E6F3D /* DataStorage.swift */; };
+		60F369FC2A76B810001E6F3D /* PendingTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F369FB2A76B810001E6F3D /* PendingTaskViewModel.swift */; };
 		60FBBB5328B89E6E00CBDC68 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FBBB5228B89E6E00CBDC68 /* FAQView.swift */; };
 		60FBBB5628B8B24600CBDC68 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FBBB5528B8B24600CBDC68 /* SettingsView.swift */; };
 		60FE216628B282BB0002E080 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216828B282BB0002E080 /* Localizable.strings */; };
@@ -193,6 +194,7 @@
 		60E68A3C28B68C4600CD7709 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		60EE4B8B28C78865008E5F7D /* SubtaskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtaskStorage.swift; sourceTree = "<group>"; };
 		60F369F92A76B159001E6F3D /* DataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorage.swift; sourceTree = "<group>"; };
+		60F369FB2A76B810001E6F3D /* PendingTaskViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingTaskViewModel.swift; sourceTree = "<group>"; };
 		60FBBB5228B89E6E00CBDC68 /* FAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
 		60FBBB5528B8B24600CBDC68 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		60FE216928B283000002E080 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -317,6 +319,7 @@
 				60399B4129AFCA51007BF90D /* ToastViewModel.swift */,
 				6091231E2A3AFF7500C83DE9 /* SingleTaskManager.swift */,
 				608BA9C92A5961D700303A4E /* StatisticsViewModels.swift */,
+				60F369FB2A76B810001E6F3D /* PendingTaskViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -593,6 +596,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6091231F2A3AFF7500C83DE9 /* SingleTaskManager.swift in Sources */,
+				60F369FC2A76B810001E6F3D /* PendingTaskViewModel.swift in Sources */,
 				60813FCF29B63C1E00110269 /* VersionAwareDestructiveButton.swift in Sources */,
 				60F369FA2A76B159001E6F3D /* DataStorage.swift in Sources */,
 				60C4CBF028C113DF00F0B1BF /* TaskStorage.swift in Sources */,
