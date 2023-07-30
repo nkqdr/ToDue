@@ -24,7 +24,7 @@ class TodayTasksViewModel: ObservableObject, TaskModifier, SubtaskModifier {
     var taskTitle: String = "Today"
     var taskDueDate: Date = Date()
     
-    private(set) var taskStorage: TaskStorage = TaskStorage.shared
+    private(set) var taskStorage: TaskStorage = TaskStorage.main
     private(set) var subTaskStorage: SubtaskStorage = SubtaskStorage.shared
     
     private var taskCancellable: AnyCancellable?
@@ -32,8 +32,8 @@ class TodayTasksViewModel: ObservableObject, TaskModifier, SubtaskModifier {
     
     init() {
         let today: Date = Date()
-        
-        let taskPublisher = taskStorage.tasks.eraseToAnyPublisher()
+        let taskFetchController = TaskFetchController.all
+        let taskPublisher = taskFetchController.tasks.eraseToAnyPublisher()
         let subTaskPublisher = subTaskStorage.subTasks.eraseToAnyPublisher()
         
         taskCancellable = taskPublisher.sink { tasks in

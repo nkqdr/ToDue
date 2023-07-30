@@ -33,11 +33,11 @@ class TaskManager: ObservableObject, SubtaskModifier, TaskModifier {
     }
     
     var subTaskStorage = SubtaskStorage.shared
-    var taskStorage = TaskStorage.shared
+    var taskStorage = TaskStorage.main
     
     private var taskCancellable: AnyCancellable?
     
-    private init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher()) {
+    private init(taskPublisher: AnyPublisher<[Task], Never> = TaskFetchController.all.tasks.eraseToAnyPublisher()) {
         taskCancellable = taskPublisher.sink { tasks in
             print("Updating tasks...")
             self.tasks = tasks

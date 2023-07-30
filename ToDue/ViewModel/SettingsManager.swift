@@ -17,7 +17,7 @@ class SettingsManager: ObservableObject {
     
     let pub = NotificationCenter.default.publisher(for: NSUbiquitousKeyValueStore.didChangeExternallyNotification).receive(on: RunLoop.main)
     
-    private init(taskPublisher: AnyPublisher<[Task], Never> = TaskStorage.shared.tasks.eraseToAnyPublisher()) {
+    private init(taskPublisher: AnyPublisher<[Task], Never> = TaskFetchController.all.tasks.eraseToAnyPublisher()) {
         taskCancellable = taskPublisher.sink { tasks in
             self.incompleteTasks = tasks.filter { !$0.isCompleted }
         }

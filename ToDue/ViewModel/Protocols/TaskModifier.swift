@@ -26,7 +26,7 @@ extension TaskModifier {
     }
     
     func delete(_ task: Task) {
-        TaskStorage.shared.delete(task)
+        taskStorage.delete(task)
         WidgetCenter.shared.reloadAllTimelines()
     }
     
