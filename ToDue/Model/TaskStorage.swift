@@ -10,8 +10,9 @@ import Combine
 import CoreData
 
 class TaskFetchController: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+    static let all = TaskFetchController()
+    private let fetchedResultsController: RichFetchedResultsController<Task>
     var tasks = CurrentValueSubject<[Task], Never>([])
-    private let taskFetchController: RichFetchedResultsController<Task>
     
     public init(sortDescriptors: [NSSortDescriptor]? = [NSSortDescriptor(keyPath: \Task.date, ascending: true)], predicate: NSPredicate? = nil) {
         let request = RichFetchRequest<Task>(entityName: "Task")
@@ -22,17 +23,17 @@ class TaskFetchController: NSObject, ObservableObject, NSFetchedResultsControlle
             #keyPath(Task.category.categoryColorGreen),
             #keyPath(Task.category.categoryColorBlue)
         ]
-        taskFetchController = RichFetchedResultsController(
+        fetchedResultsController = RichFetchedResultsController(
             fetchRequest: request,
             managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
         super.init()
-        taskFetchController.delegate = self
+        fetchedResultsController.delegate = self
         do {
-            try taskFetchController.performFetch()
-            tasks.value = taskFetchController.fetchedObjects as? [Task] ?? []
+            try fetchedResultsController.performFetch()
+            tasks.value = fetchedResultsController.fetchedObjects as? [Task] ?? []
         } catch {
             NSLog("Error: could not fetch objects")
         }
@@ -45,50 +46,26 @@ class TaskFetchController: NSObject, ObservableObject, NSFetchedResultsControlle
     }
 }
 
-class TaskStorage: NSObject, ObservableObject {
-    var tasks = CurrentValueSubject<[Task], Never>([])
-    private let taskFetchController: RichFetchedResultsController<Task>
-    
-    static let shared: TaskStorage = TaskStorage()
-    
-    private override init() {
-        let request = RichFetchRequest<Task>(entityName: "Task")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Task.date, ascending: true)]
-        request.relationshipKeyPathsForRefreshing = [
-            #keyPath(Task.category.categoryColorRed),
-            #keyPath(Task.category.categoryColorGreen),
-            #keyPath(Task.category.categoryColorBlue)
-        ]
-        taskFetchController = RichFetchedResultsController(
-            fetchRequest: request,
-            managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        super.init()
-        taskFetchController.delegate = self
-        do {
-            try taskFetchController.performFetch()
-            tasks.value = taskFetchController.fetchedObjects as? [Task] ?? []
-        } catch {
-            NSLog("Error: could not fetch objects")
-        }
-    }
+class TaskStorage: DataStorage {
+    static let main = TaskStorage(context: PersistenceController.shared.persistentContainer.viewContext)
     
     func toggleCompleted(for task: Task) {
-        PersistenceController.shared.persistentContainer.viewContext.performAndWait {
+        if !task.isCompleted { // Task is going to be completed
+            Utils.cancelNotification(for: task)
+        }
+        self.context.performAndWait {
             if task.completedAt == nil {
                 task.completedAt = Date()
             } else {
                 task.completedAt = nil
             }
             task.isCompleted = !task.isCompleted
-            try? PersistenceController.shared.persistentContainer.viewContext.save()
+            try? self.context.save()
         }
     }
     
     func add(title: String, description: String, date: Date, category: TaskCategory?, scheduledDate: Date? = nil) -> Task {
-        let task = Task(context: PersistenceController.shared.persistentContainer.viewContext)
+        let task = Task(context: self.context)
         task.date = date
         task.taskDescription = description
         task.taskTitle = title
@@ -97,12 +74,12 @@ class TaskStorage: NSObject, ObservableObject {
         task.scheduledDate = scheduledDate
         task.id = UUID()
         task.subTasks = []
-        try? PersistenceController.shared.persistentContainer.viewContext.save()
+        try? self.context.save()
         return task
     }
     
     func update(_ task: Task, title: String?, description: String?, date: Date?, isCompleted: Bool?, category: TaskCategory?, scheduledDate: Date?) {
-        PersistenceController.shared.persistentContainer.viewContext.performAndWait {
+        self.context.performAndWait {
             task.isCompleted = isCompleted ?? task.isCompleted
             if let isCompleted, isCompleted {
                 task.completedAt = Date()
@@ -112,26 +89,18 @@ class TaskStorage: NSObject, ObservableObject {
             task.category = category
             task.date = date ?? task.date!
             task.scheduledDate = scheduledDate
-            try? PersistenceController.shared.persistentContainer.viewContext.save()
+            try? self.context.save()
         }
     }
     
     func delete(_ task: Task) {
         Utils.cancelNotification(for: task)
-        PersistenceController.shared.persistentContainer.viewContext.delete(task)
+        self.context.delete(task)
         do {
-            try PersistenceController.shared.persistentContainer.viewContext.save()
+            try self.context.save()
         } catch {
-            PersistenceController.shared.persistentContainer.viewContext.rollback()
+            self.context.rollback()
             print("Failed to save context \(error.localizedDescription)")
         }
-    }
-}
-
-extension TaskStorage: NSFetchedResultsControllerDelegate {
-    public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        guard let tasks = controller.fetchedObjects as? [Task] else { return }
-        print("Context has changed, reloading tasks")
-        self.tasks.value = tasks
     }
 }

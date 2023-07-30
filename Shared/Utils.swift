@@ -11,7 +11,7 @@ import SwiftUI
 class Utils {
     static func _remainingTime(_ givenTask: Task?) -> DateComponents {
         if let task = givenTask, let date = task.date, date < Date.distantFuture {
-            let diff = Calendar.current.dateComponents([.month, .day], from: Date().removeTimeStamp!, to: date)
+            let diff = Calendar.current.dateComponents([.month, .day], from: Date().removeTimeStamp, to: date)
             return diff
         } else {
             return Calendar.current.dateComponents([], from: Date.distantPast)

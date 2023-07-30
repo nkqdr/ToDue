@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct TaskDetailView: View {
-    @EnvironmentObject var taskManager: TaskManager
     @State var showAddSubtaskSheet: Bool = false
     @State var showEditTaskSheet: Bool = false
     @State private var showingAlert: Bool = false

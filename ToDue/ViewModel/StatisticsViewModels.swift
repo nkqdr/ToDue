@@ -69,7 +69,7 @@ class ThisMonthCompletedTasksViewModel: ObservableObject {
     
     init() {
         let date: Date = Date()
-        let startOfMonth: Date = date.startOfThisMonth.removeTimeStamp!
+        let startOfMonth: Date = date.startOfThisMonth.removeTimeStamp
         let endOfMonth: Date = Calendar.current.date(byAdding: DateComponents(month: 1), to: startOfMonth) ?? date
         self.fetchController = TaskFetchController(predicate: NSPredicate(format: "completedAt >= %@ && completedAt <= %@", startOfMonth as NSDate, endOfMonth as NSDate))
         let publisher = fetchController.tasks.eraseToAnyPublisher()

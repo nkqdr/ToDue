@@ -217,6 +217,9 @@
 /* No comment provided by engineer. */
 "Save" = "Speichern";
 
+/* (No Comment) */
+"Today" = "Heute";
+
 /* DatePicker description for scheduling */
 "schedule_task_date" = "Geplantes Datum";
 

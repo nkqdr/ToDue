@@ -9,6 +9,8 @@ import Foundation
 import Combine
 
 class SingleTaskManager: ObservableObject, SubtaskModifier {
+    var subTaskStorage = SubtaskStorage.main
+    
     private var task: Task
     @Published var subTasks: [SubTask] = [] {
         didSet {
@@ -18,15 +20,13 @@ class SingleTaskManager: ObservableObject, SubtaskModifier {
     @Published var progress: Double = 0
     
     private var subTaskCancellable: AnyCancellable?
-    private(set) var subTaskStorage: SubtaskStorage
+    private(set) var subtaskFetchController: SubtaskFetchController
     
     init(task: Task) {
         self.task = task
+        self.subtaskFetchController = SubtaskFetchController(task: task)
         
-        let storage = SubtaskStorage(task: task)
-        self.subTaskStorage = storage
-        
-        let subTaskPublisher = storage.subTasks.eraseToAnyPublisher()
+        let subTaskPublisher = self.subtaskFetchController.subTasks.eraseToAnyPublisher()
         self.subTaskCancellable = subTaskPublisher.sink { subTasks in
             print("Updating subtasks for single...")
             print(subTasks.count)

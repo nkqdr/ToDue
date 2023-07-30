@@ -26,12 +26,12 @@ extension TaskModifier {
     }
     
     func delete(_ task: Task) {
-        TaskStorage.shared.delete(task)
+        taskStorage.delete(task)
         WidgetCenter.shared.reloadAllTimelines()
     }
     
     func save(_ editor: TaskEditor) {
-        let newDate = editor.hasDeadline ? editor.taskDueDate.removeTimeStamp! : Date.distantFuture
+        let newDate = editor.hasDeadline ? editor.taskDueDate.removeTimeStamp : Date.distantFuture
         let newDescription = editor.taskDescription
         let newTitle = editor.taskTitle
         let scheduledDate: Date? = editor.isScheduled ? editor.scheduledDate : nil

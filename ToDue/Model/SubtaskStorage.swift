@@ -9,19 +9,27 @@ import Foundation
 import Combine
 import CoreData
 
-class SubtaskStorage: NSObject, ObservableObject {
+class SubtaskFetchController: NSObject, ObservableObject {
+    static let all = SubtaskFetchController()
     var subTasks = CurrentValueSubject<[SubTask], Never>([])
     private let subTaskFetchController: NSFetchedResultsController<SubTask>
     
-    static let shared: SubtaskStorage = SubtaskStorage()
+    public convenience init(task: Task) {
+        let predicate = NSPredicate(format: "task == %@", task)
+        self.init(predicate: predicate)
+    }
     
-    public init(task: Task) {
+    private init(
+        sortDescriptors: [NSSortDescriptor]? = [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)],
+        predicate: NSPredicate? = nil,
+        context: NSManagedObjectContext = PersistenceController.shared.persistentContainer.viewContext
+    ) {
         let request = SubTask.fetchRequest()
-        request.predicate = NSPredicate(format: "task == %@", task)
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)]
+        request.sortDescriptors = sortDescriptors
+        request.predicate = predicate
         subTaskFetchController = NSFetchedResultsController(
             fetchRequest: request,
-            managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
+            managedObjectContext: context,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
@@ -35,38 +43,31 @@ class SubtaskStorage: NSObject, ObservableObject {
         }
     }
     
-    private override init() {
-        let request = SubTask.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \SubTask.createdAt, ascending: true)]
-        subTaskFetchController = NSFetchedResultsController(
-            fetchRequest: request,
-            managedObjectContext: PersistenceController.shared.persistentContainer.viewContext,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        super.init()
-        subTaskFetchController.delegate = self
-        do {
-            try subTaskFetchController.performFetch()
-            subTasks.value = subTaskFetchController.fetchedObjects ?? []
-        } catch {
-            NSLog("Error: could not fetch objects")
-        }
+}
+
+extension SubtaskFetchController: NSFetchedResultsControllerDelegate {
+    public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard let subTasks = controller.fetchedObjects as? [SubTask] else { return }
+        self.subTasks.value = subTasks
     }
+}
+
+class SubtaskStorage: DataStorage {
+    static let main: SubtaskStorage = SubtaskStorage(context: PersistenceController.shared.persistentContainer.viewContext)
     
     func add(on date: Date, title: String) {
-        let subTask = SubTask(context: PersistenceController.shared.persistentContainer.viewContext)
+        let subTask = SubTask(context: self.context)
         subTask.title = title
         subTask.id = UUID()
         subTask.isCompleted = false
         subTask.createdAt = Date()
         subTask.scheduledDate = date
         
-        try? PersistenceController.shared.persistentContainer.viewContext.save()
+        try? self.context.save()
     }
     
     func add(to task: Task, title: String, scheduledDate: Date?) {
-        let subTask = SubTask(context: PersistenceController.shared.persistentContainer.viewContext)
+        let subTask = SubTask(context: self.context)
         subTask.title = title
         subTask.id = UUID()
         subTask.isCompleted = false
@@ -74,32 +75,25 @@ class SubtaskStorage: NSObject, ObservableObject {
         subTask.createdAt = Date()
         
         task.addToSubTasks(subTask)
-        try? PersistenceController.shared.persistentContainer.viewContext.save()
+        try? self.context.save()
     }
     
     func update(_ subTask: SubTask, title: String?, isCompleted: Bool?, scheduledDate: Date?) {
-        PersistenceController.shared.persistentContainer.viewContext.performAndWait {
+        self.context.performAndWait {
             subTask.title = title ?? subTask.title
             subTask.isCompleted = isCompleted ?? subTask.isCompleted
             subTask.scheduledDate = scheduledDate
-            try? PersistenceController.shared.persistentContainer.viewContext.save()
+            try? self.context.save()
         }
     }
     
     func delete(_ subTask: SubTask) {
-        PersistenceController.shared.persistentContainer.viewContext.delete(subTask)
+        self.context.delete(subTask)
         do {
-            try PersistenceController.shared.persistentContainer.viewContext.save()
+            try self.context.save()
         } catch {
-            PersistenceController.shared.persistentContainer.viewContext.rollback()
+            self.context.rollback()
             print("Failed to save context \(error.localizedDescription)")
         }
-    }
-}
-
-extension SubtaskStorage: NSFetchedResultsControllerDelegate {
-    public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        guard let subTasks = controller.fetchedObjects as? [SubTask] else { return }
-        self.subTasks.value = subTasks
     }
 }

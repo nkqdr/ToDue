@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct CompletedTasksView: View {
-    @EnvironmentObject var taskManager: TaskManager
-    @State private var searchValue = ""
-    @State var displayedTasks: [Task]?
+    @StateObject private var viewModel = CompleteTasksViewModel()
     
     @ViewBuilder
     private func taskSection(_ title: LocalizedStringKey, tasks: [Task]) -> some View {
@@ -24,19 +22,19 @@ struct CompletedTasksView: View {
                         }.opacity(0)
                     }
                 }
-                .animation(.spring(), value: taskManager.completeTasks)
+                .animation(.spring(), value: viewModel.completeTasks)
             }
             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
     }
     
     var body: some View {
-        let deadlineTasksToShow: [Task] = displayedTasks?.filter({ $0.date != Date.distantFuture }) ?? taskManager.completeTasks.filter({ $0.date != Date.distantFuture })
-        let taskWithoutDeadlineToShow: [Task] = displayedTasks?.filter({ $0.date == Date.distantFuture }) ?? taskManager.completeTasks.filter({ $0.date == Date.distantFuture })
+        let deadlineTasksToShow: [Task] = viewModel.displayedTasks.filter({ $0.date != Date.distantFuture })
+        let taskWithoutDeadlineToShow: [Task] = viewModel.displayedTasks.filter({ $0.date == Date.distantFuture })
         
         List {
             HStack {
-                Text("Total: \(taskManager.completeTasks.count)", comment: "Label that displays how many tasks have been completed in total.")
+                Text("Total: \(viewModel.completeTasks.count)", comment: "Label that displays how many tasks have been completed in total.")
                     .font(.title3)
                     .fontWeight(.bold)
                 Spacer()
@@ -52,21 +50,12 @@ struct CompletedTasksView: View {
         .background(Color("Background").ignoresSafeArea())
         .navigationTitle("Archive")
         .hideScrollContentBackgroundIfNecessary()
-        .versionAwareSearchable(text: $searchValue)
-        .onChange(of: searchValue) { newValue in
-            DispatchQueue.global(qos: .userInitiated).async {
-                let newTasks = taskManager.filterTasks(taskManager.completeTasks.map { $0 }, by: searchValue)
-                DispatchQueue.main.async {
-                    displayedTasks = newTasks
-                }
-            }
-        }
+        .versionAwareSearchable(text: $viewModel.searchValue)
     }
 }
 
 struct CompletedTasksView_Previews: PreviewProvider {
     static var previews: some View {
         CompletedTasksView()
-            .environmentObject(TaskManager.shared)
     }
 }
