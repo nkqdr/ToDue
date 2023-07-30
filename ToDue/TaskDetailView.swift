@@ -220,7 +220,7 @@ struct TaskDetailView: View {
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
     @StateObject private var singleTaskManager: SingleTaskManager
-    var task: Task
+    @ObservedObject var task: Task
     
     init(task: Task) {
         self.task = task
