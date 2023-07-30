@@ -25,8 +25,14 @@
 /* (No Comment) */
 "Sub-Tasks" = "Subtasks";
 
-/* (No Comment) */
-"Task_almost_due" = "Task is almost due!";
+/* Part of the notification message */
+"due_in" = "Due in";
+
+/* Part of the notification message */
+"day_singular" = "day";
+
+/* Part of the notification message */
+"days_plural" = "days";
 
 /* Section header in task form */
 "task_form_optional_information" = "Additional Information (Optional)";

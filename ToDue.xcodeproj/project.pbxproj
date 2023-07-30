@@ -86,6 +86,8 @@
 		60EE4B8C28C78865008E5F7D /* SubtaskStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EE4B8B28C78865008E5F7D /* SubtaskStorage.swift */; };
 		60F369FA2A76B159001E6F3D /* DataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F369F92A76B159001E6F3D /* DataStorage.swift */; };
 		60F369FC2A76B810001E6F3D /* TaskListViewModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F369FB2A76B810001E6F3D /* TaskListViewModels.swift */; };
+		60F369FE2A76CA1B001E6F3D /* ReminderStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F369FD2A76CA1B001E6F3D /* ReminderStorage.swift */; };
+		60F36A002A76CC85001E6F3D /* ReminderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F369FF2A76CC85001E6F3D /* ReminderManager.swift */; };
 		60FBBB5328B89E6E00CBDC68 /* FAQView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FBBB5228B89E6E00CBDC68 /* FAQView.swift */; };
 		60FBBB5628B8B24600CBDC68 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FBBB5528B8B24600CBDC68 /* SettingsView.swift */; };
 		60FE216628B282BB0002E080 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 60FE216828B282BB0002E080 /* Localizable.strings */; };
@@ -195,6 +197,8 @@
 		60EE4B8B28C78865008E5F7D /* SubtaskStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtaskStorage.swift; sourceTree = "<group>"; };
 		60F369F92A76B159001E6F3D /* DataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStorage.swift; sourceTree = "<group>"; };
 		60F369FB2A76B810001E6F3D /* TaskListViewModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListViewModels.swift; sourceTree = "<group>"; };
+		60F369FD2A76CA1B001E6F3D /* ReminderStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderStorage.swift; sourceTree = "<group>"; };
+		60F369FF2A76CC85001E6F3D /* ReminderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderManager.swift; sourceTree = "<group>"; };
 		60FBBB5228B89E6E00CBDC68 /* FAQView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQView.swift; sourceTree = "<group>"; };
 		60FBBB5528B8B24600CBDC68 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		60FE216928B283000002E080 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -320,6 +324,7 @@
 				6091231E2A3AFF7500C83DE9 /* SingleTaskManager.swift */,
 				608BA9C92A5961D700303A4E /* StatisticsViewModels.swift */,
 				60F369FB2A76B810001E6F3D /* TaskListViewModels.swift */,
+				60F369FF2A76CC85001E6F3D /* ReminderManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -399,6 +404,7 @@
 				60EE4B8B28C78865008E5F7D /* SubtaskStorage.swift */,
 				60410E2B28D31A30008BBAA6 /* TaskCategoryStorage.swift */,
 				60F369F92A76B159001E6F3D /* DataStorage.swift */,
+				60F369FD2A76CA1B001E6F3D /* ReminderStorage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -642,8 +648,10 @@
 				60E0EEC929A795520083ACDC /* TodayTasksViewModel.swift in Sources */,
 				60B5719628C7303700CDC7C0 /* UIDeviceExtension.swift in Sources */,
 				60960B3428DDC8FD000E1705 /* TaskCategoryView.swift in Sources */,
+				60F36A002A76CC85001E6F3D /* ReminderManager.swift in Sources */,
 				60809E9327D394A30027AE84 /* ToDoWidget.intentdefinition in Sources */,
 				60E68A3D28B68C4600CD7709 /* Utils.swift in Sources */,
+				60F369FE2A76CA1B001E6F3D /* ReminderStorage.swift in Sources */,
 				6061F80327D5360300772ACE /* ProgressBar.swift in Sources */,
 				608F053928ABC92800ACD45B /* ProgressPie.swift in Sources */,
 				608BA9CA2A5961D700303A4E /* StatisticsViewModels.swift in Sources */,

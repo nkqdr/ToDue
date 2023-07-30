@@ -7,9 +7,216 @@
 
 import SwiftUI
 
+struct ReminderListTile: View {
+    var reminder: Reminder
+    
+    var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+        return dateFormatter
+    }
+    
+    var timeFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .short
+        return dateFormatter
+    }
+    
+    var timeBeforeDue: DateComponents? {
+        let task = reminder.task
+        guard let date = reminder.dateTime, let taskDate = task?.date, taskDate < Date.distantFuture else {
+            return nil
+        }
+        return Calendar.current.dateComponents([.month, .day], from: date, to: taskDate)
+    }
+    
+    var timeBeforeDueString: LocalizedStringKey {
+        guard let comps = timeBeforeDue, let days = comps.day, days >= 0, let months = comps.month else {
+            return ""
+        }
+        if months > 0 {
+            return "\(months) M, \(days) D"
+        } else {
+            return "\(days) days_short"
+        }
+    }
+    
+    var body: some View {
+        if let date = reminder.dateTime {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text(timeBeforeDueString) + Text(" ") + Text("before task is due")
+                }
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                
+                HStack {
+                    Label(dateFormatter.string(from: date), systemImage: "calendar")
+                        .font(.title3.bold())
+                    Spacer()
+                    Label(timeFormatter.string(from: date), systemImage: "alarm")
+                        .foregroundColor(.secondary)
+                }
+                .font(.title3)
+            }
+            .padding(.vertical)
+            .foregroundColor(date < Date() ? .secondary : nil)
+            .frame(maxWidth: .infinity)
+            .listRowBackground(Color("Accent2").opacity(0.3))
+            .listRowInsets(EdgeInsets())
+        }
+    }
+}
+
+struct ReminderListTile_Previews: PreviewProvider {
+    static var reminder: Reminder {
+        let reminder = Reminder(context: PersistenceController.shared.persistentContainer.viewContext)
+        reminder.dateTime = Date()
+        return reminder
+    }
+    
+    static var previews: some View {
+        ReminderListTile(reminder: reminder)
+    }
+}
+
+struct CreateReminderView: View {
+    @State private var selectedDateTime: Date = Date()
+    @Binding var isPresented: Bool
+    var task: Task
+    
+    var body: some View {
+        return NavigationView {
+            List {
+                DatePicker("Reminder", selection: $selectedDateTime)
+                    .datePickerStyle(.graphical)
+                    .listRowBackground(Color("Accent2").opacity(0.3))
+                    .listRowInsets(EdgeInsets())
+            }
+            .hideScrollContentBackgroundIfNecessary()
+            .background(Color("Background").ignoresSafeArea())
+            .navigationTitle("New Reminder")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        ReminderStorage.main.add(to: task, scheduledDate: selectedDateTime)
+                        isPresented.toggle()
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct ReminderManagerSheet: View {
+    @StateObject private var reminderManager: ReminderManager
+    @State private var showConfirmationDialog: Bool = false
+    @State private var showCreateReminder: Bool = false
+    @State private var reminderToDelete: Reminder? = nil
+    @Binding var isPresented: Bool
+    var task: Task
+    
+    init(isPresented: Binding<Bool>, task: Task) {
+        self._isPresented = isPresented
+        self.task = task
+        self._reminderManager = StateObject(wrappedValue: ReminderManager(task: task))
+    }
+    
+    @ViewBuilder
+    var reminderScrollView: some View {
+        List {
+            if !reminderManager.openReminders.isEmpty {
+                Section(header: Text("Open")) {
+                    ForEach(reminderManager.openReminders) { reminder in
+                        ReminderListTile(reminder: reminder)
+                            .padding(.horizontal)
+                            .versionAwareDeleteSwipeAction {
+                                reminderToDelete = reminder
+                                showConfirmationDialog = true
+                            }
+                    }
+                }
+            }
+            if !reminderManager.pastReminders.isEmpty {
+                Section(header: Text("Completed")) {
+                    ForEach(reminderManager.pastReminders) { reminder in
+                        ReminderListTile(reminder: reminder)
+                            .padding(.horizontal)
+                            .versionAwareDeleteSwipeAction {
+                                reminderToDelete = reminder
+                                showConfirmationDialog = true
+                            }
+                    }
+                }
+            }
+        }
+        .hideScrollContentBackgroundIfNecessary()
+        .background(Color("Background").ignoresSafeArea())
+        .versionAwareConfirmationDialog(
+            $showConfirmationDialog,
+            title: "Are you sure you want to delete this reminder?",
+            message: "",
+            onDelete: {
+                if let reminder = reminderToDelete {
+                    ReminderStorage.main.delete(reminder)
+                }
+            },
+            onCancel: { showConfirmationDialog = false }
+        )
+    }
+    
+    var body: some View {
+        NavigationView {
+            Group {
+                if reminderManager.reminders.isEmpty {
+                    VStack {
+                        Spacer()
+                        Text("There are no reminders for this task yet")
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity)
+                } else {
+                    reminderScrollView
+                }
+            }
+            .sheet(isPresented: $showCreateReminder) {
+                CreateReminderView(isPresented: $showCreateReminder, task: task)
+            }
+            .navigationTitle("Reminders")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color("Background").ignoresSafeArea())
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showCreateReminder.toggle()
+                    } label: {
+                        Label("Add", systemImage: "plus")
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct TaskDetailView: View {
     @State var showAddSubtaskSheet: Bool = false
     @State var showEditTaskSheet: Bool = false
+    @State var showReminderSheet: Bool = false
     @State private var showingAlert: Bool = false
     @State private var currentSubTask: SubTask?
     @StateObject private var singleTaskManager: SingleTaskManager
@@ -67,10 +274,15 @@ struct TaskDetailView: View {
         })
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showEditTaskSheet = true
+                Menu {
+                    Button { showEditTaskSheet = true } label: {
+                        Label("Edit", systemImage: "pencil")
+                    }
+                    Button { showReminderSheet = true } label: {
+                        Label("Reminders", systemImage: "alarm")
+                    }
                 } label: {
-                    Image(systemName: "pencil")
+                    Image(systemName: "ellipsis.circle")
                 }
             }
         }
@@ -84,6 +296,9 @@ struct TaskDetailView: View {
         }
         .sheet(isPresented: $showEditTaskSheet) {
             TaskFormView(isPresented: $showEditTaskSheet, taskEditor: TaskEditor(task: task))
+        }
+        .sheet(isPresented: $showReminderSheet) {
+            ReminderManagerSheet(isPresented: $showReminderSheet, task: task)
         }
     }
     
