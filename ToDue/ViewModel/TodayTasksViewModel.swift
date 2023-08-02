@@ -29,19 +29,37 @@ class TodayTasksViewModel: ObservableObject, TaskModifier, SubtaskModifier {
     
     private var taskCancellable: AnyCancellable?
     private var subTaskCancellable: AnyCancellable?
+    private var taskFetchController: TaskFetchController
+    private var subtaskFetchController: SubtaskFetchController
     
     init() {
         let today: Date = Date()
-        let taskFetchController = TaskFetchController.all
-        let subtaskFetchController = SubtaskFetchController.all
-        let taskPublisher = taskFetchController.tasks.eraseToAnyPublisher()
-        let subTaskPublisher = subtaskFetchController.subTasks.eraseToAnyPublisher()
-        
+        self.taskFetchController = TaskFetchController(scheduledAt: today)
+        self.subtaskFetchController = SubtaskFetchController(scheduledAt: today)
+        let taskPublisher = self.taskFetchController.tasks.eraseToAnyPublisher()
+        let subTaskPublisher = self.subtaskFetchController.subTasks.eraseToAnyPublisher()
+
         taskCancellable = taskPublisher.sink { tasks in
-            self.tasks = tasks.filter({ $0.scheduledDate?.isSameDayAs(today) ?? false })
+            self.tasks = tasks
+            print(tasks)
         }
         subTaskCancellable = subTaskPublisher.sink { subTasks in
-            self.subTasks = subTasks.filter({ $0.scheduledDate?.isSameDayAs(today) ?? false })
+            self.subTasks = subTasks
+            print(subTasks)
+        }
+    }
+    
+    private func setupFetchControllers() {
+        let today = Date()
+        self.taskFetchController = TaskFetchController(scheduledAt: today)
+        self.subtaskFetchController = SubtaskFetchController(scheduledAt: today)
+        let taskPublisher = self.taskFetchController.tasks.eraseToAnyPublisher()
+        let subTaskPublisher = self.subtaskFetchController.subTasks.eraseToAnyPublisher()
+        taskCancellable = taskPublisher.sink { tasks in
+            self.tasks = tasks
+        }
+        subTaskCancellable = subTaskPublisher.sink { subTasks in
+            self.subTasks = subTasks
         }
     }
     
@@ -53,5 +71,14 @@ class TodayTasksViewModel: ObservableObject, TaskModifier, SubtaskModifier {
             let complete: Int = tasks.filter { $0.isCompleted }.count + subTasks.filter({ $0.isCompleted }).count
             progress = Double(complete) / Double(total)
         }
+    }
+    
+    // MARK: - Intents
+    
+    public func refresh() {
+        print("Refreshing")
+        self.taskCancellable?.cancel()
+        self.subTaskCancellable?.cancel()
+        self.setupFetchControllers()
     }
 }

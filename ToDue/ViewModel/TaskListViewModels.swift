@@ -85,5 +85,15 @@ class PendingTasksViewModel: ObservableObject {
             displayedTasks = incompleteTasks
         }
     }
+    
+    // MARK: - Intents
+    
+    public func refresh() {
+        self.taskCancellable?.cancel()
+        let taskPublisher = self.taskFetchController.tasks.eraseToAnyPublisher()
+        self.taskCancellable = taskPublisher.sink { tasks in
+            self.incompleteTasks = tasks
+        }
+    }
 }
 

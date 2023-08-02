@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct IncompleteTaskView: View {
+    @Environment(\.scenePhase) var scenePhase
     @StateObject private var categoryManager = TaskCategoryManager.shared
     @StateObject private var viewModel = PendingTasksViewModel()
     @State private var showAddingPage = false
@@ -59,6 +60,12 @@ struct IncompleteTaskView: View {
             .background(Color("Background").ignoresSafeArea())
             .sheet(isPresented: $showAddingPage) {
                 TaskFormView(isPresented: $showAddingPage, taskEditor: TaskEditor())
+            }
+            .onChange(of: scenePhase) { newPhase in
+                // If the user re-enters the app, refresh the viewmodel because the current date might have changed
+                if newPhase == .active {
+                    self.viewModel.refresh()
+                }
             }
             if let task = viewModel.displayedTasks.first {
                 TaskDetailView(task: task)
