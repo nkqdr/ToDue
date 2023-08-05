@@ -64,7 +64,9 @@ struct IncompleteTaskView: View {
             .onChange(of: scenePhase) { newPhase in
                 // If the user re-enters the app, refresh the viewmodel because the current date might have changed
                 if newPhase == .active {
-                    self.viewModel.refresh()
+                    withAnimation {
+                        self.viewModel.refresh()
+                    }
                 }
             }
             if let task = viewModel.displayedTasks.first {
