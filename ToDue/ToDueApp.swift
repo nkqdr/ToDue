@@ -69,6 +69,7 @@ struct MainAppContent: View {
                 }
         }
         .onChange(of: scenePhase) { newPhase in
+            // If the user leaves the app, reload the widgets
             if newPhase != .active {
                 WidgetCenter.shared.reloadAllTimelines()
             }

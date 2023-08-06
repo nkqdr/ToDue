@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TodayTasksView: View {
+    @Environment(\.scenePhase) var scenePhase
     @StateObject private var dailyManager = TodayTasksViewModel()
     
     private var showTodaysTasks: Bool {
@@ -50,14 +51,22 @@ struct TodayTasksView: View {
     }
     
     var body: some View {
-        if showTodaysTasks {
-            NavigationLink(destination: {
-                TodaysTasksDetailView(dailyManager: dailyManager)
-            }, label: {
-                listContainer
-            })
-        } else {
-            EmptyView()
+        Group {
+            if showTodaysTasks {
+                NavigationLink(destination: {
+                    TodaysTasksDetailView(dailyManager: dailyManager)
+                }, label: {
+                    listContainer
+                })
+            } else {
+                EmptyView()
+            }
+        }
+        .onChange(of: scenePhase) { newPhase in
+            // If the user re-enters the app, refresh this because the current date might have changed
+            if newPhase == .active {
+                self.dailyManager.refresh()
+            }
         }
     }
     

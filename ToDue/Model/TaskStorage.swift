@@ -14,6 +14,13 @@ class TaskFetchController: NSObject, ObservableObject, NSFetchedResultsControlle
     private let fetchedResultsController: RichFetchedResultsController<Task>
     var tasks = CurrentValueSubject<[Task], Never>([])
     
+    public convenience init(scheduledAt: Date) {
+        let startOfDay = Calendar.current.startOfDay(for: scheduledAt)
+        let nextDay = Calendar.current.date(byAdding: DateComponents(day: 1), to: scheduledAt) ?? scheduledAt
+        let startOfNextDay = Calendar.current.startOfDay(for: nextDay)
+        self.init(predicate: NSPredicate(format: "scheduledDate < %@ && scheduledDate >= %@", startOfNextDay as NSDate, startOfDay as NSDate))
+    }
+    
     public init(sortDescriptors: [NSSortDescriptor]? = [NSSortDescriptor(keyPath: \Task.date, ascending: true)], predicate: NSPredicate? = nil) {
         let request = RichFetchRequest<Task>(entityName: "Task")
         request.sortDescriptors = sortDescriptors

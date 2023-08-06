@@ -15,8 +15,14 @@ class SubtaskFetchController: NSObject, ObservableObject {
     private let subTaskFetchController: NSFetchedResultsController<SubTask>
     
     public convenience init(task: Task) {
-        let predicate = NSPredicate(format: "task == %@", task)
-        self.init(predicate: predicate)
+        self.init(predicate: NSPredicate(format: "task == %@", task))
+    }
+    
+    public convenience init(scheduledAt: Date) {
+        let startOfDay = Calendar.current.startOfDay(for: scheduledAt)
+        let nextDay = Calendar.current.date(byAdding: DateComponents(day: 1), to: scheduledAt) ?? scheduledAt
+        let startOfNextDay = Calendar.current.startOfDay(for: nextDay)
+        self.init(predicate: NSPredicate(format: "scheduledDate < %@ && scheduledDate >= %@", startOfNextDay as NSDate, startOfDay as NSDate))
     }
     
     private init(

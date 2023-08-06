@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 class Utils {
-    static func _remainingTime(_ givenTask: Task?) -> DateComponents {
+    static func _remainingTime(_ givenTask: Task?, granularity: Set<Calendar.Component> = [.month, .day]) -> DateComponents {
         if let task = givenTask, let date = task.date, date < Date.distantFuture {
-            let diff = Calendar.current.dateComponents([.month, .day], from: Date().removeTimeStamp, to: date)
+            let diff = Calendar.current.dateComponents(granularity, from: Date().removeTimeStamp, to: date)
             return diff
         } else {
             return Calendar.current.dateComponents([], from: Date.distantPast)
@@ -60,9 +60,15 @@ class Utils {
     // MARK: - Notifications
     
     private static func getTaskNotificationContent(for task: Task) -> UNMutableNotificationContent {
+        let messagePrefix = NSString.localizedUserNotificationString(forKey: "due_in", arguments: nil)
+        let remainingTime = _remainingTime(task, granularity: [.day])
+        let days: Int = remainingTime.day ?? 0
+        let remainingTimeSuffix = days == 1 ? NSString.localizedUserNotificationString(forKey: "day_singular", arguments: nil) : NSString.localizedUserNotificationString(forKey: "days_plural", arguments: nil)
+        
+        
         let content = UNMutableNotificationContent()
         content.title = task.taskTitle ?? "Unknown Task"
-        content.body = NSString.localizedUserNotificationString(forKey: "Task_almost_due", arguments: nil)
+        content.body = messagePrefix + " \(days) " + remainingTimeSuffix
         content.sound = UNNotificationSound.default
         return content
     }
@@ -107,6 +113,27 @@ class Utils {
             UNUserNotificationCenter.current().add(request)
             print("Scheduled notification for \(task.taskTitle ?? "Unknown") on \(dateComponents.description)")
         }
+    }
+    
+    static func scheduleReminderNotification(reminder: Reminder) {
+        guard let task = reminder.task, let date = reminder.dateTime, date > Date() else {
+            return
+        }
+        guard let uuidStr = reminder.id?.uuidString else {
+            return
+        }
+        let content = getTaskNotificationContent(for: task)
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        let request = UNNotificationRequest(identifier: uuidStr, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request)
+    }
+    
+    static func cancelNotification(for reminder: Reminder) {
+        guard let uuid = reminder.id else {
+            return
+        }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [uuid.uuidString])
     }
     
     static func cancelNotification(for task: Task) {
