@@ -11,7 +11,7 @@ struct TaskContainer: View {
     @EnvironmentObject var taskManager: TaskManager
     @State private var showingAlert: Bool = false
     @StateObject private var singleTaskManager: SingleTaskManager
-    var task: Task
+    @ObservedObject var task: Task
     var showBackground: Bool = false
     var cornerRadius: Double = DrawingConstants.containerCornerRadius
     
