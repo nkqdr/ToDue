@@ -14,6 +14,21 @@
 "Add" = "Hinzufügen";
 
 /* No comment provided by engineer. */
+"Added" = "Hinzugefügt";
+
+/* No comment provided by engineer. */
+"Added to today's tasks!" = "Zu heutigen Aufgaben hinzugefügt!";
+
+/* No comment provided by engineer. */
+"Removed" = "Entfernt";
+
+/* No comment provided by engineer. */
+"Created" = "Erstellt";
+
+/* No comment provided by engineer. */
+"Removed from today's tasks." = "Von heutigen Aufgaben entfernt.";
+
+/* No comment provided by engineer. */
 "Add a category in order to better manage your deadlines!" = "Erstellen Sie eine Kategorie, um Ihre Deadlines noch besser zu managen!";
 
 /* No comment provided by engineer. */

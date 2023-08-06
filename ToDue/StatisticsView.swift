@@ -122,6 +122,7 @@ struct StatisticsView: View {
             .background(Color("Background").ignoresSafeArea())
             .navigationTitle("Statistics")
         }
+        .navigationViewStyle(.stack)
         .currentDeviceNavigationViewStyle()
     }
 }
